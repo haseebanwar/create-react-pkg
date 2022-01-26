@@ -1,13 +1,19 @@
 #!/usr/bin/env node
 
 import path from 'path';
-import { exec } from 'child_process';
+import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import { program } from 'commander';
 import chalk from 'chalk';
 // import { execa }  from 'execa';
 import validatePackageName from 'validate-npm-package-name';
-import { getAuthorName, getPackageCMD } from './utils';
+import {
+  getAuthorName,
+  composePackageJSON,
+  getPackageCMD,
+  makeInstallCommand,
+} from './utils';
+import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
@@ -86,19 +92,17 @@ program
 
       // install deps
       console.log('Installing packages. This might take a couple of minutes.');
-      // Installing react, react-dom, and react-scripts with cra-template...
+      dependencies.forEach((dep) => console.log(`  - ${dep}`));
       process.chdir(projectPath);
+
+      // generate package.json
+      const pkg = composePackageJSON(packageName, author);
+      fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg);
 
       // decide whether to use npm or yarn for installing deps
       const packageCMD = getPackageCMD(flags.useNpm);
 
-      exec('node -v', (error, stdout, stderr) => {
-        if (error || stderr) {
-          throw error || stderr;
-        }
-
-        console.log(`stdout: ${stdout}`);
-      });
+      execSync(makeInstallCommand(packageCMD, dependencies)).toString();
 
       process.exit(0);
     } catch (error) {
