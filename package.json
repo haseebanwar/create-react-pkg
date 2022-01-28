@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "babel src -d lib --watch",
-    "build": "babel src -d lib"
+    "build": "babel src -d lib",
+    "lint": "eslint src"
   },
   "author": "Haseeb Anwar",
   "license": "MIT",
@@ -25,6 +26,7 @@
     "@babel/cli": "^7.16.8",
     "@babel/core": "^7.16.10",
     "@babel/plugin-transform-runtime": "^7.16.10",
-    "@babel/preset-env": "^7.16.10"
+    "@babel/preset-env": "^7.16.10",
+    "eslint": "^8.7.0"
   }
 }
