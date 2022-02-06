@@ -2,8 +2,8 @@
 export const basePackageJSON = {
   version: '0.1.0',
   description: '',
-  main: '', // TODO: define cjs entry point
-  module: '', // TODO: define es entry point
+  main: 'dist/cjs/bundle.js', // TODO: define cjs entry point
+  module: 'dist/es/bundle.js', // TODO: define es entry point
   license: 'MIT',
   scripts: {
     build: 'create-js-package build',

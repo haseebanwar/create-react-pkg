@@ -5,8 +5,13 @@ import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import { program } from 'commander';
 import chalk from 'chalk';
-// import { execa }  from 'execa';
 import validatePackageName from 'validate-npm-package-name';
+
+import { rollup } from 'rollup';
+import { babel } from '@rollup/plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+
 import {
   getAuthorName,
   composePackageJSON,
@@ -15,11 +20,6 @@ import {
 } from './utils';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
-
-import { rollup } from 'rollup';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import { babel } from '@rollup/plugin-babel';
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
@@ -120,28 +120,67 @@ program
   .command('build')
   .description('Creates a distributable build of package')
   .action(async () => {
+    let buildFailed = false;
     try {
-      console.log('this is builds');
+      console.log('this is build');
 
       const bundle = await rollup({
-        input: './src/index.js',
+        input: 'src/index.js',
         plugins: [
           babel({ babelHelpers: 'bundled', presets: ['@babel/preset-react'] }),
           resolve(),
           commonjs(),
         ],
-        // external: ['react'],
+        external: ['react'],
       });
 
-      const output = await bundle.write({
-        file: 'dist/bundle.js',
+      await bundle.write({
+        file: 'dist/cjs/bundle.js',
         format: 'cjs',
       });
-
-      console.log('output', output);
+      await bundle.write({
+        file: 'dist/es/bundle.js',
+        format: 'es',
+      });
     } catch (error) {
       console.log('error', error);
-      process.exit(1);
+      buildFailed = true;
+    } finally {
+      process.exit(buildFailed ? 1 : 0);
+    }
+  });
+
+program
+  .command('watch')
+  .description('Creates a distributable build of package')
+  .action(async () => {
+    let buildFailed = false;
+    try {
+      console.log('this is build');
+
+      const bundle = await rollup({
+        input: 'src/index.js',
+        plugins: [
+          babel({ babelHelpers: 'bundled', presets: ['@babel/preset-react'] }),
+          resolve(),
+          commonjs(),
+        ],
+        external: ['react'],
+      });
+
+      await bundle.write({
+        file: 'dist/cjs/bundle.js',
+        format: 'cjs',
+      });
+      await bundle.write({
+        file: 'dist/es/bundle.js',
+        format: 'es',
+      });
+    } catch (error) {
+      console.log('error', error);
+      buildFailed = true;
+    } finally {
+      process.exit(buildFailed ? 1 : 0);
     }
   });
 
