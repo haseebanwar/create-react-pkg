@@ -16,6 +16,11 @@ import {
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
+import { rollup } from 'rollup';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import { babel } from '@rollup/plugin-babel';
+
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
@@ -105,6 +110,35 @@ program
       execSync(makeInstallCommand(packageCMD, dependencies)).toString();
 
       process.exit(0);
+    } catch (error) {
+      console.log('error', error);
+      process.exit(1);
+    }
+  });
+
+program
+  .command('build')
+  .description('Creates a distributable build of package')
+  .action(async () => {
+    try {
+      console.log('this is builds');
+
+      const bundle = await rollup({
+        input: './src/index.js',
+        plugins: [
+          babel({ babelHelpers: 'bundled', presets: ['@babel/preset-react'] }),
+          resolve(),
+          commonjs(),
+        ],
+        // external: ['react'],
+      });
+
+      const output = await bundle.write({
+        file: 'dist/bundle.js',
+        format: 'cjs',
+      });
+
+      console.log('output', output);
     } catch (error) {
       console.log('error', error);
       process.exit(1);

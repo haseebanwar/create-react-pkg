@@ -2,12 +2,17 @@
 export const basePackageJSON = {
   version: '0.1.0',
   description: '',
-  main: '',
+  main: '', // TODO: define cjs entry point
+  module: '', // TODO: define es entry point
   license: 'MIT',
   scripts: {
-    build: 'babel src -d lib',
+    build: 'create-js-package build',
+  },
+  peerDependencies: {
+    react: '^17.0.2',
+    'react-dom': '^17.0.2',
   },
   keywords: [],
 };
 
-export const dependencies = ['@babel/cli', '@babel/core', '@babel/preset-env'];
+export const dependencies = [];

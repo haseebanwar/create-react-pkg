@@ -1,7 +1,15 @@
-export function add(num1, num2) {
-  return num1 + num2;
-}
+import React, { useState } from 'react';
 
-export function subtract(num1, num2) {
-  return num1 - num2;
-}
+const HelloWorld = (props) => {
+  const [test] = useState('hello there');
+
+  return (
+    <div>
+      <h1> {test}</h1>
+      <p>My props are</p>
+      <pre>{JSON.stringify(props, null, 2)}</pre>
+    </div>
+  );
+};
+
+export default HelloWorld;
