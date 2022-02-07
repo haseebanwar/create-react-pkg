@@ -6,6 +6,7 @@ export const basePackageJSON = {
   description: '',
   main: 'dist/cjs/bundle.js', // TODO: define cjs entry point
   module: 'dist/es/bundle.js', // TODO: define es entry point
+  // files: [], // TODO: define files
   license: 'MIT',
   scripts: {
     build: `${packageJSON.name} build`,
