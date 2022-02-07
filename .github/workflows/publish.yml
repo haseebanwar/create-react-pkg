@@ -1,0 +1,31 @@
+name: Publish package to npm
+
+# trigger this workflow only when commits are pushed to master branch
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  # build is the job name (could be anything)
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # move repository files to workflow environment
+      - uses: actions/checkout@v2
+
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      # make build
+      - run: npm install
+      - run: npm run build
+
+      # publish to npm
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
