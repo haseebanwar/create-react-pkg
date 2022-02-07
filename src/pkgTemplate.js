@@ -1,3 +1,5 @@
+import packageJSON from '../package.json';
+
 // name and author fields will be dynamic
 export const basePackageJSON = {
   version: '0.1.0',
@@ -6,7 +8,7 @@ export const basePackageJSON = {
   module: 'dist/es/bundle.js', // TODO: define es entry point
   license: 'MIT',
   scripts: {
-    build: 'create-js-package build',
+    build: `${packageJSON.name} build`,
   },
   peerDependencies: {
     react: '^17.0.2',

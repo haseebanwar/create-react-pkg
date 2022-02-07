@@ -11,6 +11,7 @@ import { rollup } from 'rollup';
 import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import babelPresetReact from '@babel/preset-react';
 
 import {
   getAuthorName,
@@ -120,14 +121,16 @@ program
   .command('build')
   .description('Creates a distributable build of package')
   .action(async () => {
+    let bundle;
     let buildFailed = false;
+
     try {
       console.log('this is build');
 
-      const bundle = await rollup({
+      bundle = await rollup({
         input: 'src/index.js',
         plugins: [
-          babel({ babelHelpers: 'bundled', presets: ['@babel/preset-react'] }),
+          babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
           resolve(),
           commonjs(),
         ],
@@ -137,15 +140,20 @@ program
       await bundle.write({
         file: 'dist/cjs/bundle.js',
         format: 'cjs',
+        sourcemap: true,
       });
       await bundle.write({
         file: 'dist/es/bundle.js',
         format: 'es',
+        sourcemap: true,
       });
     } catch (error) {
       console.log('error', error);
       buildFailed = true;
     } finally {
+      if (bundle) {
+        await bundle.close();
+      }
       process.exit(buildFailed ? 1 : 0);
     }
   });
