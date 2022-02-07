@@ -1,4 +1,4 @@
-src/
+./src
 .babelrc
 .eslintrc.json
 .prettierrc
