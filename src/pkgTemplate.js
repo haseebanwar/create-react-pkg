@@ -15,13 +15,11 @@ export const basePackageJSON = {
     react: '^17.0.2',
     'react-dom': '^17.0.2',
   },
-  dependencies: {
-    [packageJSON.name]: 'latest',
-  },
   keywords: [],
   eslintConfig: {
     extends: ['react-app'],
   },
 };
 
-export const dependencies = [];
+export const dependencies = [packageJSON.name];
+export const devDependencies = ['react', 'react-dom'];

@@ -36,6 +36,6 @@ export function makeInstallCommand(cmd, dependencies) {
     case 'yarn':
       return `yarn add ${dependencies.join(' ')} --dev`;
     default:
-      throw new Error('Invalid command');
+      throw new Error('Invalid package manager');
   }
 }
