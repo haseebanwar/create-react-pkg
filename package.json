@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/create-react-package",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A CLI for creating JavaScript packages",
   "main": "index.js",
   "bin": {
