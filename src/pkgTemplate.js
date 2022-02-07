@@ -15,6 +15,9 @@ export const basePackageJSON = {
     'react-dom': '^17.0.2',
   },
   keywords: [],
+  eslintConfig: {
+    extends: ['react-app'],
+  },
 };
 
 export const dependencies = [];
