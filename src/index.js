@@ -20,7 +20,7 @@ import {
   getPackageCMD,
   makeInstallCommand,
 } from './utils';
-import { dependencies, devDependencies } from './pkgTemplate';
+import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
@@ -109,9 +109,7 @@ program
       // decide whether to use npm or yarn for installing deps
       const packageCMD = getPackageCMD(flags.useNpm);
 
-      execSync(
-        makeInstallCommand(packageCMD, [...dependencies, devDependencies])
-      ).toString();
+      execSync(makeInstallCommand(packageCMD, dependencies)).toString();
 
       process.exit(0);
     } catch (error) {

@@ -21,5 +21,4 @@ export const basePackageJSON = {
   },
 };
 
-export const dependencies = [packageJSON.name];
-export const devDependencies = ['react', 'react-dom'];
+export const dependencies = [packageJSON.name, 'react', 'react-dom'];
