@@ -30,7 +30,10 @@
     "eslint-config-react-app": "^7.0.0",
     "fs-extra": "^10.0.0",
     "ora": "^6.0.1",
+    "react-dev-utils": "^12.0.0",
     "rollup": "^2.67.0",
+    "strip-ansi": "^7.0.1",
+    "text-table": "^0.2.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {

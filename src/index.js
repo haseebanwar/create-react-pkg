@@ -7,12 +7,13 @@ import { program } from 'commander';
 import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 
-import { rollup } from 'rollup';
+import { rollup, watch } from 'rollup';
 import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import eslint from '@rollup/plugin-eslint';
 import babelPresetReact from '@babel/preset-react';
+import clearConsole from 'react-dev-utils/clearConsole';
 
 import {
   getAuthorName,
@@ -20,6 +21,7 @@ import {
   getPackageCMD,
   makeInstallCommand,
 } from './utils';
+import eslintFormatter from './formatter';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
@@ -164,34 +166,67 @@ program
   .command('watch')
   .description('Creates a distributable build of package')
   .action(async () => {
+    console.log('this is watch');
+
+    const watcher = watch({
+      input: './src/index.js',
+      output: [
+        {
+          file: 'dist/cjs/bundle.js',
+          format: 'cjs',
+          sourcemap: true,
+          // env: 'production'
+        },
+        {
+          file: 'dist/es/bundle.js',
+          format: 'es',
+          sourcemap: true,
+          // env: 'production'
+        },
+      ],
+      plugins: [
+        eslint({
+          throwOnError: true,
+          formatter: eslintFormatter,
+        }),
+        babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
+        resolve(),
+        commonjs(),
+      ],
+      external: ['react'],
+      watch: {
+        include: ['src/**'],
+        exclude: ['node_modules/**'],
+      },
+    });
+
     let buildFailed = false;
-    try {
-      console.log('this is build');
 
-      const bundle = await rollup({
-        input: 'src/index.js',
-        plugins: [
-          babel({ babelHelpers: 'bundled', presets: ['@babel/preset-react'] }),
-          resolve(),
-          commonjs(),
-        ],
-        external: ['react'],
-      });
+    watcher.on('event', (evt) => {
+      if (evt.result) {
+        evt.result.close();
+      }
 
-      await bundle.write({
-        file: 'dist/cjs/bundle.js',
-        format: 'cjs',
-      });
-      await bundle.write({
-        file: 'dist/es/bundle.js',
-        format: 'es',
-      });
-    } catch (error) {
-      console.log('error', error);
-      buildFailed = true;
-    } finally {
-      process.exit(buildFailed ? 1 : 0);
-    }
+      if (evt.code === 'START') {
+        buildFailed = false;
+        clearConsole();
+        console.log(chalk.yellow(`Compiling...`));
+      }
+
+      if (evt.code === 'ERROR') {
+        buildFailed = true;
+        clearConsole();
+        console.log(chalk.red(`Failed to compile`));
+        console.log('error', evt.error);
+      }
+
+      if (evt.code === 'END') {
+        if (!buildFailed) {
+          clearConsole();
+          console.log(chalk.green('Compiled successfully'));
+        }
+      }
+    });
   });
 
 program.parse(process.argv);

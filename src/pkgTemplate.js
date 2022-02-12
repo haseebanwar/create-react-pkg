@@ -1,5 +1,3 @@
-import packageJSON from '../package.json';
-
 // name and author fields will be dynamic
 export const basePackageJSON = {
   version: '0.1.0',
@@ -9,7 +7,8 @@ export const basePackageJSON = {
   // files: [], // TODO: define files
   license: 'MIT',
   scripts: {
-    build: `${packageJSON.name} build`,
+    start: `create-react-package watch`,
+    build: `create-react-package build`,
   },
   peerDependencies: {
     react: '^17.0.2',
@@ -21,4 +20,5 @@ export const basePackageJSON = {
   },
 };
 
-export const dependencies = [packageJSON.name, 'react', 'react-dom'];
+export const dependencies = [];
+// export const dependencies = [packageJSON.name, 'react', 'react-dom'];
