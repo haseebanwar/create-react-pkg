@@ -1,3 +1,5 @@
+// Deprecated
+
 import path from 'path';
 import chalk from 'chalk';
 import table from 'text-table';
@@ -19,7 +21,49 @@ function getRelativePath(filePath) {
   return path.relative(cwd, filePath);
 }
 
+export function myFormatter(results) {
+  let output = '\n';
+  let hasErrors = false;
+
+  output = results.reduce((appendedOutput, result) => {
+    if (result.errorCount) {
+      hasErrors = true;
+    }
+
+    const { messages } = result;
+    appendedOutput += messages.reduce((appendedMessages, message) => {
+      // serverity 1 is warning, 2 is error
+      // if (message.severity === 2 ) {
+      // }
+      appendedMessages += `${path.relative(process.cwd(), result.filePath)}\n`;
+      appendedMessages += `${chalk.bold(
+        `  Line ${message.line}:${message.column}:`
+      )} ${message.message}\n`;
+
+      if (message.ruleId) {
+        appendedMessages += `  ${chalk.yellow(message.ruleId)}\n`;
+      }
+
+      return appendedMessages;
+    }, '');
+
+    return appendedOutput;
+  }, output);
+
+  return output;
+}
+
 function formatter(results) {
+  // results.forEach((result) => {
+  //   console.log('result', { ...result, messages: undefined });
+
+  //   const { messages } = result;
+
+  //   messages.forEach((message) => {
+  //     console.log('message', message);
+  //   });
+  // });
+
   let output = '\n';
   let hasErrors = false;
   let reportContainsErrorRuleIDs = false;
@@ -95,6 +139,12 @@ function formatter(results) {
       chalk.underline(chalk.red('keywords')) +
       ' to learn more about each error.';
   }
+
+  // if (hasErrors) {
+  //   const error = new Error('Custom error');
+  //   error.customMessages = output;
+  //   throw error;
+  // }
 
   return output;
 }

@@ -11,22 +11,49 @@ import { rollup, watch } from 'rollup';
 import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
-import eslint from '@rollup/plugin-eslint';
 import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
+import eslintFormatter from 'react-dev-utils/eslintFormatter';
 
+import eslint from './plugins/rollup-eslint';
 import {
   getAuthorName,
   composePackageJSON,
   getPackageCMD,
   makeInstallCommand,
 } from './utils';
-import eslintFormatter from './formatter';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
+
+const buildDirectory = 'dist';
+const rollupConfig = {
+  input: 'src/index.js',
+  plugins: [
+    eslint({
+      formatter: eslintFormatter,
+    }),
+    babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
+    resolve(),
+    commonjs(),
+  ],
+  external: ['react'],
+};
+const rollupOutputs = [
+  {
+    file: `${buildDirectory}/cjs/bundle.js`,
+    format: 'cjs',
+    sourcemap: true,
+    // env: 'production'
+  },
+  {
+    file: `${buildDirectory}/es/bundle.js`,
+    format: 'es',
+    sourcemap: true,
+  },
+];
 
 program
   .argument('<package-directory>', 'package directory')
@@ -128,32 +155,44 @@ program
     let buildFailed = false;
 
     try {
-      console.log('this is build');
+      clearConsole();
+      console.log(chalk.cyan('Creating an optimized build...'));
+
+      fs.emptyDirSync(buildDirectory);
 
       bundle = await rollup({
-        input: 'src/index.js',
-        plugins: [
-          eslint({}),
-          babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
-          resolve(),
-          commonjs(),
-        ],
-        external: ['react'],
+        ...rollupConfig,
+        onwarn: (warning, warn) => {
+          const { code, plugin } = warning;
+
+          if (code === 'PLUGIN_WARNING' && plugin === 'eslint') {
+            const { firstWarning: firstWarningOfCurrentBuild, lintWarnings } =
+              warning;
+
+            if (firstWarningOfCurrentBuild) {
+              console.log(chalk.yellow('Compiled with warnings.'));
+            }
+            console.log(lintWarnings || warning);
+            return;
+          }
+
+          // Use default for everything else
+          warn(warning);
+        },
       });
 
-      await bundle.write({
-        file: 'dist/cjs/bundle.js',
-        format: 'cjs',
-        sourcemap: true,
-      });
-      await bundle.write({
-        file: 'dist/es/bundle.js',
-        format: 'es',
-        sourcemap: true,
-      });
+      for (const output of rollupOutputs) {
+        await bundle.write(output);
+      }
+
+      console.log(chalk.green('Build succeeded!'));
     } catch (error) {
-      console.log('error', error);
       buildFailed = true;
+
+      clearConsole();
+      console.log(chalk.red('Failed to compile.'));
+
+      console.log(error.lintErrors || error);
     } finally {
       if (bundle) {
         await bundle.close();
@@ -166,41 +205,38 @@ program
   .command('watch')
   .description('Creates a distributable build of package')
   .action(async () => {
-    console.log('this is watch');
+    let hasErrors = false;
+    let hasWarnings = false;
 
     const watcher = watch({
-      input: './src/index.js',
-      output: [
-        {
-          file: 'dist/cjs/bundle.js',
-          format: 'cjs',
-          sourcemap: true,
-          // env: 'production'
-        },
-        {
-          file: 'dist/es/bundle.js',
-          format: 'es',
-          sourcemap: true,
-          // env: 'production'
-        },
-      ],
-      plugins: [
-        eslint({
-          throwOnError: true,
-          formatter: eslintFormatter,
-        }),
-        babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
-        resolve(),
-        commonjs(),
-      ],
-      external: ['react'],
+      ...rollupConfig,
+      output: rollupOutputs,
       watch: {
+        silent: true,
         include: ['src/**'],
         exclude: ['node_modules/**'],
       },
-    });
+      onwarn: (warning, warn) => {
+        const { code, plugin } = warning;
 
-    let buildFailed = false;
+        if (code === 'PLUGIN_WARNING' && plugin === 'eslint') {
+          hasWarnings = true;
+
+          const { firstWarning: firstWarningOfCurrentBuild, lintWarnings } =
+            warning;
+
+          if (firstWarningOfCurrentBuild) {
+            clearConsole();
+            console.log(chalk.yellow('Compiled with warnings.'));
+          }
+          console.log(lintWarnings || warning);
+          return;
+        }
+
+        // Use default for everything else
+        warn(warning);
+      },
+    });
 
     watcher.on('event', (evt) => {
       if (evt.result) {
@@ -208,23 +244,29 @@ program
       }
 
       if (evt.code === 'START') {
-        buildFailed = false;
         clearConsole();
         console.log(chalk.yellow(`Compiling...`));
+        fs.emptyDirSync(buildDirectory);
       }
 
       if (evt.code === 'ERROR') {
-        buildFailed = true;
+        hasErrors = true;
+
         clearConsole();
-        console.log(chalk.red(`Failed to compile`));
-        console.log('error', evt.error);
+        console.log(chalk.red(`Failed to compile.`));
+        const { lintErrors } = evt.error;
+        console.log(lintErrors || evt.error);
       }
 
       if (evt.code === 'END') {
-        if (!buildFailed) {
+        if (!hasErrors && !hasWarnings) {
           clearConsole();
-          console.log(chalk.green('Compiled successfully'));
+          console.log(chalk.green('Compiled successfully!'));
         }
+
+        // reset for the next round of build
+        hasErrors = false;
+        hasWarnings = false;
       }
     });
   });
