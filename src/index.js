@@ -35,9 +35,10 @@ const rollupConfig = {
     eslint({
       formatter: eslintFormatter,
     }),
-    babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
     resolve(),
-    commonjs(),
+    commonjs({ include: /node_modules/ }),
+    // json(),
+    babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
   ],
   external: ['react'],
 };
@@ -46,7 +47,11 @@ const rollupOutputs = [
     file: `${buildDirectory}/cjs/bundle.js`,
     format: 'cjs',
     sourcemap: true,
-    // env: 'production'
+    // env: 'production',
+    // exports: 'named',
+    // Do not let Rollup call Object.freeze() on namespace import objects
+    // (i.e. import * as namespaceImportObject from...) that are accessed dynamically.
+    // freeze: false
   },
   {
     file: `${buildDirectory}/es/bundle.js`,
