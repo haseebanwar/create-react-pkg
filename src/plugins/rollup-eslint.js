@@ -22,9 +22,6 @@ function eslint(options = {}) {
     exclude = [/node_modules/, /\.json|\.s?css$/],
   } = options;
 
-  // flag for showing 'Compiled with warnings' text once before warnings
-  let firstWarning = true;
-
   const eslint = new ESLint();
   const filter = createFilter(include, exclude);
 
@@ -38,10 +35,7 @@ function eslint(options = {}) {
         this.warn({
           message: 'Lint warnings',
           lintWarnings: meta.eslint.resultText,
-          firstWarning,
         });
-
-        firstWarning = false;
       }
     },
     transform: async function transform(code, id) {
@@ -87,21 +81,13 @@ function eslint(options = {}) {
         this.warn({
           message: 'Lint warnings',
           lintWarnings: resultText,
-          firstWarning,
         });
-
-        // first warning for this build already emitted above or in cache hook
-        firstWarning = false;
       }
 
       // store lint errors/warnings in the meta field for this module
       // so in the shouldTransformCachedModule hook we don't have to lint cached modules again
       // instead show cached errors/warnings for that module
       return { meta: { eslint: { resultText, warningCount, errorCount } } };
-    },
-    buildEnd() {
-      // reset for the next round of build
-      firstWarning = true;
     },
   };
 }
