@@ -19,7 +19,7 @@ function eslint(options = {}) {
     throwOnWarning = false,
     formatter = defaultFormatter,
     include = [],
-    exclude = /node_modules/,
+    exclude = [/node_modules/, /\.json|\.s?css$/],
   } = options;
 
   // flag for showing 'Compiled with warnings' text once before warnings
@@ -31,7 +31,7 @@ function eslint(options = {}) {
   return {
     name: 'eslint',
     shouldTransformCachedModule({ id, meta }) {
-      // if current module is a node_module then skip
+      // if current module is a node_module or .json/.css then skip
       if (!filter(id)) return;
 
       if (meta.eslint && (meta.eslint.warningCount || meta.eslint.errorCount)) {
@@ -45,7 +45,7 @@ function eslint(options = {}) {
       }
     },
     transform: async function transform(code, id) {
-      // if current module is a node_module then skip
+      // if current module is a node_module or .json/.css then skip
       if (!filter(id)) return;
 
       const results = await eslint.lintText(code, {
