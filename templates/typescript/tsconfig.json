@@ -1,6 +1,7 @@
 {
   // see https://www.typescriptlang.org/tsconfig to better understand tsconfigs
   "include": ["src", "types"],
+  "exclude": ["dist"], // custom
   "compilerOptions": {
     "module": "esnext",
     "lib": ["dom", "esnext"],
@@ -9,7 +10,7 @@
     // "declaration": true,
     "outDir": "dist",
     "declaration": true,
-    // "declarationDir": ".",
+    "declarationDir": ".", // custom
 
     // output .js.map sourcemap files for consumers
     "sourceMap": true,
@@ -34,6 +35,7 @@
     // error out if import and file system have a casing mismatch. Recommended by TS
     "forceConsistentCasingInFileNames": true,
     // `tsdx build` ignores this option, but it is commonly used when type-checking separately with `tsc`
-    "noEmit": true
+    "noEmit": true,
+    "resolveJsonModule": true // custom
   }
 }

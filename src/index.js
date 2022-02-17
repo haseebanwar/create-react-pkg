@@ -8,9 +8,12 @@ import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 
 import { rollup, watch } from 'rollup';
-import { babel } from '@rollup/plugin-babel';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import json from '@rollup/plugin-json';
+import { babel } from '@rollup/plugin-babel';
+// import typescript from '@rollup/plugin-typescript';
+import typescript from 'rollup-plugin-typescript2';
 import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
@@ -21,6 +24,8 @@ import {
   composePackageJSON,
   getPackageCMD,
   makeInstallCommand,
+  logBuildError,
+  logBuildWarnings,
 } from './utils';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
@@ -30,15 +35,18 @@ program.version(packageJSON.version);
 
 const buildDirectory = 'dist';
 const rollupConfig = {
-  input: 'src/index.js',
+  input: 'src/index.tsx',
   plugins: [
     eslint({
       formatter: eslintFormatter,
     }),
     resolve(),
     commonjs({ include: /node_modules/ }),
-    // json(),
-    babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
+    json(),
+    typescript({
+      tsconfig: './tsconfig.json',
+    }),
+    // babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
   ],
   external: ['react'],
 };
@@ -67,7 +75,14 @@ program
   .option('-t, --template <test>', 'specify a template for created package')
   .action(async (projectDirectory, flags) => {
     try {
-      const template = 'basic';
+      const { useNpm, template = 'basic' } = flags;
+
+      // TODO define at one place
+      if (!['basic', 'typescript'].includes(template)) {
+        console.log('Invalid template');
+        // print valid templates
+        process.exit(1);
+      }
 
       const projectPath = path.resolve(projectDirectory);
       const packageName = path.basename(projectPath);
@@ -141,7 +156,7 @@ program
       fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg);
 
       // decide whether to use npm or yarn for installing deps
-      const packageCMD = getPackageCMD(flags.useNpm);
+      const packageCMD = getPackageCMD(useNpm);
 
       execSync(makeInstallCommand(packageCMD, dependencies)).toString();
 
@@ -158,6 +173,7 @@ program
   .action(async () => {
     let bundle;
     let buildFailed = false;
+    let hasWarnings = false;
 
     try {
       clearConsole();
@@ -168,21 +184,12 @@ program
       bundle = await rollup({
         ...rollupConfig,
         onwarn: (warning, warn) => {
-          const { code, plugin } = warning;
-
-          if (code === 'PLUGIN_WARNING' && plugin === 'eslint') {
-            const { firstWarning: firstWarningOfCurrentBuild, lintWarnings } =
-              warning;
-
-            if (firstWarningOfCurrentBuild) {
-              console.log(chalk.yellow('Compiled with warnings.'));
-            }
-            console.log(lintWarnings || warning);
-            return;
+          // print this message only when there were no previous warnings for this build
+          if (!hasWarnings) {
+            console.log(chalk.yellow('Compiled with warnings.'));
           }
-
-          // Use default for everything else
-          warn(warning);
+          hasWarnings = true;
+          logBuildWarnings(warning, warn);
         },
       });
 
@@ -193,11 +200,9 @@ program
       console.log(chalk.green('Build succeeded!'));
     } catch (error) {
       buildFailed = true;
-
       clearConsole();
       console.log(chalk.red('Failed to compile.'));
-
-      console.log(error.lintErrors || error);
+      logBuildError(error);
     } finally {
       if (bundle) {
         await bundle.close();
@@ -222,24 +227,13 @@ program
         exclude: ['node_modules/**'],
       },
       onwarn: (warning, warn) => {
-        const { code, plugin } = warning;
-
-        if (code === 'PLUGIN_WARNING' && plugin === 'eslint') {
-          hasWarnings = true;
-
-          const { firstWarning: firstWarningOfCurrentBuild, lintWarnings } =
-            warning;
-
-          if (firstWarningOfCurrentBuild) {
-            clearConsole();
-            console.log(chalk.yellow('Compiled with warnings.'));
-          }
-          console.log(lintWarnings || warning);
-          return;
+        // clear console only if there were no previous warnings for this round of build
+        if (!hasWarnings) {
+          clearConsole();
+          console.log(chalk.yellow('Compiled with warnings.'));
         }
-
-        // Use default for everything else
-        warn(warning);
+        hasWarnings = true;
+        logBuildWarnings(warning, warn);
       },
     });
 
@@ -256,11 +250,9 @@ program
 
       if (evt.code === 'ERROR') {
         hasErrors = true;
-
         clearConsole();
         console.log(chalk.red(`Failed to compile.`));
-        const { lintErrors } = evt.error;
-        console.log(lintErrors || evt.error);
+        logBuildError(evt.error);
       }
 
       if (evt.code === 'END') {

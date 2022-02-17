@@ -1,4 +1,6 @@
+import path from 'path';
 import { execSync } from 'child_process';
+import chalk from 'chalk';
 import { basePackageJSON } from './pkgTemplate';
 
 export function getAuthorName() {
@@ -37,5 +39,51 @@ export function makeInstallCommand(cmd, dependencies) {
       return `yarn add ${dependencies.join(' ')} --dev`;
     default:
       throw new Error('Invalid package manager');
+  }
+}
+
+export function logBuildError(error) {
+  switch (error.plugin) {
+    case 'eslint':
+      console.error(error.lintErrors);
+      return;
+    default:
+      console.error(
+        chalk.red(
+          `${error.plugin === 'rpt2' ? 'typescript' : error.plugin || ''} ${
+            error.message
+          }`
+        )
+      );
+
+      if (error.frame) {
+        console.log(error.frame);
+      } else if (error.stack) {
+        console.log(error.stack.replace(error.message, ''));
+      }
+      return;
+  }
+}
+
+export function logBuildWarnings(warning, warn) {
+  switch (warning.plugin) {
+    case 'eslint': {
+      const { lintWarnings } = warning;
+      console.log(lintWarnings || warning);
+      return;
+    }
+    case 'typescript':
+    case 'rpt2': {
+      const { loc, message } = warning;
+      console.log(`\n${path.relative(process.cwd(), loc.file)}:`);
+      console.log(
+        ` ${chalk.bold(`Line ${loc.line}:${loc.column}:`)} ${message}`
+      );
+      return;
+    }
+    default:
+      // Use default for everything else
+      warn(warning);
+      return;
   }
 }
