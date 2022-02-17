@@ -12,7 +12,6 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import { babel } from '@rollup/plugin-babel';
-// import typescript from '@rollup/plugin-typescript';
 import typescript from 'rollup-plugin-typescript2';
 import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
@@ -27,32 +26,38 @@ import {
   logBuildError,
   logBuildWarnings,
 } from './utils';
+import { paths } from './paths';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
-const buildDirectory = 'dist';
-const rollupConfig = {
-  input: 'src/index.tsx',
-  plugins: [
-    eslint({
-      formatter: eslintFormatter,
-    }),
-    resolve(),
-    commonjs({ include: /node_modules/ }),
-    json(),
-    typescript({
-      tsconfig: './tsconfig.json',
-    }),
-    // babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
-  ],
-  external: ['react'],
-};
+function createRollupConfig() {
+  const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
+
+  return {
+    input: `src/index.${isTypescriptConfigured ? 'tsx' : 'js'}`,
+    plugins: [
+      eslint({
+        formatter: eslintFormatter,
+      }),
+      resolve(),
+      commonjs({ include: /node_modules/ }),
+      json(),
+      isTypescriptConfigured &&
+        typescript({
+          tsconfig: './tsconfig.json',
+        }),
+      !isTypescriptConfigured &&
+        babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
+    ].filter(Boolean),
+    external: ['react'],
+  };
+}
 const rollupOutputs = [
   {
-    file: `${buildDirectory}/cjs/bundle.js`,
+    file: `${paths.appDist}/cjs/bundle.js`,
     format: 'cjs',
     sourcemap: true,
     // env: 'production',
@@ -62,7 +67,7 @@ const rollupOutputs = [
     // freeze: false
   },
   {
-    file: `${buildDirectory}/es/bundle.js`,
+    file: `${paths.appDist}/es/bundle.js`,
     format: 'es',
     sourcemap: true,
   },
@@ -179,7 +184,9 @@ program
       clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
 
-      fs.emptyDirSync(buildDirectory);
+      fs.emptyDirSync(paths.appDist);
+
+      const rollupConfig = createRollupConfig();
 
       bundle = await rollup({
         ...rollupConfig,
@@ -218,6 +225,8 @@ program
     let hasErrors = false;
     let hasWarnings = false;
 
+    const rollupConfig = createRollupConfig();
+
     const watcher = watch({
       ...rollupConfig,
       output: rollupOutputs,
@@ -245,7 +254,7 @@ program
       if (evt.code === 'START') {
         clearConsole();
         console.log(chalk.yellow(`Compiling...`));
-        fs.emptyDirSync(buildDirectory);
+        fs.emptyDirSync(paths.appDist);
       }
 
       if (evt.code === 'ERROR') {

@@ -42,6 +42,10 @@ export function makeInstallCommand(cmd, dependencies) {
   }
 }
 
+export const resolvePath = function (relativePath) {
+  return path.resolve(process.cwd(), relativePath);
+};
+
 export function logBuildError(error) {
   switch (error.plugin) {
     case 'eslint':
