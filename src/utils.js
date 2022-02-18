@@ -16,7 +16,15 @@ export function getAuthorName() {
 }
 
 export function composePackageJSON(packageName, authorName) {
-  return { ...basePackageJSON, name: packageName, author: authorName };
+  const safeName = safePackageName(packageName);
+  return {
+    name: packageName,
+    author: authorName,
+    main: `dist/cjs/${safeName}.js`, // CJS entry
+    module: `dist/es/${safeName}.js`, // ES entry
+    // spreading after so name fields appear above base fields in created package
+    ...basePackageJSON,
+  };
 }
 
 export function getPackageCMD(useNpm) {
@@ -90,4 +98,11 @@ export function logBuildWarnings(warning, warn) {
       warn(warning);
       return;
   }
+}
+
+// taken from TSDX
+export function safePackageName(packageName) {
+  return packageName
+    .toLowerCase()
+    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '');
 }

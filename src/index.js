@@ -25,6 +25,7 @@ import {
   makeInstallCommand,
   logBuildError,
   logBuildWarnings,
+  safePackageName,
 } from './utils';
 import { paths } from './paths';
 import { dependencies } from './pkgTemplate';
@@ -50,28 +51,37 @@ function createRollupConfig() {
           tsconfig: './tsconfig.json',
         }),
       !isTypescriptConfigured &&
-        babel({ babelHelpers: 'bundled', presets: [babelPresetReact] }),
+        babel({
+          babelHelpers: 'bundled',
+          presets: [babelPresetReact],
+          // inputSourceMap: rollup-plugin-sourcemaps
+        }),
+      // rollup plugin replace
+      // rollup plugin terser
     ].filter(Boolean),
     external: ['react'],
   };
 }
-const rollupOutputs = [
-  {
-    file: `${paths.appDist}/cjs/bundle.js`,
-    format: 'cjs',
-    sourcemap: true,
-    // env: 'production',
-    // exports: 'named',
-    // Do not let Rollup call Object.freeze() on namespace import objects
-    // (i.e. import * as namespaceImportObject from...) that are accessed dynamically.
-    // freeze: false
-  },
-  {
-    file: `${paths.appDist}/es/bundle.js`,
-    format: 'es',
-    sourcemap: true,
-  },
-];
+function createRollupOutputs(packageName) {
+  const safeName = safePackageName(packageName);
+  return [
+    {
+      file: `${paths.appDist}/cjs/${safeName}.js`,
+      format: 'cjs',
+      sourcemap: true,
+      // env: 'production',
+      // exports: 'named',
+      // Do not let Rollup call Object.freeze() on namespace import objects
+      // (i.e. import * as namespaceImportObject from...) that are accessed dynamically.
+      // freeze: false
+    },
+    {
+      file: `${paths.appDist}/es/${safeName}.js`,
+      format: 'es',
+      sourcemap: true,
+    },
+  ];
+}
 
 program
   .argument('<package-directory>', 'package directory')
@@ -158,7 +168,9 @@ program
 
       // generate package.json
       const pkg = composePackageJSON(packageName, author);
-      fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg);
+      fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg, {
+        spaces: 2,
+      });
 
       // decide whether to use npm or yarn for installing deps
       const packageCMD = getPackageCMD(useNpm);
@@ -186,7 +198,10 @@ program
 
       fs.emptyDirSync(paths.appDist);
 
+      const appPackage = fs.readJSONSync(paths.appPackageJson);
+
       const rollupConfig = createRollupConfig();
+      const rollupOutputs = createRollupOutputs(appPackage.name);
 
       bundle = await rollup({
         ...rollupConfig,
@@ -225,7 +240,10 @@ program
     let hasErrors = false;
     let hasWarnings = false;
 
+    const appPackage = fs.readJSONSync(paths.appPackageJson);
+
     const rollupConfig = createRollupConfig();
+    const rollupOutputs = createRollupOutputs(appPackage.name);
 
     const watcher = watch({
       ...rollupConfig,
