@@ -1,17 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
-export const TestC = () => {
-  const [test, setTest] = useState('');
-
-  useEffect(() => {
-    console.log('first', test);
-  }, []);
-
+// Delete me
+export const Thingss = ({ foo }) => {
+  const doSomething = async () => {
+    const t = await import('./test');
+    console.log('t', t);
+  };
   return (
-    <div onClick={setTest}>
-      <h1> {test}</h1>
-      <p>My props are</p>
-      <pre>{JSON.stringify(props, null, 2)}</pre>
+    <div className="Test" onClick={doSomething}>
+      the snozzberries taste like stawberries....{foo}
     </div>
   );
 };

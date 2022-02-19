@@ -13,9 +13,11 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
+import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
+import camelCase from 'camelcase';
 
 import eslint from './plugins/rollup-eslint';
 import {
@@ -28,13 +30,14 @@ import {
   safePackageName,
 } from './utils';
 import { paths } from './paths';
+import { templates, buildModules } from './constants';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
-function createRollupConfig() {
+function createRollupConfig(shouldMinify) {
   const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
   return {
@@ -57,30 +60,51 @@ function createRollupConfig() {
           // inputSourceMap: rollup-plugin-sourcemaps
         }),
       // rollup plugin replace
-      // rollup plugin terser
+      shouldMinify && terser(),
     ].filter(Boolean),
     external: ['react'],
   };
 }
-function createRollupOutputs(packageName) {
+
+function createRollupOutputs(packageName, minifed) {
   const safeName = safePackageName(packageName);
-  return [
-    {
-      file: `${paths.appDist}/cjs/${safeName}.js`,
-      format: 'cjs',
-      sourcemap: true,
-      // env: 'production',
-      // exports: 'named',
-      // Do not let Rollup call Object.freeze() on namespace import objects
-      // (i.e. import * as namespaceImportObject from...) that are accessed dynamically.
-      // freeze: false
-    },
-    {
-      file: `${paths.appDist}/es/${safeName}.js`,
-      format: 'es',
-      sourcemap: true,
-    },
-  ];
+
+  return buildModules
+    .map((buildModule) => {
+      const baseOutput = {
+        dir: `${paths.appDist}/${buildModule}`,
+        entryFileNames: `${safeName}${minifed ? '.min' : ''}.js`,
+        format: buildModule,
+        sourcemap: true,
+        freeze: false, // do not call Object.freeze on imported objects with import * syntax
+        // exports: 'named',
+      };
+
+      switch (buildModule) {
+        case 'cjs':
+        case 'esm':
+        case 'es': {
+          return [{ ...baseOutput }];
+        }
+      }
+
+      if (buildModule === 'umd') {
+        return {
+          ...baseOutput,
+          name: camelCase(safeName),
+          // inline dynamic imports for umd modules
+          // because rollup doesn't support code-splitting for IIFE/UMD
+          inlineDynamicImports: true,
+          // tell rollup that external module like 'react' should be named this in IIFE/UMD
+          // for example 'react' will be bound to the window object (in browser) like
+          // window.React = // react
+          globals: { react: 'React' },
+        };
+      }
+
+      return baseOutput;
+    })
+    .flat();
 }
 
 program
@@ -92,10 +116,17 @@ program
     try {
       const { useNpm, template = 'basic' } = flags;
 
-      // TODO define at one place
-      if (!['basic', 'typescript'].includes(template)) {
-        console.log('Invalid template');
+      // check if template is valid
+      if (!templates.includes(template)) {
+        console.error(
+          'Invalid template, please use one of the following supported templates'
+        );
+
         // print valid templates
+        templates.forEach((supportedTemplate) => {
+          console.log(`- ${chalk.cyan(supportedTemplate)}`);
+        });
+
         process.exit(1);
       }
 
@@ -199,9 +230,26 @@ program
       fs.emptyDirSync(paths.appDist);
 
       const appPackage = fs.readJSONSync(paths.appPackageJson);
+      const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-      const rollupConfig = createRollupConfig();
-      const rollupOutputs = createRollupOutputs(appPackage.name);
+      for (const buildModule of buildModules) {
+        const rollupConfig = createRollupConfig(buildModule !== 'esm');
+        const rollupOutputs = createRollupOutputs(appPackage.name);
+
+        bundle = await rollup({
+          ...rollupConfig,
+          onwarn: (warning, warn) => {
+            // print this message only when there were no previous warnings for this build
+            if (!hasWarnings) {
+              console.log(chalk.yellow('Compiled with warnings.'));
+            }
+            hasWarnings = true;
+            logBuildWarnings(warning, warn);
+          },
+        });
+
+        bundle.write();
+      }
 
       bundle = await rollup({
         ...rollupConfig,

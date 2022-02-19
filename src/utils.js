@@ -21,7 +21,7 @@ export function composePackageJSON(packageName, authorName) {
     name: packageName,
     author: authorName,
     main: `dist/cjs/${safeName}.js`, // CJS entry
-    module: `dist/es/${safeName}.js`, // ES entry
+    module: `dist/esm/${safeName}.js`, // ES entry
     // spreading after so name fields appear above base fields in created package
     ...basePackageJSON,
   };
