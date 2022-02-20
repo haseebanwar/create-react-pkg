@@ -15,7 +15,7 @@ import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
-import clearConsole from 'react-dev-utils/clearConsole';
+// import clearConsole from 'react-dev-utils/clearConsole';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 
@@ -37,11 +37,9 @@ import packageJSON from '../package.json';
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
-function createRollupConfig(shouldMinify) {
-  const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
-
+function createRollupInputOptions(useTypescript) {
   return {
-    input: `src/index.${isTypescriptConfigured ? 'tsx' : 'js'}`,
+    input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     plugins: [
       eslint({
         formatter: eslintFormatter,
@@ -49,62 +47,21 @@ function createRollupConfig(shouldMinify) {
       resolve(),
       commonjs({ include: /node_modules/ }),
       json(),
-      isTypescriptConfigured &&
+      useTypescript &&
         typescript({
           tsconfig: './tsconfig.json',
         }),
-      !isTypescriptConfigured &&
+      !useTypescript &&
         babel({
           babelHelpers: 'bundled',
           presets: [babelPresetReact],
           // inputSourceMap: rollup-plugin-sourcemaps
         }),
       // rollup plugin replace
-      shouldMinify && terser(),
+      // terser(),
     ].filter(Boolean),
     external: ['react'],
   };
-}
-
-function createRollupOutputs(packageName, minifed) {
-  const safeName = safePackageName(packageName);
-
-  return buildModules
-    .map((buildModule) => {
-      const baseOutput = {
-        dir: `${paths.appDist}/${buildModule}`,
-        entryFileNames: `${safeName}${minifed ? '.min' : ''}.js`,
-        format: buildModule,
-        sourcemap: true,
-        freeze: false, // do not call Object.freeze on imported objects with import * syntax
-        // exports: 'named',
-      };
-
-      switch (buildModule) {
-        case 'cjs':
-        case 'esm':
-        case 'es': {
-          return [{ ...baseOutput }];
-        }
-      }
-
-      if (buildModule === 'umd') {
-        return {
-          ...baseOutput,
-          name: camelCase(safeName),
-          // inline dynamic imports for umd modules
-          // because rollup doesn't support code-splitting for IIFE/UMD
-          inlineDynamicImports: true,
-          // tell rollup that external module like 'react' should be named this in IIFE/UMD
-          // for example 'react' will be bound to the window object (in browser) like
-          // window.React = // react
-          globals: { react: 'React' },
-        };
-      }
-
-      return baseOutput;
-    })
-    .flat();
 }
 
 program
@@ -215,6 +172,66 @@ program
     }
   });
 
+function createRollupOutputs(packageName) {
+  const safeName = safePackageName(packageName);
+
+  return buildModules
+    .map((buildModule) => {
+      const baseOutput = {
+        dir: `${paths.appDist}/${buildModule}`,
+        format: buildModule,
+        // sourcemap: true,
+        // freeze: false, // do not call Object.freeze on imported objects with import * syntax
+        // exports: 'named',
+      };
+
+      switch (buildModule) {
+        case 'esm':
+          return {
+            ...baseOutput,
+            entryFileNames: `${safeName}.js`,
+          };
+        case 'cjs':
+          return [
+            // {
+            //   ...baseOutput,
+            //   entryFileNames: `${safeName}.js`,
+            // },
+            {
+              ...baseOutput,
+              entryFileNames: `${safeName}.min.js`,
+              plugins: [terser()],
+            },
+          ];
+        case 'umd': {
+          const b = {
+            ...baseOutput,
+            name: camelCase(safeName),
+            // inline dynamic imports for umd modules
+            // because rollup doesn't support code-splitting for IIFE/UMD
+            inlineDynamicImports: true,
+            // tell rollup that external module like 'react' should be named this in IIFE/UMD
+            // for example 'react' will be bound to the window object (in browser) like
+            // window.React = // react
+            globals: { react: 'React' },
+          };
+          return [
+            {
+              ...b,
+              entryFileNames: `${safeName}.js`,
+            },
+            {
+              ...b,
+              entryFileNames: `${safeName}.min.js`,
+              plugins: [terser()],
+            },
+          ];
+        }
+      }
+    })
+    .flat();
+}
+
 program
   .command('build')
   .description('Creates a distributable build of package')
@@ -224,7 +241,7 @@ program
     let hasWarnings = false;
 
     try {
-      clearConsole();
+      // clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
 
       fs.emptyDirSync(paths.appDist);
@@ -232,27 +249,9 @@ program
       const appPackage = fs.readJSONSync(paths.appPackageJson);
       const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-      for (const buildModule of buildModules) {
-        const rollupConfig = createRollupConfig(buildModule !== 'esm');
-        const rollupOutputs = createRollupOutputs(appPackage.name);
-
-        bundle = await rollup({
-          ...rollupConfig,
-          onwarn: (warning, warn) => {
-            // print this message only when there were no previous warnings for this build
-            if (!hasWarnings) {
-              console.log(chalk.yellow('Compiled with warnings.'));
-            }
-            hasWarnings = true;
-            logBuildWarnings(warning, warn);
-          },
-        });
-
-        bundle.write();
-      }
-
+      const rollupInputs = createRollupInputOptions(isTypescriptConfigured);
       bundle = await rollup({
-        ...rollupConfig,
+        ...rollupInputs,
         onwarn: (warning, warn) => {
           // print this message only when there were no previous warnings for this build
           if (!hasWarnings) {
@@ -263,14 +262,16 @@ program
         },
       });
 
-      for (const output of rollupOutputs) {
+      const outputOptions = createRollupOutputs(appPackage.name);
+
+      for (const output of outputOptions) {
         await bundle.write(output);
       }
 
       console.log(chalk.green('Build succeeded!'));
     } catch (error) {
       buildFailed = true;
-      clearConsole();
+      // clearConsole();
       console.log(chalk.red('Failed to compile.'));
       logBuildError(error);
     } finally {
@@ -289,12 +290,14 @@ program
     let hasWarnings = false;
 
     const appPackage = fs.readJSONSync(paths.appPackageJson);
+    const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-    const rollupConfig = createRollupConfig();
+    const rollupInputs = createRollupInputOptions(isTypescriptConfigured);
     const rollupOutputs = createRollupOutputs(appPackage.name);
+    console.log('rollupOutputs', rollupOutputs);
 
     const watcher = watch({
-      ...rollupConfig,
+      ...rollupInputs,
       output: rollupOutputs,
       watch: {
         silent: true,
@@ -304,7 +307,7 @@ program
       onwarn: (warning, warn) => {
         // clear console only if there were no previous warnings for this round of build
         if (!hasWarnings) {
-          clearConsole();
+          // clearConsole();
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
@@ -318,21 +321,21 @@ program
       }
 
       if (evt.code === 'START') {
-        clearConsole();
+        // clearConsole();
         console.log(chalk.yellow(`Compiling...`));
         fs.emptyDirSync(paths.appDist);
       }
 
       if (evt.code === 'ERROR') {
         hasErrors = true;
-        clearConsole();
+        // clearConsole();
         console.log(chalk.red(`Failed to compile.`));
         logBuildError(evt.error);
       }
 
       if (evt.code === 'END') {
         if (!hasErrors && !hasWarnings) {
-          clearConsole();
+          // clearConsole();
           console.log(chalk.green('Compiled successfully!'));
         }
 
