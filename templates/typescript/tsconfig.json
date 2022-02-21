@@ -10,7 +10,7 @@
     // "declaration": true,
     "outDir": "dist",
     "declaration": true,
-    "declarationDir": ".", // custom
+    "declarationDir": "dist/types", // custom
 
     // output .js.map sourcemap files for consumers
     "sourceMap": true,

@@ -1,6 +1,6 @@
 // name and author fields will be dynamic
 export const basePackageJSON = {
-  types: './index.d.ts',
+  types: './dist/types/index.d.ts',
   version: '0.1.0',
   description: '',
   files: ['dist'],

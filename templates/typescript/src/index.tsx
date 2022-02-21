@@ -1,13 +1,10 @@
 import React from 'react';
-import { logHello } from './test1';
 
 export const Things = (props: any) => {
   // const doSomething = async () => {
   //   const test = await import('./test');
   //   console.log('test', test);
   // };
-
-  console.log(logHello());
 
   return (
     <div>
@@ -22,3 +19,5 @@ export const Things = (props: any) => {
     </div>
   );
 };
+
+export * from './test1';
