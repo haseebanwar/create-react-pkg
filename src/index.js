@@ -44,7 +44,6 @@ function createRollupInputOptions(useTypescript) {
       eslint({
         formatter: eslintFormatter,
       }),
-
       resolve(),
       commonjs({ include: /node_modules/ }),
       json(),
@@ -56,9 +55,7 @@ function createRollupInputOptions(useTypescript) {
         babel({
           babelHelpers: 'bundled',
           presets: [babelPresetReact],
-          // inputSourceMap: rollup-plugin-sourcemaps
         }),
-      // terser(),
     ].filter(Boolean),
     external: ['react'],
   };
@@ -96,7 +93,7 @@ function createRollupOutputs(packageName) {
             },
           ];
         case 'umd': {
-          const b = {
+          const baseUMDOutput = {
             ...baseOutput,
             name: camelCase(safeName),
             // inline dynamic imports for umd modules
@@ -107,13 +104,14 @@ function createRollupOutputs(packageName) {
             // window.React = // react
             globals: { react: 'React' },
           };
+
           return [
             {
-              ...b,
+              ...baseUMDOutput,
               entryFileNames: `${safeName}.js`,
             },
             {
-              ...b,
+              ...baseUMDOutput,
               entryFileNames: `${safeName}.min.js`,
               plugins: [terser()],
             },
@@ -126,13 +124,13 @@ function createRollupOutputs(packageName) {
 
 function writeCjsEntryFile(packageName) {
   const safeName = safePackageName(packageName);
-  const contents = `'use strict'
-  if (process.env.NODE_ENV === 'production') {
-    module.exports = require('./cjs/${safeName}.min.js');
-  } else {
-    module.exports = require('./cjs/${safeName}.js');
-  }`;
-  return fs.outputFile(path.join(paths.appDist, 'index.js'), contents);
+  const contents = `'use strict';
+if (process.env.NODE_ENV === 'production') {
+  module.exports = require('./cjs/${safeName}.min.js');
+} else {
+  module.exports = require('./cjs/${safeName}.js');
+}`;
+  return fs.outputFileSync(path.join(paths.appDist, 'index.js'), contents);
 }
 
 program
