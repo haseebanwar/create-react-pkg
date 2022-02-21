@@ -50,6 +50,7 @@ function createRollupInputOptions(useTypescript) {
       useTypescript &&
         typescript({
           tsconfig: './tsconfig.json',
+          useTsconfigDeclarationDir: true,
         }),
       !useTypescript &&
         babel({
@@ -89,7 +90,7 @@ function createRollupOutputs(packageName) {
             {
               ...baseOutput,
               entryFileNames: `${safeName}.min.js`,
-              plugins: [terser()],
+              plugins: [terser({ format: { comments: false } })],
             },
           ];
         case 'umd': {
@@ -113,7 +114,7 @@ function createRollupOutputs(packageName) {
             {
               ...baseUMDOutput,
               entryFileNames: `${safeName}.min.js`,
-              plugins: [terser()],
+              plugins: [terser({ format: { comments: false } })],
             },
           ];
         }

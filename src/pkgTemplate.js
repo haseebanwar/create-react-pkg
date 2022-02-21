@@ -1,8 +1,9 @@
 // name and author fields will be dynamic
 export const basePackageJSON = {
+  types: './index.d.ts',
   version: '0.1.0',
   description: '',
-  // files: [], // TODO: define files
+  files: ['dist'],
   license: 'MIT',
   scripts: {
     start: `create-react-package watch`,
