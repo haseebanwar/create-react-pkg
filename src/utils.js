@@ -15,13 +15,16 @@ export function getAuthorName() {
   return author;
 }
 
-export function composePackageJSON(packageName, authorName) {
+export function composePackageJSON(packageName, authorName, useTypescript) {
   const safeName = safePackageName(packageName);
   return {
     name: packageName,
     author: authorName,
     main: `dist/index.js`, // CJS entry
     module: `dist/esm/${safeName}.js`, // ES entry
+    ...(useTypescript && {
+      types: './dist/types/index.d.ts',
+    }),
     // spreading after so name fields appear above base fields in created package
     ...basePackageJSON,
   };

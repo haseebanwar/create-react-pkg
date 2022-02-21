@@ -157,6 +157,7 @@ program
         process.exit(1);
       }
 
+      const useTypescript = template === 'typescript';
       const projectPath = path.resolve(projectDirectory);
       const packageName = path.basename(projectPath);
 
@@ -225,7 +226,7 @@ program
       process.chdir(projectPath);
 
       // generate package.json
-      const pkg = composePackageJSON(packageName, author);
+      const pkg = composePackageJSON(packageName, author, useTypescript);
       fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg, {
         spaces: 2,
       });
