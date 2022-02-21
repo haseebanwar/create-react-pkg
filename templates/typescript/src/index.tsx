@@ -1,7 +1,17 @@
 import React from 'react';
 
-export const TestC = () => {
+export const Things = (props: any) => {
+  const doSomething = async () => {
+    const test = await import('./test');
+    console.log('test', test);
+  };
+
   return (
-    <div className="Test">the snozzberries taste like stawberries....</div>
+    <div>
+      These are Things
+      <h1>My props are</h1>
+      <pre>{JSON.stringify(props, null, 2)}</pre>
+      <button onClick={doSomething}>Load dynamic import</button>
+    </div>
   );
 };
