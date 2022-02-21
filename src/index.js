@@ -15,7 +15,7 @@ import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
-// import clearConsole from 'react-dev-utils/clearConsole';
+import clearConsole from 'react-dev-utils/clearConsole';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 
@@ -44,6 +44,7 @@ function createRollupInputOptions(useTypescript) {
       eslint({
         formatter: eslintFormatter,
       }),
+
       resolve(),
       commonjs({ include: /node_modules/ }),
       json(),
@@ -57,11 +58,81 @@ function createRollupInputOptions(useTypescript) {
           presets: [babelPresetReact],
           // inputSourceMap: rollup-plugin-sourcemaps
         }),
-      // rollup plugin replace
       // terser(),
     ].filter(Boolean),
     external: ['react'],
   };
+}
+
+function createRollupOutputs(packageName) {
+  const safeName = safePackageName(packageName);
+
+  return buildModules
+    .map((buildModule) => {
+      const baseOutput = {
+        dir: `${paths.appDist}/${buildModule}`,
+        format: buildModule,
+        sourcemap: true,
+        freeze: false, // do not call Object.freeze on imported objects with import * syntax
+        exports: 'named',
+      };
+
+      switch (buildModule) {
+        case 'esm':
+          return {
+            ...baseOutput,
+            entryFileNames: `${safeName}.js`,
+          };
+        case 'cjs':
+          return [
+            {
+              ...baseOutput,
+              entryFileNames: `${safeName}.js`,
+            },
+            {
+              ...baseOutput,
+              entryFileNames: `${safeName}.min.js`,
+              plugins: [terser()],
+            },
+          ];
+        case 'umd': {
+          const b = {
+            ...baseOutput,
+            name: camelCase(safeName),
+            // inline dynamic imports for umd modules
+            // because rollup doesn't support code-splitting for IIFE/UMD
+            inlineDynamicImports: true,
+            // tell rollup that external module like 'react' should be named this in IIFE/UMD
+            // for example 'react' will be bound to the window object (in browser) like
+            // window.React = // react
+            globals: { react: 'React' },
+          };
+          return [
+            {
+              ...b,
+              entryFileNames: `${safeName}.js`,
+            },
+            {
+              ...b,
+              entryFileNames: `${safeName}.min.js`,
+              plugins: [terser()],
+            },
+          ];
+        }
+      }
+    })
+    .flat();
+}
+
+function writeCjsEntryFile(packageName) {
+  const safeName = safePackageName(packageName);
+  const contents = `'use strict'
+  if (process.env.NODE_ENV === 'production') {
+    module.exports = require('./cjs/${safeName}.min.js');
+  } else {
+    module.exports = require('./cjs/${safeName}.js');
+  }`;
+  return fs.outputFile(path.join(paths.appDist, 'index.js'), contents);
 }
 
 program
@@ -172,66 +243,6 @@ program
     }
   });
 
-function createRollupOutputs(packageName) {
-  const safeName = safePackageName(packageName);
-
-  return buildModules
-    .map((buildModule) => {
-      const baseOutput = {
-        dir: `${paths.appDist}/${buildModule}`,
-        format: buildModule,
-        // sourcemap: true,
-        // freeze: false, // do not call Object.freeze on imported objects with import * syntax
-        // exports: 'named',
-      };
-
-      switch (buildModule) {
-        case 'esm':
-          return {
-            ...baseOutput,
-            entryFileNames: `${safeName}.js`,
-          };
-        case 'cjs':
-          return [
-            // {
-            //   ...baseOutput,
-            //   entryFileNames: `${safeName}.js`,
-            // },
-            {
-              ...baseOutput,
-              entryFileNames: `${safeName}.min.js`,
-              plugins: [terser()],
-            },
-          ];
-        case 'umd': {
-          const b = {
-            ...baseOutput,
-            name: camelCase(safeName),
-            // inline dynamic imports for umd modules
-            // because rollup doesn't support code-splitting for IIFE/UMD
-            inlineDynamicImports: true,
-            // tell rollup that external module like 'react' should be named this in IIFE/UMD
-            // for example 'react' will be bound to the window object (in browser) like
-            // window.React = // react
-            globals: { react: 'React' },
-          };
-          return [
-            {
-              ...b,
-              entryFileNames: `${safeName}.js`,
-            },
-            {
-              ...b,
-              entryFileNames: `${safeName}.min.js`,
-              plugins: [terser()],
-            },
-          ];
-        }
-      }
-    })
-    .flat();
-}
-
 program
   .command('build')
   .description('Creates a distributable build of package')
@@ -241,7 +252,7 @@ program
     let hasWarnings = false;
 
     try {
-      // clearConsole();
+      clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
 
       fs.emptyDirSync(paths.appDist);
@@ -262,6 +273,8 @@ program
         },
       });
 
+      writeCjsEntryFile(appPackage.name);
+
       const outputOptions = createRollupOutputs(appPackage.name);
 
       for (const output of outputOptions) {
@@ -271,7 +284,7 @@ program
       console.log(chalk.green('Build succeeded!'));
     } catch (error) {
       buildFailed = true;
-      // clearConsole();
+      clearConsole();
       console.log(chalk.red('Failed to compile.'));
       logBuildError(error);
     } finally {
@@ -294,7 +307,6 @@ program
 
     const rollupInputs = createRollupInputOptions(isTypescriptConfigured);
     const rollupOutputs = createRollupOutputs(appPackage.name);
-    console.log('rollupOutputs', rollupOutputs);
 
     const watcher = watch({
       ...rollupInputs,
@@ -307,7 +319,7 @@ program
       onwarn: (warning, warn) => {
         // clear console only if there were no previous warnings for this round of build
         if (!hasWarnings) {
-          // clearConsole();
+          clearConsole();
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
@@ -321,21 +333,21 @@ program
       }
 
       if (evt.code === 'START') {
-        // clearConsole();
+        clearConsole();
         console.log(chalk.yellow(`Compiling...`));
-        fs.emptyDirSync(paths.appDist);
+        writeCjsEntryFile(appPackage.name);
       }
 
       if (evt.code === 'ERROR') {
         hasErrors = true;
-        // clearConsole();
+        clearConsole();
         console.log(chalk.red(`Failed to compile.`));
         logBuildError(evt.error);
       }
 
       if (evt.code === 'END') {
         if (!hasErrors && !hasWarnings) {
-          // clearConsole();
+          clearConsole();
           console.log(chalk.green('Compiled successfully!'));
         }
 
