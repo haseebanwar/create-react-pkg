@@ -37,7 +37,7 @@ import packageJSON from '../package.json';
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
-function createRollupInputOptions(useTypescript) {
+function createRollupInputOptions(useTypescript, pkgPeerDeps) {
   return {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     plugins: [
@@ -58,7 +58,7 @@ function createRollupInputOptions(useTypescript) {
           presets: [babelPresetReact],
         }),
     ].filter(Boolean),
-    external: ['react'],
+    external: [...Object.keys(pkgPeerDeps || [])],
   };
 }
 
@@ -260,7 +260,10 @@ program
       const appPackage = fs.readJSONSync(paths.appPackageJson);
       const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-      const rollupInputs = createRollupInputOptions(isTypescriptConfigured);
+      const rollupInputs = createRollupInputOptions(
+        isTypescriptConfigured,
+        appPackage.peerDependencies
+      );
       bundle = await rollup({
         ...rollupInputs,
         onwarn: (warning, warn) => {
@@ -305,7 +308,10 @@ program
     const appPackage = fs.readJSONSync(paths.appPackageJson);
     const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-    const rollupInputs = createRollupInputOptions(isTypescriptConfigured);
+    const rollupInputs = createRollupInputOptions(
+      isTypescriptConfigured,
+      appPackage.peerDependencies
+    );
     const rollupOutputs = createRollupOutputs(appPackage.name);
 
     const watcher = watch({
