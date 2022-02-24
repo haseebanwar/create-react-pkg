@@ -6,21 +6,15 @@ import fs from 'fs-extra';
 import { program } from 'commander';
 import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
-import camelCase from 'camelcase';
 
 import { rollup, watch } from 'rollup';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import json from '@rollup/plugin-json';
-import { babel } from '@rollup/plugin-babel';
-import typescript from 'rollup-plugin-typescript2';
-import { terser } from 'rollup-plugin-terser';
-import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
-import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import { run as jestRun } from 'jest';
 
-import eslint from './plugins/rollup-eslint';
+import {
+  createRollupInputOptions,
+  createRollupOutputs,
+} from './rollup/rollupConfigs';
 import {
   getAuthorName,
   composePackageJSON,
@@ -31,98 +25,12 @@ import {
   safePackageName,
 } from './utils';
 import { paths } from './paths';
-import { templates, buildModules } from './constants';
+import { templates } from './constants';
 import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
-
-function createRollupInputOptions(useTypescript, pkgPeerDeps) {
-  return {
-    input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
-    plugins: [
-      eslint({
-        formatter: eslintFormatter,
-      }),
-      resolve(),
-      commonjs({ include: /node_modules/ }),
-      json(),
-      useTypescript &&
-        typescript({
-          tsconfig: './tsconfig.json',
-          useTsconfigDeclarationDir: true,
-        }),
-      !useTypescript &&
-        babel({
-          babelHelpers: 'bundled',
-          presets: [babelPresetReact], // TODO: replace with require.resolve
-        }),
-    ].filter(Boolean),
-    external: [...Object.keys(pkgPeerDeps || [])],
-  };
-}
-
-function createRollupOutputs(packageName) {
-  const safeName = safePackageName(packageName);
-
-  return buildModules
-    .map((buildModule) => {
-      const baseOutput = {
-        dir: `${paths.appDist}/${buildModule}`,
-        format: buildModule,
-        sourcemap: true,
-        freeze: false, // do not call Object.freeze on imported objects with import * syntax
-        exports: 'named',
-      };
-
-      switch (buildModule) {
-        case 'esm':
-          return {
-            ...baseOutput,
-            entryFileNames: `${safeName}.js`,
-          };
-        case 'cjs':
-          return [
-            {
-              ...baseOutput,
-              entryFileNames: `${safeName}.js`,
-            },
-            {
-              ...baseOutput,
-              entryFileNames: `${safeName}.min.js`,
-              plugins: [terser({ format: { comments: false } })],
-            },
-          ];
-        case 'umd': {
-          const baseUMDOutput = {
-            ...baseOutput,
-            name: camelCase(safeName),
-            // inline dynamic imports for umd modules
-            // because rollup doesn't support code-splitting for IIFE/UMD
-            inlineDynamicImports: true,
-            // tell rollup that external module like 'react' should be named this in IIFE/UMD
-            // for example 'react' will be bound to the window object (in browser) like
-            // window.React = // react
-            globals: { react: 'React' },
-          };
-
-          return [
-            {
-              ...baseUMDOutput,
-              entryFileNames: `${safeName}.js`,
-            },
-            {
-              ...baseUMDOutput,
-              entryFileNames: `${safeName}.min.js`,
-              plugins: [terser({ format: { comments: false } })],
-            },
-          ];
-        }
-      }
-    })
-    .flat();
-}
 
 function writeCjsEntryFile(packageName) {
   const safeName = safePackageName(packageName);
@@ -378,7 +286,7 @@ program
     const jestConfig = {
       testEnvironment: 'jsdom',
       transform: {
-        '.(js|jsx)$': require.resolve('./babelTransform.js'),
+        '.(js|jsx)$': require.resolve('./jest/babelTransform.js'),
       },
       // transformIgnorePatterns already includes node_modules
       moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying
