@@ -2,8 +2,8 @@ import React from 'react';
 
 export const Things = (props) => {
   const doSomething = async () => {
-    const test = await import('./test');
-    console.log('test', test);
+    const foo = await import('./foo');
+    console.log('foo', foo);
   };
 
   return (

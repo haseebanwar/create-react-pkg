@@ -7,6 +7,7 @@ export const basePackageJSON = {
   scripts: {
     start: `create-react-package watch`,
     build: `create-react-package build`,
+    test: `create-react-package test`,
   },
   peerDependencies: {
     react: '^17.0.2',

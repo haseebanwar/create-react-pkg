@@ -6,6 +6,7 @@ import fs from 'fs-extra';
 import { program } from 'commander';
 import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
+import camelCase from 'camelcase';
 
 import { rollup, watch } from 'rollup';
 import resolve from '@rollup/plugin-node-resolve';
@@ -17,7 +18,7 @@ import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
 import clearConsole from 'react-dev-utils/clearConsole';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
-import camelCase from 'camelcase';
+import { run as jestRun } from 'jest';
 
 import eslint from './plugins/rollup-eslint';
 import {
@@ -55,7 +56,7 @@ function createRollupInputOptions(useTypescript, pkgPeerDeps) {
       !useTypescript &&
         babel({
           babelHelpers: 'bundled',
-          presets: [babelPresetReact],
+          presets: [babelPresetReact], // TODO: replace with require.resolve
         }),
     ].filter(Boolean),
     external: [...Object.keys(pkgPeerDeps || [])],
@@ -362,6 +363,33 @@ program
         hasWarnings = false;
       }
     });
+  });
+
+program
+  .command('test')
+  .description('Jest test runner')
+  .allowUnknownOption()
+  .action(async () => {
+    process.env.BABEL_ENV = 'test'; // because we're using babel for transforming JSX
+    process.env.NODE_ENV = 'test'; // jest sets this but to be sure
+
+    const argv = process.argv.slice(2);
+
+    const jestConfig = {
+      testEnvironment: 'jsdom',
+      transform: {
+        '.(js|jsx)$': require.resolve('./babelTransform.js'),
+      },
+      // transformIgnorePatterns already includes node_modules
+      moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying
+      collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+      testMatch: ['<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}'],
+      rootDir: paths.appRoot,
+    };
+
+    argv.push('--config', JSON.stringify(jestConfig));
+
+    jestRun(argv);
   });
 
 program.parse(process.argv);
