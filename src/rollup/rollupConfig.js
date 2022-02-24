@@ -10,7 +10,7 @@ import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
 import { safePackageName } from '../utils';
 import { paths } from '../paths';
-import { buildModules } from './constants';
+import { buildModules } from '../constants';
 
 export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
   return {

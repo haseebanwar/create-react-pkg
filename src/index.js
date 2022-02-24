@@ -14,7 +14,7 @@ import { run as jestRun } from 'jest';
 import {
   createRollupInputOptions,
   createRollupOutputs,
-} from './rollup/rollupConfigs';
+} from './rollup/rollupConfig';
 import {
   getAuthorName,
   composePackageJSON,
