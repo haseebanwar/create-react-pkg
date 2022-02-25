@@ -3,7 +3,7 @@ import babelJest from 'babel-jest';
 
 module.exports = babelJest.createTransformer({
   presets: [
-    [require.resolve('@babel/preset-react'), { runtime: 'automatic' }],
+    [require.resolve('@babel/preset-react')],
     [require.resolve('@babel/preset-env')],
   ],
   plugins: ['@babel/plugin-transform-runtime'],

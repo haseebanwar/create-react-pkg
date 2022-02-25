@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Things = (props) => {
+export const MyComponent = (props) => {
   const doSomething = async () => {
     const foo = await import('./foo');
     console.log('foo', foo);
