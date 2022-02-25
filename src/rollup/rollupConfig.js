@@ -24,7 +24,7 @@ export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
       json(),
       useTypescript &&
         typescript({
-          tsconfig: './tsconfig.json',
+          tsconfig: paths.tsconfigJson,
           useTsconfigDeclarationDir: true,
         }),
       !useTypescript &&

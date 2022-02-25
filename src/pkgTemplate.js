@@ -21,11 +21,14 @@ export const basePackageJSON = {
   },
 };
 
-// export const dependencies = [];
-export const dependencies = [packageJSON.name, 'react', 'react-dom'];
-export const tsDependencies = [
-  '@types/react',
-  '@types/react-dom',
-  'typescript',
-  'tslib',
-];
+export const dependencies = [];
+export const tsDependencies = [];
+// export const dependencies = [packageJSON.name, 'react', 'react-dom'];
+// export const tsDependencies = [
+//   '@types/react',
+//   '@types/react-dom',
+//   '@types/jest',
+//   '@types/node',
+//   'typescript',
+//   'tslib',
+// ];

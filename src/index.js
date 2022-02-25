@@ -162,6 +162,8 @@ program
     let buildFailed = false;
     let hasWarnings = false;
 
+    console.log('THIS IS BUILD');
+
     try {
       clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
