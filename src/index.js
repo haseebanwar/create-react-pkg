@@ -19,6 +19,7 @@ import {
   getAuthorName,
   composePackageJSON,
   getPackageCMD,
+  makePackageDeps,
   makeInstallCommand,
   logBuildError,
   logBuildWarnings,
@@ -26,7 +27,6 @@ import {
 } from './utils';
 import { paths } from './paths';
 import { templates } from './constants';
-import { dependencies } from './pkgTemplate';
 import packageJSON from '../package.json';
 
 program.name(packageJSON.name);
@@ -130,7 +130,9 @@ program
       // if author is not present prompt for name
 
       // install deps
+      const dependencies = makePackageDeps(useTypescript);
       console.log('Installing packages. This might take a couple of minutes.');
+
       dependencies.forEach((dep) => console.log(`  - ${dep}`));
       process.chdir(projectPath);
 
@@ -287,12 +289,17 @@ program
       testEnvironment: 'jsdom',
       transform: {
         '.(js|jsx)$': require.resolve('./jest/babelTransform.js'),
+        '.(ts|tsx)$': require.resolve('ts-jest'),
       },
       // transformIgnorePatterns already includes node_modules
       moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying
       collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
       testMatch: ['<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}'],
       rootDir: paths.appRoot,
+      watchPlugins: [
+        require.resolve('jest-watch-typeahead/filename'),
+        require.resolve('jest-watch-typeahead/testname'),
+      ],
     };
 
     argv.push('--config', JSON.stringify(jestConfig));

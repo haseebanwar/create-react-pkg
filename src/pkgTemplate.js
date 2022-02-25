@@ -1,3 +1,5 @@
+import packageJSON from '../package.json';
+
 // name and author fields will be dynamic
 export const basePackageJSON = {
   version: '0.1.0',
@@ -15,9 +17,15 @@ export const basePackageJSON = {
   },
   keywords: [],
   eslintConfig: {
-    extends: ['react-app'],
+    extends: ['react-app', 'react-app/jest'],
   },
 };
 
-export const dependencies = [];
-// export const dependencies = [packageJSON.name, 'react', 'react-dom'];
+// export const dependencies = [];
+export const dependencies = [packageJSON.name, 'react', 'react-dom'];
+export const tsDependencies = [
+  '@types/react',
+  '@types/react-dom',
+  'typescript',
+  'tslib',
+];

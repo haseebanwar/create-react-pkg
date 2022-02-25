@@ -1,7 +1,7 @@
 import path from 'path';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
-import { basePackageJSON } from './pkgTemplate';
+import { basePackageJSON, dependencies, tsDependencies } from './pkgTemplate';
 
 export function getAuthorName() {
   let author = '';
@@ -40,6 +40,14 @@ export function getPackageCMD(useNpm) {
     // yarn is not installed, use npm as fallback
     return 'npm';
   }
+}
+
+export function makePackageDeps(useTypescript) {
+  if (useTypescript) {
+    return [...dependencies, ...tsDependencies];
+  }
+
+  return dependencies;
 }
 
 export function makeInstallCommand(cmd, dependencies) {
