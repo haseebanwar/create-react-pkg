@@ -26,11 +26,32 @@ export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
         typescript({
           tsconfig: paths.tsconfigJson,
           useTsconfigDeclarationDir: true,
+          tsconfigDefaults: {
+            exclude: [
+              // all test files
+              '**/*.spec.ts',
+              '**/*.test.ts',
+              '**/*.spec.tsx',
+              '**/*.test.tsx',
+              '**/*.spec.js',
+              '**/*.test.js',
+              '**/*.spec.jsx',
+              '**/*.test.jsx',
+              // '**/*.+(spec|test).{ts,tsx,js,jsx}',
+              // TS defaults below
+              'node_modules',
+              'bower_components',
+              'jspm_packages',
+              'dist', // outDir is default
+            ],
+          },
         }),
       !useTypescript &&
         babel({
+          exclude: 'node_modules/**',
           babelHelpers: 'bundled',
           presets: [babelPresetReact], // TODO: replace with require.resolve
+          babelrc: false,
         }),
     ].filter(Boolean),
     external: [...Object.keys(pkgPeerDeps || [])],
