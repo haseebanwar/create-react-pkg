@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 
 import { rollup, watch } from 'rollup';
-import clearConsole from 'react-dev-utils/clearConsole';
+// import clearConsole from 'react-dev-utils/clearConsole';
 import { run as jestRun } from 'jest';
 
 import {
@@ -165,7 +165,7 @@ program
     console.log('THIS IS BUILD');
 
     try {
-      clearConsole();
+      // clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
 
       fs.emptyDirSync(paths.appDist);
@@ -200,7 +200,7 @@ program
       console.log(chalk.green('Build succeeded!'));
     } catch (error) {
       buildFailed = true;
-      clearConsole();
+      // clearConsole();
       console.log(chalk.red('Failed to compile.'));
       logBuildError(error);
     } finally {
@@ -238,7 +238,7 @@ program
       onwarn: (warning, warn) => {
         // clear console only if there were no previous warnings for this round of build
         if (!hasWarnings) {
-          clearConsole();
+          // clearConsole();
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
@@ -252,21 +252,21 @@ program
       }
 
       if (evt.code === 'START') {
-        clearConsole();
+        // clearConsole();
         console.log(chalk.yellow(`Compiling...`));
         writeCjsEntryFile(appPackage.name);
       }
 
       if (evt.code === 'ERROR') {
         hasErrors = true;
-        clearConsole();
+        // clearConsole();
         console.log(chalk.red(`Failed to compile.`));
         logBuildError(evt.error);
       }
 
       if (evt.code === 'END') {
         if (!hasErrors && !hasWarnings) {
-          clearConsole();
+          // clearConsole();
           console.log(chalk.green('Compiled successfully!'));
         }
 

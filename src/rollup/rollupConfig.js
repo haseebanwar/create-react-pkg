@@ -1,3 +1,6 @@
+import path from 'path';
+import fs from 'fs-extra';
+
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
@@ -5,6 +8,8 @@ import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
+import css from 'rollup-plugin-import-css';
+import postcss from 'rollup-plugin-postcss';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
@@ -13,6 +18,13 @@ import { paths } from '../paths';
 import { buildModules } from '../constants';
 
 export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
+  const appDirectory = fs.realpathSync(process.cwd());
+  const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
+
+  const test = path.resolve('dist/my-custom-file-name.css');
+
+  console.log('test', test);
+
   return {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     plugins: [
@@ -53,6 +65,12 @@ export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
           presets: [babelPresetReact], // TODO: replace with require.resolve
           babelrc: false,
         }),
+      postcss({
+        extract: 'css/newlib.css',
+        minimize: true,
+        sourceMap: true,
+        config: false, // do not load postcss config
+      }),
     ].filter(Boolean),
     external: [...Object.keys(pkgPeerDeps || [])],
   };
@@ -64,28 +82,29 @@ export function createRollupOutputs(packageName) {
   return buildModules
     .map((buildModule) => {
       const baseOutput = {
-        dir: `${paths.appDist}/${buildModule}`,
+        dir: `${paths.appDist}`,
         format: buildModule,
         sourcemap: true,
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
         exports: 'named',
+        chunkFileNames: `${buildModule}/[name]-[hash].js`,
       };
 
       switch (buildModule) {
         case 'esm':
           return {
             ...baseOutput,
-            entryFileNames: `${safeName}.js`,
+            entryFileNames: `${buildModule}/${safeName}.js`,
           };
         case 'cjs':
           return [
             {
               ...baseOutput,
-              entryFileNames: `${safeName}.js`,
+              entryFileNames: `${buildModule}/${safeName}.js`,
             },
             {
               ...baseOutput,
-              entryFileNames: `${safeName}.min.js`,
+              entryFileNames: `${buildModule}/${safeName}.min.js`,
               plugins: [terser({ format: { comments: false } })],
             },
           ];
@@ -105,11 +124,11 @@ export function createRollupOutputs(packageName) {
           return [
             {
               ...baseUMDOutput,
-              entryFileNames: `${safeName}.js`,
+              entryFileNames: `${buildModule}/${safeName}.js`,
             },
             {
               ...baseUMDOutput,
-              entryFileNames: `${safeName}.min.js`,
+              entryFileNames: `${buildModule}/${safeName}.min.js`,
               plugins: [terser({ format: { comments: false } })],
             },
           ];

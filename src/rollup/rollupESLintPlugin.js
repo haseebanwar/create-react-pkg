@@ -22,7 +22,7 @@ function eslint(options = {}) {
     exclude = [/node_modules/, /\.json|\.s?css$/],
   } = options;
 
-  const eslint = new ESLint({ useEslintrc: false });
+  const eslint = new ESLint();
   const filter = createFilter(include, exclude);
 
   return {
