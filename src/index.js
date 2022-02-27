@@ -8,7 +8,7 @@ import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 
 import { rollup, watch } from 'rollup';
-// import clearConsole from 'react-dev-utils/clearConsole';
+import clearConsole from 'react-dev-utils/clearConsole';
 import { run as jestRun } from 'jest';
 
 import {
@@ -167,7 +167,7 @@ program
     let hasWarnings = false;
 
     try {
-      // clearConsole();
+      clearConsole();
       console.log(chalk.cyan('Creating an optimized build...'));
 
       fs.emptyDirSync(paths.appDist);
@@ -199,10 +199,10 @@ program
         await bundle.write(output);
       }
 
-      console.log(chalk.green('Build succeeded!'), process.env.NODE_ENV);
+      console.log(chalk.green('Build succeeded!'));
     } catch (error) {
       buildFailed = true;
-      // clearConsole();
+      clearConsole();
       console.log(chalk.red('Failed to compile.'));
       logBuildError(error);
     } finally {
@@ -244,7 +244,7 @@ program
       onwarn: (warning, warn) => {
         // clear console only if there were no previous warnings for this round of build
         if (!hasWarnings) {
-          // clearConsole();
+          clearConsole();
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
@@ -258,23 +258,23 @@ program
       }
 
       if (evt.code === 'START') {
-        // clearConsole();
+        clearConsole();
         console.log(chalk.yellow(`Compiling...`));
         writeCjsEntryFile(appPackage.name);
       }
 
       if (evt.code === 'ERROR') {
         hasErrors = true;
-        // clearConsole();
+        clearConsole();
         console.log(chalk.red(`Failed to compile.`));
         logBuildError(evt.error);
       }
 
       if (evt.code === 'END') {
         if (!hasErrors && !hasWarnings) {
-          // clearConsole();
+          clearConsole();
           console.log(chalk.green('Compiled successfully!'));
-          console.log('Note that the development build is not optimized.');
+          console.log('\nNote that the development build is not optimized.');
           console.log(
             `To create a production build, use ${chalk.cyan('npm run build')}.`
           );
@@ -302,6 +302,9 @@ program
       transform: {
         '.(js|jsx)$': require.resolve('./jest/babelTransform.js'),
         '.(ts|tsx)$': require.resolve('ts-jest'),
+        '.(css|scss|sass|styl|stylus|less)$': require.resolve(
+          './jest/cssTransform.js'
+        ),
       },
       // transformIgnorePatterns already includes node_modules
       moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying

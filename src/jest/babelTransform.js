@@ -1,7 +1,7 @@
 import babelJest from 'babel-jest';
-// import 'regenerator-runtime/runtime';
 
-module.exports = babelJest.createTransformer({
+// custom jest transformer for transforming js and jsx files with babel
+export default babelJest.createTransformer({
   presets: [
     [require.resolve('@babel/preset-react')],
     [require.resolve('@babel/preset-env')],
