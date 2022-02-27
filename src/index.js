@@ -274,6 +274,10 @@ program
         if (!hasErrors && !hasWarnings) {
           // clearConsole();
           console.log(chalk.green('Compiled successfully!'));
+          console.log('Note that the development build is not optimized.');
+          console.log(
+            `To create a production build, use ${chalk.cyan('npm run build')}.`
+          );
         }
 
         // reset for the next round of build
