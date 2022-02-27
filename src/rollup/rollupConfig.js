@@ -1,6 +1,3 @@
-import path from 'path';
-import fs from 'fs-extra';
-
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
@@ -8,8 +5,8 @@ import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
-import css from 'rollup-plugin-import-css';
 import postcss from 'rollup-plugin-postcss';
+import autoprefixer from 'autoprefixer';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
@@ -18,13 +15,6 @@ import { paths } from '../paths';
 import { buildModules } from '../constants';
 
 export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
-  const appDirectory = fs.realpathSync(process.cwd());
-  const resolveApp = (relativePath) => path.resolve(appDirectory, relativePath);
-
-  const test = path.resolve('dist/my-custom-file-name.css');
-
-  console.log('test', test);
-
   return {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     plugins: [
@@ -68,8 +58,10 @@ export function createRollupInputOptions(useTypescript, pkgPeerDeps) {
       postcss({
         extract: 'css/newlib.css',
         minimize: true,
+        plugins: [autoprefixer()],
         sourceMap: true,
         config: false, // do not load postcss config
+        // css modules are by default supported for .module.css, .module.scss, etc
       }),
     ].filter(Boolean),
     external: [...Object.keys(pkgPeerDeps || [])],
@@ -88,6 +80,7 @@ export function createRollupOutputs(packageName) {
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
         exports: 'named',
         chunkFileNames: `${buildModule}/[name]-[hash].js`,
+        assetFileNames: '[name][extname]',
       };
 
       switch (buildModule) {
@@ -96,7 +89,7 @@ export function createRollupOutputs(packageName) {
             ...baseOutput,
             entryFileNames: `${buildModule}/${safeName}.js`,
           };
-        case 'cjs':
+        case 'cjsss':
           return [
             {
               ...baseOutput,
@@ -108,7 +101,7 @@ export function createRollupOutputs(packageName) {
               plugins: [terser({ format: { comments: false } })],
             },
           ];
-        case 'umd': {
+        case 'umds': {
           const baseUMDOutput = {
             ...baseOutput,
             name: camelCase(safeName),
@@ -135,5 +128,6 @@ export function createRollupOutputs(packageName) {
         }
       }
     })
+    .filter(Boolean)
     .flat();
 }

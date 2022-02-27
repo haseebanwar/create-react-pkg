@@ -158,11 +158,13 @@ program
   .command('build')
   .description('Creates a distributable build of package')
   .action(async () => {
+    // node env is used by many tools like browserslist
+    process.env.NODE_ENV = 'production';
+    process.env.BABEL_ENV = 'production';
+
     let bundle;
     let buildFailed = false;
     let hasWarnings = false;
-
-    console.log('THIS IS BUILD');
 
     try {
       // clearConsole();
@@ -197,7 +199,7 @@ program
         await bundle.write(output);
       }
 
-      console.log(chalk.green('Build succeeded!'));
+      console.log(chalk.green('Build succeeded!'), process.env.NODE_ENV);
     } catch (error) {
       buildFailed = true;
       // clearConsole();
@@ -215,6 +217,10 @@ program
   .command('watch')
   .description('Creates a distributable build of package')
   .action(async () => {
+    // node env is used by many tools like browserslist
+    process.env.NODE_ENV = 'development';
+    process.env.BABEL_ENV = 'development';
+
     let hasErrors = false;
     let hasWarnings = false;
 
@@ -282,8 +288,8 @@ program
   .description('Jest test runner')
   .allowUnknownOption()
   .action(async () => {
+    process.env.NODE_ENV = 'test';
     process.env.BABEL_ENV = 'test'; // because we're using babel for transforming JSX
-    process.env.NODE_ENV = 'test'; // jest sets this but to be sure
 
     const argv = process.argv.slice(2);
 
