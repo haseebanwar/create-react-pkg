@@ -1,0 +1,32 @@
+{
+  "include": ["src"],
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "esnext"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "rootDir": "./src",
+    "declaration": true,
+    "declarationDir": "dist/types", // .d.ts directory
+    "sourceMap": true,
+    "importHelpers": true,
+    "strict": true,
+    // transpile JSX to React.createElement
+    "jsx": "react",
+    // interop between ESM and CJS modules. Recommended by TS
+    "esModuleInterop": true,
+    // significant perf increase by skipping checking .d.ts files, particularly those in node_modules. Recommended by TS
+    "skipLibCheck": true,
+    // error out if import and file system have a casing mismatch. Recommended by TS
+    "forceConsistentCasingInFileNames": true,
+    // do not emit build when type-checking with tsc
+    "noEmit": true,
+    // resolve any JSON files imported
+    "resolveJsonModule": true,
+    // code best practices
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  }
+}
