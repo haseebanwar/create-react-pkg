@@ -11,10 +11,7 @@ import { rollup, watch } from 'rollup';
 import clearConsole from 'react-dev-utils/clearConsole';
 import { run as jestRun } from 'jest';
 
-import {
-  createRollupInputOptions,
-  createRollupOutputs,
-} from './rollup/rollupConfig';
+import { createRollupConfig, createRollupConfig2 } from './rollup/rollupConfig';
 import {
   getAuthorName,
   composePackageJSON,
@@ -175,12 +172,14 @@ program
       const appPackage = fs.readJSONSync(paths.appPackageJson);
       const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-      const rollupInputs = createRollupInputOptions(
-        isTypescriptConfigured,
-        appPackage.peerDependencies
-      );
+      const rollupConfig = createRollupConfig({
+        useTypescript: isTypescriptConfigured,
+        packageName: appPackage.name,
+        packagePeerDeps: appPackage.peerDependencies,
+      });
+
       bundle = await rollup({
-        ...rollupInputs,
+        ...rollupConfig,
         onwarn: (warning, warn) => {
           // print this message only when there were no previous warnings for this build
           if (!hasWarnings) {
@@ -193,9 +192,7 @@ program
 
       writeCjsEntryFile(appPackage.name);
 
-      const outputOptions = createRollupOutputs(appPackage.name);
-
-      for (const output of outputOptions) {
+      for (const output of rollupConfig.output) {
         await bundle.write(output);
       }
 
@@ -227,30 +224,55 @@ program
     const appPackage = fs.readJSONSync(paths.appPackageJson);
     const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
 
-    const rollupInputs = createRollupInputOptions(
-      isTypescriptConfigured,
-      appPackage.peerDependencies
-    );
-    const rollupOutputs = createRollupOutputs(appPackage.name);
+    // const rollupConfig = createRollupConfig({
+    //   useTypescript: isTypescriptConfigured,
+    //   packagePeerDeps: appPackage.peerDependencies,
+    //   packageName: appPackage.name,
+    // });
+    // const watcher = watch({
+    //   ...rollupConfig,
+    //   watch: {
+    //     silent: true,
+    //     include: ['src/**'],
+    //     exclude: ['node_modules/**'],
+    //   },
+    //   onwarn: (warning, warn) => {
+    //     // clear console only if there were no previous warnings for this round of build
+    //     if (!hasWarnings) {
+    //       clearConsole();
+    //       console.log(chalk.yellow('Compiled with warnings.'));
+    //     }
+    //     hasWarnings = true;
+    //     logBuildWarnings(warning, warn);
+    //   },
+    // });
 
-    const watcher = watch({
-      ...rollupInputs,
-      output: rollupOutputs,
-      watch: {
-        silent: true,
-        include: ['src/**'],
-        exclude: ['node_modules/**'],
-      },
-      onwarn: (warning, warn) => {
-        // clear console only if there were no previous warnings for this round of build
-        if (!hasWarnings) {
-          clearConsole();
-          console.log(chalk.yellow('Compiled with warnings.'));
-        }
-        hasWarnings = true;
-        logBuildWarnings(warning, warn);
-      },
+    // a dirty workaround until this is fixed
+    // https://github.com/rollup/rollup/issues/4415
+    const rollupConfigs = createRollupConfig2({
+      useTypescript: isTypescriptConfigured,
+      packagePeerDeps: appPackage.peerDependencies,
+      packageName: appPackage.name,
     });
+    const watcher = watch(
+      rollupConfigs.map((config) => ({
+        ...config,
+        onwarn: (warning, warn) => {
+          // print this message only when there were no previous warnings for this build
+          if (!hasWarnings) {
+            clearConsole();
+            console.log(chalk.yellow('Compiled with warnings.'));
+          }
+          hasWarnings = true;
+          logBuildWarnings(warning, warn);
+        },
+        watch: {
+          silent: true,
+          include: ['src/**'],
+          exclude: ['node_modules/**'],
+        },
+      }))
+    );
 
     watcher.on('event', (evt) => {
       if (evt.result) {
