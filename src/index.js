@@ -63,7 +63,8 @@ program
         process.exit(1);
       }
 
-      const useTypescript = template === 'typescript';
+      const useTypescript = template.includes('typescript');
+      const useStorybook = template.includes('storybook');
       const projectPath = path.resolve(projectDirectory);
       const packageName = path.basename(projectPath);
 
@@ -127,22 +128,27 @@ program
       // if author is not present prompt for name
 
       // install deps
-      const dependencies = makePackageDeps(useTypescript);
+      const dependencies = makePackageDeps(useTypescript, useStorybook);
       console.log('Installing packages. This might take a couple of minutes.');
 
       dependencies.forEach((dep) => console.log(`  - ${dep}`));
       process.chdir(projectPath);
 
       // generate package.json
-      const pkg = composePackageJSON(packageName, author, useTypescript);
+      const pkg = composePackageJSON(
+        packageName,
+        author,
+        useTypescript,
+        useStorybook
+      );
       fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg, {
         spaces: 2,
       });
 
       // decide whether to use npm or yarn for installing deps
       const packageCMD = getPackageCMD(useNpm);
-
-      execSync(makeInstallCommand(packageCMD, dependencies)).toString();
+      const command = makeInstallCommand(packageCMD, dependencies);
+      execSync(command, { stdio: 'ignore' });
 
       process.exit(0);
     } catch (error) {

@@ -1,7 +1,12 @@
 import path from 'path';
 import { execSync } from 'child_process';
 import chalk from 'chalk';
-import { basePackageJSON, dependencies, tsDependencies } from './pkgTemplate';
+import {
+  basePackageJSON,
+  dependencies,
+  tsDependencies,
+  storybookDependencies,
+} from './pkgTemplate';
 
 export function getAuthorName() {
   let author = '';
@@ -15,7 +20,12 @@ export function getAuthorName() {
   return author;
 }
 
-export function composePackageJSON(packageName, authorName, useTypescript) {
+export function composePackageJSON(
+  packageName,
+  authorName,
+  useTypescript,
+  useStorybook
+) {
   const safeName = safePackageName(packageName);
   return {
     name: packageName,
@@ -27,6 +37,13 @@ export function composePackageJSON(packageName, authorName, useTypescript) {
     }),
     // spreading after so name fields appear above base fields in created package
     ...basePackageJSON,
+    ...(useStorybook && {
+      scripts: {
+        ...basePackageJSON.scripts,
+        storybook: 'start-storybook -p 6006',
+        'build-storybook': 'build-storybook',
+      },
+    }),
   };
 }
 
@@ -42,18 +59,22 @@ export function getPackageCMD(useNpm) {
   }
 }
 
-export function makePackageDeps(useTypescript) {
+export function makePackageDeps(useTypescript, useStorybook) {
+  const deps = [...dependencies];
   if (useTypescript) {
-    return [...dependencies, ...tsDependencies];
+    deps.push(...tsDependencies);
+  }
+  if (useStorybook) {
+    deps.push(...storybookDependencies);
   }
 
-  return dependencies;
+  return deps;
 }
 
 export function makeInstallCommand(cmd, dependencies) {
   switch (cmd) {
     case 'npm':
-      return `npm install ${dependencies.join(' ')} --save-dev`;
+      return `npm install --save-dev ${dependencies.join(' ')}`;
     case 'yarn':
       return `yarn add ${dependencies.join(' ')} --dev`;
     default:

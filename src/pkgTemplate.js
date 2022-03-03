@@ -12,8 +12,8 @@ export const basePackageJSON = {
     test: `create-react-package test`,
   },
   peerDependencies: {
-    react: '^17.0.2',
-    'react-dom': '^17.0.2',
+    react: '>=17',
+    'react-dom': '>=17',
   },
   keywords: ['react'],
   eslintConfig: {
@@ -29,14 +29,30 @@ export const basePackageJSON = {
   },
 };
 
-export const dependencies = [];
-export const tsDependencies = [];
-// export const dependencies = [packageJSON.name, 'react', 'react-dom'];
-// export const tsDependencies = [
-//   '@types/react',
-//   '@types/react-dom',
-//   '@types/jest',
-//   '@types/node',
-//   'typescript',
-//   'tslib',
-// ];
+// export const dependencies = [];
+// export const tsDependencies = [];
+// export const storybookDependencies = [];
+
+export const dependencies = [
+  // packageJSON.name,
+  'react',
+  'react-dom',
+];
+export const tsDependencies = [
+  '@types/react',
+  '@types/react-dom',
+  '@types/jest',
+  '@types/node',
+  'typescript',
+  'tslib',
+];
+export const storybookDependencies = [
+  '@babel/core',
+  '@storybook/addon-actions',
+  '@storybook/addon-essentials',
+  '@storybook/addon-interactions',
+  '@storybook/addon-links',
+  '@storybook/react',
+  '@storybook/testing-library',
+  'babel-loader',
+];
