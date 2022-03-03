@@ -1,6 +1,13 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const MyComponent = (props: any) => {
+export interface MyComponentProps {
+  /**
+   * inner content
+   */
+  label?: string;
+}
+
+export const MyComponent: FC<MyComponentProps> = (props) => {
   // const doSomething = async () => {
   //   const test = await import('./test');
   //   console.log('test', test);
@@ -9,7 +16,7 @@ export const MyComponent = (props: any) => {
   return (
     <div>
       These are Things
-      <h1>My props are</h1>
+      <p>{props.label}</p>
       <pre>{JSON.stringify(props, null, 2)}</pre>
       <button
       // onClick={doSomething}

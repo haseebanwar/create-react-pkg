@@ -1,4 +1,4 @@
-import { MyComponent } from '../';
+import { MyComponent } from '../src';
 
 const meta = {
   title: 'My Component',

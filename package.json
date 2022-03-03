@@ -15,7 +15,7 @@
     "build": "babel src -d lib",
     "lint": "eslint src"
   },
-  "author": "Haseeb Anwar",
+  "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.17.0",
