@@ -1,0 +1,20 @@
+{
+  "name": "create-react-package",
+  "version": "0.1.0",
+  "description": "Zero config CLI for creating react packages",
+  "main": "index.js",
+  "bin": {
+    "create-react-package": "lib/index.js"
+  },
+  "files": [
+    "/lib",
+    "templates"
+  ],
+  "scripts": {
+    "start": "babel src -d lib --watch",
+    "build": "babel src -d lib",
+    "lint": "eslint src"
+  },
+  "author": "Haseeb Anwar (https://haseebanwar.net/)",
+  "license": "MIT"
+}
