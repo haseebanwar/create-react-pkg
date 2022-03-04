@@ -10,9 +10,8 @@
     "templates"
   ],
   "scripts": {
-    "start": "babel src -d lib --watch",
-    "build": "babel src -d lib",
-    "lint": "eslint src"
+    "start": "babel src -d lib --root-mode upward --watch",
+    "build": "babel src -d lib --root-mode upward"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
