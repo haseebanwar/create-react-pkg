@@ -16,5 +16,11 @@
     "lint": "eslint src"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^8.3.0",
+    "validate-npm-package-name": "^3.0.0",
+    "fs-extra": "^10.0.0",
+    "chalk": "^4.1.2"
+  }
 }
