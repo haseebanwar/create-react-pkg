@@ -1,8 +1,7 @@
 {
-  "name": "create-react-package",
-  "version": "0.1.0",
+  "name": "@haseebanwar/create-react-package",
+  "version": "0.1.8",
   "description": "Zero config CLI for creating react packages",
-  "main": "index.js",
   "bin": {
     "create-react-package": "lib/index.js"
   },
@@ -11,16 +10,17 @@
     "templates"
   ],
   "scripts": {
-    "start": "babel src -d lib --watch",
+    "start": "babel src -d lib --watch --root-mode upward",
     "build": "babel src -d lib",
     "lint": "eslint src"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.16.7",
+    "chalk": "^4.1.2",
     "commander": "^8.3.0",
-    "validate-npm-package-name": "^3.0.0",
     "fs-extra": "^10.0.0",
-    "chalk": "^4.1.2"
+    "validate-npm-package-name": "^3.0.0"
   }
 }

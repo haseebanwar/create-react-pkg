@@ -18,6 +18,13 @@ export function getAuthorName() {
   return author;
 }
 
+// taken from TSDX
+export function safePackageName(packageName) {
+  return packageName
+    .toLowerCase()
+    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '');
+}
+
 export function composePackageJSON(
   packageName,
   authorName,

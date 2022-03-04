@@ -13,8 +13,14 @@ import {
   makePackageDeps,
   makeInstallCommand,
 } from './utils';
-import { templates } from './constants';
 import packageJSON from '../package.json';
+
+const templates = [
+  'basic',
+  'basic-storybook',
+  'typescript',
+  'typescript-storybook',
+];
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
