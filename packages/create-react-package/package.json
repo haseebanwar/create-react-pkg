@@ -6,7 +6,7 @@
     "create-react-package": "lib/index.js"
   },
   "files": [
-    "/lib",
+    "lib",
     "templates"
   ],
   "scripts": {
