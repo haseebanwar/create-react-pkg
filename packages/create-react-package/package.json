@@ -9,6 +9,13 @@
     "lib",
     "templates"
   ],
+  "keywords": [
+    "react",
+    "cli",
+    "package",
+    "library",
+    "rollup"
+  ],
   "scripts": {
     "start": "babel src -d lib --root-mode upward --watch",
     "build": "babel src -d lib --root-mode upward"

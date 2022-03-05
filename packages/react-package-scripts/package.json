@@ -8,6 +8,14 @@
   "files": [
     "lib"
   ],
+  "keywords": [
+    "react",
+    "package",
+    "library",
+    "rollup",
+    "bundle",
+    "eslint"
+  ],
   "scripts": {
     "start": "babel src -d lib --root-mode upward --watch",
     "build": "babel src -d lib --root-mode upward"

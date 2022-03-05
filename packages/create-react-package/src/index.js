@@ -27,7 +27,7 @@ program.version(packageJSON.version);
 
 program
   .argument('<package-directory>', 'package directory')
-  .description('Create a new JavaScript package')
+  .description('Create a new React package')
   .option('--use-npm', 'use NPM for installing package dependencies')
   .option('-t, --template <test>', 'specify a template for created package')
   .action(async (projectDirectory, flags) => {
@@ -102,12 +102,10 @@ program
           overwrite: true,
         }
       );
-
-      // fix gitignore
-      // await fs.move(
-      //   path.resolve(projectPath, './gitignore'),
-      //   path.resolve(projectPath, './.gitignore')
-      // );
+      await fs.move(
+        path.resolve(projectPath, './gitignore'),
+        path.resolve(projectPath, './.gitignore')
+      );
 
       // get author name
       const author = getAuthorName();
