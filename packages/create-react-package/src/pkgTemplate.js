@@ -33,6 +33,7 @@ export const basePackageJSON = {
 
 export const dependencies = [
   // 'react-package-scripts',
+  // '@haseebanwar/react-package-scripts',
   'react',
   'react-dom',
 ];

@@ -37,7 +37,9 @@ program
       // check if template is valid
       if (!templates.includes(template)) {
         console.error(
-          'Invalid template, please use one of the following supported templates'
+          chalk.red(
+            'Invalid template, please use one of the following supported templates'
+          )
         );
 
         // print valid templates
@@ -61,8 +63,8 @@ program
       } = validatePackageName(packageName);
 
       if (!validForNewPackages) {
-        console.log(
-          chalk.red(`Invalid package name ${chalk.green(`"${packageName}"`)}`)
+        console.error(
+          chalk.red(`Invalid package name ${chalk.cyan(`"${packageName}"`)}`)
         );
 
         [...(packageNameErrors || []), ...(packageNameWarnings || [])].forEach(
@@ -70,7 +72,7 @@ program
             console.log(chalk.red(`  - ${error}`));
           }
         );
-        console.log(chalk.red('Please use a different package name'));
+        console.log('\nPlease use a different package name');
         process.exit(1);
       }
 
@@ -80,9 +82,9 @@ program
       // throw an error if package folder is not empty
       const files = fs.readdirSync(projectPath);
       if (files.length) {
-        console.log(
+        console.error(
           chalk.red(
-            `Please make sure that your package directory ${chalk.green(
+            `Please make sure that your package directory ${chalk.cyan(
               `"${packageName}"`
             )} is empty`
           )
@@ -114,9 +116,11 @@ program
 
       // install deps
       const dependencies = makePackageDeps(useTypescript, useStorybook);
-      console.log('Installing packages. This might take a couple of minutes.');
+      console.log(
+        '\nInstalling dependencies. This might take a couple of minutes.'
+      );
 
-      dependencies.forEach((dep) => console.log(`  - ${dep}`));
+      dependencies.forEach((dep) => console.log(`- ${chalk.cyan(dep)}`));
       process.chdir(projectPath);
 
       // generate package.json
@@ -134,6 +138,26 @@ program
       const packageCMD = getPackageCMD(useNpm);
       const command = makeInstallCommand(packageCMD, dependencies);
       execSync(command, { stdio: 'ignore' });
+
+      console.log('\nInstalled dependencies');
+
+      console.log(`\nSuccess! Created ${packageName} at ${projectPath}`);
+      console.log(
+        'Inside that directory, you can run the following commands:\n'
+      );
+
+      console.log(chalk.cyan(`  ${packageCMD} start`));
+      console.log('    Watches for changes as you build.\n');
+
+      console.log(
+        chalk.cyan(`  ${packageCMD}${packageCMD === 'npm' ? ' run' : ''} build`)
+      );
+      console.log('    Creates an optimized production build.\n');
+
+      console.log(chalk.cyan(`  ${packageCMD} test`));
+      console.log('    Runs tests with Jest.\n');
+
+      console.log('Show the World what you can build!');
 
       process.exit(0);
     } catch (error) {

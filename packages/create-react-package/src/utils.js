@@ -78,7 +78,7 @@ export function makePackageDeps(useTypescript, useStorybook) {
 export function makeInstallCommand(cmd, dependencies) {
   switch (cmd) {
     case 'npm':
-      return `npm install --save-dev ${dependencies.join(' ')}`;
+      return `npm install ${dependencies.join(' ')} --save-dev`;
     case 'yarn':
       return `yarn add ${dependencies.join(' ')} --dev`;
     default:

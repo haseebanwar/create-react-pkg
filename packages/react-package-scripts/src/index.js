@@ -25,7 +25,9 @@ switch (command) {
     test();
     break;
   default:
-    console.error(`Unkown command ${chalk.cyan(command)}. Valid commands are`);
+    console.error(
+      `Unkown command ${chalk.cyan(`"${command}"`)}. Valid commands are`
+    );
     Object.entries(commands).forEach(([, validCommand]) =>
       console.log(`- ${chalk.cyan(validCommand)}`)
     );
