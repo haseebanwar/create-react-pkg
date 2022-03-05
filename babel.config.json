@@ -1,4 +1,5 @@
 {
+  "targets": "node 14.0",
   "presets": ["@babel/preset-env"],
   "plugins": ["@babel/transform-runtime"]
 }

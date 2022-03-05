@@ -1,5 +1,3 @@
-import packageJSON from '../package.json';
-
 // name and author fields will be dynamic
 export const basePackageJSON = {
   version: '0.1.0',
@@ -7,9 +5,9 @@ export const basePackageJSON = {
   files: ['dist'],
   license: 'MIT',
   scripts: {
-    start: `create-react-package watch`,
-    build: `create-react-package build`,
-    test: `create-react-package test`,
+    start: `react-package-scripts start`,
+    build: `react-package-scripts build`,
+    test: `react-package-scripts test`,
   },
   peerDependencies: {
     react: '>=17',
@@ -34,7 +32,8 @@ export const basePackageJSON = {
 // export const storybookDependencies = [];
 
 export const dependencies = [
-  // packageJSON.name,
+  // 'react-package-scripts',
+  // '@haseebanwar/react-package-scripts',
   'react',
   'react-dom',
 ];

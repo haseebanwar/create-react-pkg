@@ -10,13 +10,14 @@ import autoprefixer from 'autoprefixer';
 import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
-import { safePackageName } from '../utils';
+import { sanitizePackageName } from '../utils';
 import { paths } from '../paths';
-import { buildModules } from '../constants';
+
+const buildModules = ['cjs', 'esm', 'umd'];
 
 export function createRollupConfig(options) {
   const { packageName, useTypescript, packagePeerDeps } = options;
-  const safeName = safePackageName(packageName);
+  const safePackageName = sanitizePackageName(packageName);
 
   const config = {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
@@ -59,7 +60,7 @@ export function createRollupConfig(options) {
           babelrc: false,
         }),
       postcss({
-        extract: `css/${safeName}.css`,
+        extract: `css/${safePackageName}.css`,
         minimize: true,
         plugins: [autoprefixer()],
         sourceMap: true,
@@ -78,7 +79,7 @@ export function createRollupConfig(options) {
         sourcemap: true,
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
         exports: 'named',
-        entryFileNames: `${buildModule}/${safeName}.js`,
+        entryFileNames: `${buildModule}/${safePackageName}.js`,
         chunkFileNames: `${buildModule}/[name]-[hash].js`,
         assetFileNames: '[name][extname]',
       };
@@ -87,7 +88,7 @@ export function createRollupConfig(options) {
         case 'esm':
           return {
             ...baseOutput,
-            entryFileNames: `${buildModule}/${safeName}.js`,
+            entryFileNames: `${buildModule}/${safePackageName}.js`,
           };
         case 'cjs':
           return [
@@ -96,7 +97,7 @@ export function createRollupConfig(options) {
             },
             {
               ...baseOutput,
-              entryFileNames: `${buildModule}/${safeName}.min.js`,
+              entryFileNames: `${buildModule}/${safePackageName}.min.js`,
               chunkFileNames: `${buildModule}/[name]-[hash].min.js`,
               plugins: [terser()],
             },
@@ -104,7 +105,7 @@ export function createRollupConfig(options) {
         case 'umd': {
           const baseUMDOutput = {
             ...baseOutput,
-            name: camelCase(safeName),
+            name: camelCase(safePackageName),
             // inline dynamic imports for umd modules
             // because rollup doesn't support code-splitting for IIFE/UMD
             inlineDynamicImports: true,
@@ -120,7 +121,7 @@ export function createRollupConfig(options) {
             },
             {
               ...baseUMDOutput,
-              entryFileNames: `${buildModule}/${safeName}.min.js`,
+              entryFileNames: `${buildModule}/${safePackageName}.min.js`,
               plugins: [terser()],
             },
           ];
@@ -138,7 +139,7 @@ export function createRollupConfig(options) {
 // https://github.com/rollup/rollup/issues/4415
 export function createRollupConfig2(options) {
   const { useTypescript, packagePeerDeps, packageName } = options;
-  const safeName = safePackageName(packageName);
+  const safePackageName = sanitizePackageName(packageName);
 
   const baseConfig = {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
@@ -178,7 +179,7 @@ export function createRollupConfig2(options) {
           babelrc: false,
         }),
       postcss({
-        extract: `css/${safeName}.css`,
+        extract: `css/${safePackageName}.css`,
         minimize: true,
         plugins: [autoprefixer()],
         sourceMap: true,
@@ -197,7 +198,7 @@ export function createRollupConfig2(options) {
         sourcemap: true,
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
         exports: 'named',
-        entryFileNames: `${buildModule}/${safeName}.js`,
+        entryFileNames: `${buildModule}/${safePackageName}.js`,
         chunkFileNames: `${buildModule}/[name]-[hash].js`,
         assetFileNames: '[name][extname]',
       };
@@ -230,7 +231,7 @@ export function createRollupConfig2(options) {
               plugins: [...baseConfig.plugins, terser()],
               output: {
                 ...baseOutput,
-                entryFileNames: `${buildModule}/${safeName}.min.js`,
+                entryFileNames: `${buildModule}/${safePackageName}.min.js`,
                 chunkFileNames: `${buildModule}/[name]-[hash].min.js`,
               },
             },
@@ -239,7 +240,7 @@ export function createRollupConfig2(options) {
         case 'umd': {
           const baseUMDOutput = {
             ...baseOutput,
-            name: camelCase(safeName),
+            name: camelCase(safePackageName),
             // inline dynamic imports for umd modules
             // because rollup doesn't support code-splitting for IIFE/UMD
             inlineDynamicImports: true,
@@ -260,7 +261,7 @@ export function createRollupConfig2(options) {
               plugins: [...baseConfig.plugins, terser()],
               output: {
                 ...baseUMDOutput,
-                entryFileNames: `${buildModule}/${safeName}.min.js`,
+                entryFileNames: `${buildModule}/${safePackageName}.min.js`,
               },
             },
           ];
