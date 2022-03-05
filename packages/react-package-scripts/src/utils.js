@@ -4,25 +4,24 @@ import chalk from 'react-dev-utils/chalk';
 import { paths } from './paths';
 
 export function writeCjsEntryFile(packageName) {
-  const safeName = safePackageName(packageName);
+  const safePackageName = sanitizePackageName(packageName);
   const contents = `'use strict';
 if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./cjs/${safeName}.min.js');
+  module.exports = require('./cjs/${safePackageName}.min.js');
 } else {
-  module.exports = require('./cjs/${safeName}.js');
+  module.exports = require('./cjs/${safePackageName}.js');
 }`;
   return fs.outputFileSync(path.join(paths.appDist, 'index.js'), contents);
 }
 
-// taken from TSDX
-export function safePackageName(packageName) {
-  return packageName
-    .toLowerCase()
-    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '');
-}
-
 export function resolvePath(relativePath) {
   return path.resolve(process.cwd(), relativePath);
+}
+
+export function sanitizePackageName(packageName) {
+  return packageName
+    .toLowerCase()
+    .replace(/(^@.*\/)|((^[^a-z]+)|[^\w.-])|([^a-z0-9]+$)/g, '');
 }
 
 function logError(error) {

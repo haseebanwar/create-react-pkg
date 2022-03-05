@@ -4,7 +4,12 @@ import chalk from 'react-dev-utils/chalk';
 import { start } from './scripts/start';
 import { build } from './scripts/build';
 import { test } from './scripts/test';
-import { commands } from './constants';
+
+const commands = {
+  start: 'start',
+  build: 'build',
+  test: 'test',
+};
 
 const args = process.argv.slice(2);
 const command = args[0];

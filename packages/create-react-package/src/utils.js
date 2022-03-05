@@ -18,11 +18,10 @@ export function getAuthorName() {
   return author;
 }
 
-// taken from TSDX
-export function safePackageName(packageName) {
+export function sanitizePackageName(packageName) {
   return packageName
     .toLowerCase()
-    .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '');
+    .replace(/(^@.*\/)|((^[^a-z]+)|[^\w.-])|([^a-z0-9]+$)/g, '');
 }
 
 export function composePackageJSON(
@@ -31,12 +30,12 @@ export function composePackageJSON(
   useTypescript,
   useStorybook
 ) {
-  const safeName = safePackageName(packageName);
+  const safePackageName = sanitizePackageName(packageName);
   return {
     name: packageName,
     author: authorName,
     main: `dist/index.js`, // CJS entry
-    module: `dist/esm/${safeName}.js`, // ES entry
+    module: `dist/esm/${safePackageName}.js`, // ES entry
     ...(useTypescript && {
       types: './dist/types/index.d.ts',
     }),
