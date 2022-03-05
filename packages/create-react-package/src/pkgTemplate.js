@@ -5,7 +5,7 @@ export const basePackageJSON = {
   files: ['dist'],
   license: 'MIT',
   scripts: {
-    start: `react-package-scripts watch`,
+    start: `react-package-scripts start`,
     build: `react-package-scripts build`,
     test: `react-package-scripts test`,
   },

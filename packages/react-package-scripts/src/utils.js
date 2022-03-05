@@ -1,4 +1,7 @@
+import path from 'path';
+import fs from 'fs-extra';
 import chalk from 'react-dev-utils/chalk';
+import { paths } from './paths';
 
 export function writeCjsEntryFile(packageName) {
   const safeName = safePackageName(packageName);
@@ -18,29 +21,34 @@ export function safePackageName(packageName) {
     .replace(/(^@.*\/)|((^[^a-zA-Z]+)|[^\w.-])|([^a-zA-Z0-9]+$)/g, '');
 }
 
-export const resolvePath = function (relativePath) {
+export function resolvePath(relativePath) {
   return path.resolve(process.cwd(), relativePath);
-};
+}
+
+function logError(error) {
+  console.error(
+    chalk.red(
+      `${error.plugin === 'rpt2' ? 'typescript' : error.plugin || ''} ${
+        error.message
+      }`
+    )
+  );
+
+  if (error.frame) {
+    console.log(error.frame);
+  } else if (error.stack) {
+    console.log(error.stack.replace(error.message, ''));
+  }
+}
 
 export function logBuildError(error) {
   switch (error.plugin) {
     case 'eslint':
-      console.error(error.lintErrors);
+      if (error.lintErrors) console.error(error.lintErrors);
+      else logError(error);
       return;
     default:
-      console.error(
-        chalk.red(
-          `${error.plugin === 'rpt2' ? 'typescript' : error.plugin || ''} ${
-            error.message
-          }`
-        )
-      );
-
-      if (error.frame) {
-        console.log(error.frame);
-      } else if (error.stack) {
-        console.log(error.stack.replace(error.message, ''));
-      }
+      logError(error);
       return;
   }
 }
