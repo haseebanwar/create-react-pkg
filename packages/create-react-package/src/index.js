@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import path from 'path';
-import { execSync } from 'child_process';
+import { sync as spawnSync } from 'cross-spawn';
 import fs from 'fs-extra';
 import { program } from 'commander';
 import chalk from 'chalk';
@@ -11,49 +11,27 @@ import {
   composePackageJSON,
   getPackageCMD,
   makePackageDeps,
-  makeInstallCommand,
+  makeInstallArgs,
+  getTemplateName,
+  sanitizePackageName,
 } from './utils';
 import packageJSON from '../package.json';
-
-const templates = [
-  'basic',
-  'basic-storybook',
-  'typescript',
-  'typescript-storybook',
-];
 
 program.name(packageJSON.name);
 program.version(packageJSON.version);
 
 program
-  .argument('<package-directory>', 'package directory')
-  .description('Create a new React package')
+  .argument('<package-directory>')
+  .usage(`${chalk.green('<project-directory>')} [options]`)
   .option('--use-npm', 'use NPM for installing package dependencies')
-  .option('-t, --template <test>', 'specify a template for created package')
+  .option('--ts, --typescript', 'initialize a typescript package')
+  .option('--sb, --storybook', 'add storybook support')
   .action(async (projectDirectory, flags) => {
     try {
-      const { useNpm, template = 'basic' } = flags;
+      const { useNpm, storybook, typescript } = flags;
 
-      // check if template is valid
-      if (!templates.includes(template)) {
-        console.error(
-          chalk.red(
-            'Invalid template, please use one of the following supported templates'
-          )
-        );
-
-        // print valid templates
-        templates.forEach((supportedTemplate) => {
-          console.log(`- ${chalk.cyan(supportedTemplate)}`);
-        });
-
-        process.exit(1);
-      }
-
-      const useTypescript = template.includes('typescript');
-      const useStorybook = template.includes('storybook');
       const projectPath = path.resolve(projectDirectory);
-      const packageName = path.basename(projectPath);
+      const packageName = sanitizePackageName(path.basename(projectPath));
 
       // validate package name
       const {
@@ -92,7 +70,13 @@ program
         process.exit(1);
       }
 
-      console.log(`Creating a new package in ${chalk.green(projectPath)}`);
+      console.log(
+        `Creating a new package ${chalk.green(packageName)} in ${chalk.green(
+          projectPath
+        )}`
+      );
+
+      const template = getTemplateName(typescript, storybook);
 
       // copy the template
       await fs.copy(
@@ -110,23 +94,12 @@ program
       // get author name
       const author = getAuthorName();
 
-      // if author is not present prompt for name
-
-      // install deps
-      const dependencies = makePackageDeps(useTypescript, useStorybook);
-      console.log(
-        '\nInstalling dependencies. This might take a couple of minutes.'
-      );
-
-      dependencies.forEach((dep) => console.log(`- ${chalk.cyan(dep)}`));
-      process.chdir(projectPath);
-
       // generate package.json
       const pkg = composePackageJSON(
         packageName,
         author,
-        useTypescript,
-        useStorybook
+        typescript,
+        storybook
       );
       fs.outputJSONSync(path.resolve(projectPath, 'package.json'), pkg, {
         spaces: 2,
@@ -134,8 +107,25 @@ program
 
       // decide whether to use npm or yarn for installing deps
       const packageCMD = getPackageCMD(useNpm);
-      const command = makeInstallCommand(packageCMD, dependencies);
-      execSync(command, { stdio: 'ignore' });
+
+      console.log(
+        `\nInstalling ${chalk.cyan('react')}, ${chalk.cyan(
+          'react-dom'
+        )}, and ${chalk.cyan('react-package-scripts')} using ${chalk.cyan(
+          packageCMD
+        )}${typescript || storybook ? ' with' : ''}`
+      );
+      typescript && console.log(`- ${chalk.cyan('typescript')}`);
+      storybook && console.log(`- ${chalk.cyan('storybook')}`);
+      packageCMD === 'yarn' && console.log(''); // line break for yarn only
+
+      // install deps
+      const dependencies = makePackageDeps(typescript, storybook);
+      process.chdir(projectPath);
+      const installArgs = makeInstallArgs(packageCMD, dependencies);
+      spawnSync(packageCMD, installArgs, {
+        stdio: 'inherit',
+      });
 
       console.log('\nInstalled dependencies');
 

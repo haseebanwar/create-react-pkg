@@ -27,10 +27,6 @@ export const basePackageJSON = {
   },
 };
 
-// export const dependencies = [];
-// export const tsDependencies = [];
-// export const storybookDependencies = [];
-
 export const dependencies = [
   // 'react-package-scripts',
   // '@haseebanwar/react-package-scripts',

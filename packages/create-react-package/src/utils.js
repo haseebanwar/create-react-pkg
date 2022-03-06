@@ -6,6 +6,18 @@ import {
   storybookDependencies,
 } from './pkgTemplate';
 
+export function getTemplateName(useTypescript, useStorybook) {
+  if (useTypescript && useStorybook) {
+    return 'typescript-storybook';
+  } else if (useTypescript) {
+    return 'typescript';
+  } else if (useStorybook) {
+    return 'basic-storybook';
+  }
+
+  return 'basic';
+}
+
 export function getAuthorName() {
   let author = '';
 
@@ -75,13 +87,18 @@ export function makePackageDeps(useTypescript, useStorybook) {
   return deps;
 }
 
-export function makeInstallCommand(cmd, dependencies) {
+export function makeInstallArgs(cmd, dependencies) {
   switch (cmd) {
     case 'npm':
-      return `npm install ${dependencies.join(' ')} --save-dev`;
+      return [
+        'install',
+        ...dependencies,
+        '--save-dev',
+        '--no-audit', // https://github.com/facebook/create-react-app/issues/11174
+      ];
     case 'yarn':
-      return `yarn add ${dependencies.join(' ')} --dev`;
+      return ['add', ...dependencies, '--dev'];
     default:
-      throw new Error('Invalid package manager');
+      throw new Error('Unkown package manager');
   }
 }
