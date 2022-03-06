@@ -21,13 +21,34 @@ program.name(packageJSON.name);
 program.version(packageJSON.version);
 
 program
-  .argument('<package-directory>')
-  .usage(`${chalk.green('<project-directory>')} [options]`)
+  .argument('[package-directory]')
+  .usage(`${chalk.green('<package-directory>')} [options]`)
   .option('--use-npm', 'use NPM for installing package dependencies')
   .option('--ts, --typescript', 'initialize a typescript package')
-  .option('--sb, --storybook', 'add storybook support')
+  .option('--sb, --storybook', 'add storybook')
   .action(async (projectDirectory, flags) => {
     try {
+      // show a nice if package directory is not specified
+      if (!projectDirectory) {
+        console.log('Please specify the package directory');
+        console.log(
+          `  ${chalk.cyan(program.name())} ${chalk.green(
+            `<package-directory>`
+          )}`
+        );
+
+        console.log('\nFor example:');
+        console.log(
+          `  ${chalk.cyan(program.name())} ${chalk.green(`my-package`)}`
+        );
+
+        console.log(
+          `\nRun ${chalk.cyan(`${program.name()} --help`)} to see all options.`
+        );
+
+        process.exit(1);
+      }
+
       const { useNpm, storybook, typescript } = flags;
 
       const projectPath = path.resolve(projectDirectory);
@@ -149,6 +170,7 @@ program
 
       process.exit(0);
     } catch (error) {
+      console.error(chalk.red('Failed to create package'));
       console.log('error', error);
       process.exit(1);
     }
