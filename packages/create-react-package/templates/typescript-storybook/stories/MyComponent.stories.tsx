@@ -14,6 +14,4 @@ const Template: ComponentStory<typeof MyComponent> = (args) => (
 );
 
 export const Default = Template.bind({});
-Default.args = {
-  label: 'Test Label',
-};
+Default.args = {};

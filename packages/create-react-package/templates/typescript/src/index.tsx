@@ -1,23 +1,5 @@
-import React from 'react';
+import React, { FC } from 'react';
 
-export const MyComponent = (props: any) => {
-  // const doSomething = async () => {
-  //   const test = await import('./test');
-  //   console.log('test', test);
-  // };
-
-  return (
-    <div>
-      These are Things
-      <h1>My props are</h1>
-      <pre>{JSON.stringify(props, null, 2)}</pre>
-      <button
-      // onClick={doSomething}
-      >
-        Load dynamic import
-      </button>
-    </div>
-  );
+export const MyComponent: FC = () => {
+  return <div>Show the World what you can build!</div>;
 };
-
-export * from './test1';
