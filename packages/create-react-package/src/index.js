@@ -4,6 +4,7 @@ import path from 'path';
 import { sync as spawnSync } from 'cross-spawn';
 import fs from 'fs-extra';
 import { program } from 'commander';
+import prompts from 'prompts';
 import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 import {
@@ -28,25 +29,40 @@ program
   .option('--sb, --storybook', 'add storybook')
   .action(async (projectDirectory, flags) => {
     try {
-      // show a nice if package directory is not specified
+      // prompt if package directory is not specified
       if (!projectDirectory) {
-        console.log('Please specify the package directory');
-        console.log(
-          `  ${chalk.cyan(program.name())} ${chalk.green(
-            `<package-directory>`
-          )}`
-        );
+        const projectDirectoryInput = await prompts(
+          {
+            type: 'text',
+            name: 'projectDirectory',
+            initial: 'my-package',
+            message: 'What is your package named?',
+          },
+          {
+            onCancel: () => {
+              console.log('Please specify the package directory');
+              console.log(
+                `  ${chalk.cyan(program.name())} ${chalk.green(
+                  `<package-directory>`
+                )}`
+              );
 
-        console.log('\nFor example:');
-        console.log(
-          `  ${chalk.cyan(program.name())} ${chalk.green(`my-package`)}`
-        );
+              console.log('\nFor example:');
+              console.log(
+                `  ${chalk.cyan(program.name())} ${chalk.green(`my-package`)}`
+              );
 
-        console.log(
-          `\nRun ${chalk.cyan(`${program.name()} --help`)} to see all options.`
-        );
+              console.log(
+                `\nRun ${chalk.cyan(
+                  `${program.name()} --help`
+                )} to see all options.`
+              );
 
-        process.exit(1);
+              process.exit(1);
+            },
+          }
+        );
+        projectDirectory = projectDirectoryInput.projectDirectory;
       }
 
       const { useNpm, storybook, typescript } = flags;
@@ -107,13 +123,34 @@ program
           overwrite: true,
         }
       );
+
+      // fix gitignore
       await fs.move(
         path.resolve(projectPath, './gitignore'),
         path.resolve(projectPath, './.gitignore')
       );
 
       // get author name
-      const author = getAuthorName();
+      let author = getAuthorName();
+
+      // prompt to get author name if not present
+      if (!author) {
+        const authorInput = await prompts({
+          type: 'text',
+          name: 'author',
+          message: 'Package author',
+        });
+
+        author = authorInput.author;
+      }
+
+      // fix license
+      const licensePath = path.resolve(projectPath, 'LICENSE');
+      let license = fs.readFileSync(licensePath, { encoding: 'utf-8' });
+
+      license = license.replace(/\[year\]/g, new Date().getFullYear());
+      license = license.replace(/\[author\]/g, author);
+      fs.writeFileSync(licensePath, license, { encoding: 'utf-8' });
 
       // generate package.json
       const pkg = composePackageJSON(
