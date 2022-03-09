@@ -123,6 +123,12 @@ program
         }
       );
 
+      // copy base files
+      await fs.copy(
+        path.resolve(__dirname, '../templates/baseFiles'),
+        projectPath
+      );
+
       // fix gitignore
       await fs.move(
         path.resolve(projectPath, './gitignore'),
