@@ -63,16 +63,10 @@ export function composePackageJSON(
   };
 }
 
-export function getPackageCMD(useNpm) {
-  if (useNpm) return 'npm';
-
-  try {
-    execSync('yarn --version', { stdio: 'ignore' });
-    return 'yarn';
-  } catch (error) {
-    // yarn is not installed, use npm as fallback
-    return 'npm';
-  }
+// taken from create-react-app
+// https://github.com/facebook/create-react-app/blob/main/packages/create-react-app/createReactApp.js
+export function isUsingYarn() {
+  return (process.env.npm_config_user_agent || '').indexOf('yarn') === 0;
 }
 
 export function makePackageDeps(useTypescript, useStorybook) {

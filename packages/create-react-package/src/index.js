@@ -10,7 +10,7 @@ import validatePackageName from 'validate-npm-package-name';
 import {
   getAuthorName,
   composePackageJSON,
-  getPackageCMD,
+  isUsingYarn,
   makePackageDeps,
   makeInstallArgs,
   getTemplateName,
@@ -24,7 +24,6 @@ program.version(packageJSON.version);
 program
   .argument('[package-directory]')
   .usage(`${chalk.green('<package-directory>')} [options]`)
-  .option('--use-npm', 'use NPM for installing package dependencies')
   .option('--ts, --typescript', 'initialize a typescript package')
   .option('--sb, --storybook', 'add storybook')
   .action(async (projectDirectory, flags) => {
@@ -65,7 +64,7 @@ program
         projectDirectory = projectDirectoryInput.projectDirectory;
       }
 
-      const { useNpm, storybook, typescript } = flags;
+      const { storybook, typescript } = flags;
 
       const projectPath = path.resolve(projectDirectory);
       const packageName = sanitizePackageName(path.basename(projectPath));
@@ -108,7 +107,7 @@ program
       }
 
       console.log(
-        `Creating a new package ${chalk.green(packageName)} in ${chalk.green(
+        `\nCreating a new package ${chalk.green(packageName)} in ${chalk.green(
           projectPath
         )}`
       );
@@ -164,18 +163,22 @@ program
       });
 
       // decide whether to use npm or yarn for installing deps
-      const packageCMD = getPackageCMD(useNpm);
+      const useYarn = isUsingYarn();
+      const packageCMD = useYarn ? 'yarn' : 'npm';
 
       console.log(
-        `\nInstalling ${chalk.cyan('react')}, ${chalk.cyan(
+        '\nInstalling dependencies. This might take a couple of minutes.'
+      );
+      console.log(
+        `Installing ${chalk.cyan('react')}, ${chalk.cyan(
           'react-dom'
-        )}, and ${chalk.cyan('react-package-scripts')} using ${chalk.cyan(
-          packageCMD
-        )}${typescript || storybook ? ' with' : ''}`
+        )}, and ${chalk.cyan('react-package-scripts')}${
+          typescript || storybook ? ' with' : ''
+        }`
       );
       typescript && console.log(`- ${chalk.cyan('typescript')}`);
       storybook && console.log(`- ${chalk.cyan('storybook')}`);
-      packageCMD === 'yarn' && console.log(''); // line break for yarn only
+      useYarn && console.log(''); // line break for yarn only
 
       // install deps
       const dependencies = makePackageDeps(typescript, storybook);
