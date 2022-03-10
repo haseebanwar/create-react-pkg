@@ -2,10 +2,7 @@ import fs from 'fs-extra';
 import chalk from 'react-dev-utils/chalk';
 import { watch } from 'rollup';
 import clearConsole from 'react-dev-utils/clearConsole';
-import {
-  createRollupConfig,
-  createRollupConfig2,
-} from '../rollup/rollupConfig';
+import { createRollupConfig2 } from '../rollup/rollupConfig';
 import { writeCjsEntryFile, logBuildError, logBuildWarnings } from '../utils';
 import { paths } from '../paths';
 

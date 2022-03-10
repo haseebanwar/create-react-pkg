@@ -10,10 +10,10 @@ export function test() {
   const jestConfig = {
     testEnvironment: 'jsdom',
     transform: {
-      '.(js|jsx)$': require.resolve('./jest/babelTransform.js'),
+      '.(js|jsx)$': require.resolve('../jest/babelTransform.js'),
       '.(ts|tsx)$': require.resolve('ts-jest'),
       '.(css|scss|sass|styl|stylus|less)$': require.resolve(
-        './jest/cssTransform.js'
+        '../jest/cssTransform.js'
       ),
     },
     // transformIgnorePatterns already includes node_modules

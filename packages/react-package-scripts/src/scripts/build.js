@@ -39,7 +39,7 @@ export async function build() {
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
-        // logBuildWarnings(warning, warn);
+        logBuildWarnings(warning, warn);
       },
     });
 
