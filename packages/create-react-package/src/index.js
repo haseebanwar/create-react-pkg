@@ -117,10 +117,7 @@ program
       // copy the template
       await fs.copy(
         path.resolve(__dirname, `../templates/${template}`),
-        projectPath,
-        {
-          overwrite: true,
-        }
+        projectPath
       );
 
       // copy base files

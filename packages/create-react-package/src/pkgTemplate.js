@@ -29,7 +29,7 @@ export const basePackageJSON = {
 
 export const dependencies = [
   // 'react-package-scripts',
-  '@haseebanwar/react-package-scripts',
+  // '@haseebanwar/react-package-scripts',
   'react',
   'react-dom',
 ];
@@ -38,7 +38,9 @@ export const tsDependencies = [
   '@types/react-dom',
   '@types/jest',
   '@types/node',
-  'typescript',
+  // TODO: remove hard-coded version when this is fixed
+  // https://github.com/facebook/create-react-app/issues/12150
+  'typescript@~4.5.0',
   'tslib',
 ];
 export const storybookDependencies = [

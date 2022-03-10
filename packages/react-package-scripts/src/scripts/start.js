@@ -2,7 +2,10 @@ import fs from 'fs-extra';
 import chalk from 'react-dev-utils/chalk';
 import { watch } from 'rollup';
 import clearConsole from 'react-dev-utils/clearConsole';
-import { createRollupConfig2 } from '../rollup/rollupConfig';
+import {
+  createRollupConfig,
+  createRollupConfig2,
+} from '../rollup/rollupConfig';
 import { writeCjsEntryFile, logBuildError, logBuildWarnings } from '../utils';
 import { paths } from '../paths';
 
@@ -57,10 +60,13 @@ export function start() {
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
+
+        // ignoring because eslint already picked them
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
+
         logBuildWarnings(warning, warn);
       },
       watch: {
-        silent: true,
         include: ['src/**'],
         exclude: ['node_modules/**'],
       },

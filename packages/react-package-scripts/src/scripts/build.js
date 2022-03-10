@@ -33,12 +33,13 @@ export async function build() {
     bundle = await rollup({
       ...rollupConfig,
       onwarn: (warning, warn) => {
+        console.log('warning', warning);
         // print this message only when there were no previous warnings for this build
         if (!hasWarnings) {
           console.log(chalk.yellow('Compiled with warnings.'));
         }
         hasWarnings = true;
-        logBuildWarnings(warning, warn);
+        // logBuildWarnings(warning, warn);
       },
     });
 
