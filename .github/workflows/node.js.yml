@@ -27,12 +27,11 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Install lerna
-        run: npm install lerna -g
-
       - name: Install deps
+        run: npm ci
+
+      - name: Install package deps
         run: lerna bootstrap
-        # run: npm ci
 
       - name: Build
         run: npm run build
