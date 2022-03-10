@@ -14,7 +14,8 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x, 14.x, 16.x]
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
+        # os: [ubuntu-latest, windows-latest, macOS-latest]
 
     steps:
       - name: Checkout repo
@@ -27,7 +28,8 @@ jobs:
           cache: 'npm'
 
       - name: Install deps
-        run: npm ci
+        run: lerna bootstrap
+        # run: npm ci
 
       - name: Build
         run: npm run build
