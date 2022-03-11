@@ -28,10 +28,13 @@ jobs:
           cache: 'npm'
 
       - name: Install deps
-        run: npm ci --prefer-offline
+        run: npm ci
 
       - name: Install package deps
         run: lerna bootstrap
+
+      - name: Lint
+        run: npm run lint
 
       - name: Build
         run: npm run build
