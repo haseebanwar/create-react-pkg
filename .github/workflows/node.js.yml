@@ -30,11 +30,11 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      - name: Install package deps
-        run: lerna bootstrap
+      # - name: Install package deps
+      #   run: lerna bootstrap
 
-      - name: Build
-        run: npm run build
+      # - name: Build
+      #   run: npm run build
 
-      - name: Test
-        run: npm test
+      # - name: Test
+      #   run: npm test
