@@ -18,7 +18,8 @@
   ],
   "scripts": {
     "start": "babel src -d lib --root-mode upward --watch",
-    "build": "babel src -d lib --root-mode upward"
+    "build": "babel src -d lib --root-mode upward",
+    "prepublishOnly": "npm run build"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
@@ -49,5 +50,6 @@
     "ts-jest": "^27.1.3",
     "tslib": "^1.14.1",
     "typescript": "^4.6.2"
-  }
+  },
+  "gitHead": "97c3dff653b1174a903d903fc69c50055f8757a6"
 }
