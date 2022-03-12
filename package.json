@@ -4,7 +4,8 @@
     "start": "lerna run start --stream",
     "build": "lerna run build",
     "test": "jest",
-    "lint": "eslint packages"
+    "lint": "eslint packages",
+    "release": "lerna publish"
   },
   "devDependencies": {
     "@babel/cli": "^7.17.6",
