@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import chalk from 'react-dev-utils/chalk';
+import chalk from 'chalk';
 import { start } from './scripts/start';
 import { build } from './scripts/build';
 import { test } from './scripts/test';

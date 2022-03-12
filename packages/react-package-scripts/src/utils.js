@@ -1,6 +1,6 @@
 import path from 'path';
 import fs from 'fs-extra';
-import chalk from 'react-dev-utils/chalk';
+import chalk from 'chalk';
 import { paths } from './paths';
 
 export function writeCjsEntryFile(packageName) {
@@ -73,4 +73,12 @@ export function logBuildWarnings(warning, warn) {
       warn(warning);
       return;
   }
+}
+
+// taken from react-dev-utils
+// https://github.com/facebook/create-react-app/blob/main/packages/react-dev-utils/clearConsole.js
+export function clearConsole() {
+  process.stdout.write(
+    process.platform === 'win32' ? '\x1B[2J\x1B[0f' : '\x1B[2J\x1B[3J\x1B[H'
+  );
 }

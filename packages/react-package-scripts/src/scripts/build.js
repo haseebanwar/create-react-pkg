@@ -1,9 +1,13 @@
 import fs from 'fs-extra';
 import { rollup } from 'rollup';
-import chalk from 'react-dev-utils/chalk';
-import clearConsole from 'react-dev-utils/clearConsole';
+import chalk from 'chalk';
 import { createRollupConfig } from '../rollup/rollupConfig';
-import { writeCjsEntryFile, logBuildError, logBuildWarnings } from '../utils';
+import {
+  writeCjsEntryFile,
+  logBuildError,
+  logBuildWarnings,
+  clearConsole,
+} from '../utils';
 import { paths } from '../paths';
 
 export async function build() {
@@ -33,7 +37,6 @@ export async function build() {
     bundle = await rollup({
       ...rollupConfig,
       onwarn: (warning, warn) => {
-        console.log('warning', warning);
         // print this message only when there were no previous warnings for this build
         if (!hasWarnings) {
           console.log(chalk.yellow('Compiled with warnings.'));

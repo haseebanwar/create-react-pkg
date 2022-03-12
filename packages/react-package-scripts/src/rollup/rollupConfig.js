@@ -7,9 +7,9 @@ import { terser } from 'rollup-plugin-terser';
 import babelPresetReact from '@babel/preset-react';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
-import eslintFormatter from 'react-dev-utils/eslintFormatter';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
+import { eslintFormatter } from '../eslint/eslintFormatter';
 import { sanitizePackageName } from '../utils';
 import { paths } from '../paths';
 
