@@ -19,7 +19,7 @@
   "scripts": {
     "start": "babel src -d lib --root-mode upward --watch",
     "build": "babel src -d lib --root-mode upward",
-    "test": "jest"
+    "prepublishOnly": "npm run build"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
@@ -31,5 +31,6 @@
     "fs-extra": "^10.0.1",
     "prompts": "^2.4.2",
     "validate-npm-package-name": "^3.0.0"
-  }
+  },
+  "gitHead": "97c3dff653b1174a903d903fc69c50055f8757a6"
 }
