@@ -17,9 +17,10 @@
     "eslint"
   ],
   "scripts": {
-    "start": "babel src -d lib --root-mode upward --watch",
-    "build": "babel src -d lib --root-mode upward",
-    "prepublishOnly": "npm run build"
+    "start": "npm run clean && babel src -d lib --root-mode upward --watch",
+    "build": "npm run clean && babel src -d lib --root-mode upward",
+    "prepublishOnly": "npm run build",
+    "clean": "rimraf lib"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
