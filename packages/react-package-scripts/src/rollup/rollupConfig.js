@@ -56,7 +56,10 @@ export function createRollupConfig(options) {
         babel({
           exclude: 'node_modules/**',
           babelHelpers: 'bundled',
-          presets: [babelPresetReact], // TODO: replace with require.resolve
+          presets: [
+            [require.resolve('@babel/preset-react')],
+            [require.resolve('@babel/preset-env')],
+          ],
           babelrc: false,
         }),
       postcss({

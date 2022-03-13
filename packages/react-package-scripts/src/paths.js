@@ -1,5 +1,6 @@
 import { resolvePath } from './utils';
 
+// TODO: better names
 export const paths = {
   appRoot: resolvePath('.'),
   appSrc: resolvePath('src'),
