@@ -42,6 +42,7 @@ export const tsDependencies = [
   // https://github.com/facebook/create-react-app/issues/12150
   'typescript@~4.5.0',
   'tslib',
+  'ts-jest',
 ];
 export const storybookDependencies = [
   '@babel/core',
