@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/react-package-scripts",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Scripts for Create React Package",
   "bin": {
     "react-package-scripts": "lib/index.js"
@@ -16,6 +16,9 @@
     "bundle",
     "eslint"
   ],
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "scripts": {
     "start": "npm run clean && babel src -d lib --root-mode upward --watch",
     "build": "npm run clean && babel src -d lib --root-mode upward",

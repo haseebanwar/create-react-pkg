@@ -197,9 +197,21 @@ program
       const dependencies = makePackageDeps(typescript, storybook);
       process.chdir(projectPath);
       const installArgs = makeInstallArgs(packageCMD, dependencies);
-      spawnSync(packageCMD, installArgs, {
-        stdio: 'inherit',
-      });
+      spawnSync(
+        packageCMD,
+        [
+          'install',
+          '--no-audit', // https://github.com/facebook/create-react-app/issues/11174
+          '--save',
+          '--save-exact',
+          '--loglevel',
+          'error',
+          ...installArgs,
+        ],
+        {
+          stdio: 'inherit',
+        }
+      );
 
       console.log('\nInstalled dependencies');
 
