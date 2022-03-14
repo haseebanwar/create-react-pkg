@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import path from 'path';
+import semver from 'semver';
 import { sync as spawnSync } from 'cross-spawn';
 import fs from 'fs-extra';
 import { program } from 'commander';
@@ -66,10 +67,12 @@ program
 
       // check if user is on non-supported node version
       const currentNodeVersion = process.versions.node;
-      const nodeMajor = currentNodeVersion?.split('.')[0];
-      if (parseInt(nodeMajor) < 14) {
+      const packageNodeVersion = packageJSON.engines.node;
+      if (!semver.satisfies(currentNodeVersion, packageNodeVersion)) {
         console.error(
-          `You are running Node ${currentNodeVersion}.\nCreate React Package required Node 14 or higher.\nPlease update your version of Node.`
+          `You are running Node ${currentNodeVersion}.\nCreate React Package required Node ${
+            semver.minVersion(packageNodeVersion).version
+          } or higher.\nPlease update your version of Node.`
         );
         process.exit(1);
       }
@@ -197,21 +200,9 @@ program
       const dependencies = makePackageDeps(typescript, storybook);
       process.chdir(projectPath);
       const installArgs = makeInstallArgs(packageCMD, dependencies);
-      spawnSync(
-        packageCMD,
-        [
-          'install',
-          '--no-audit', // https://github.com/facebook/create-react-app/issues/11174
-          '--save',
-          '--save-exact',
-          '--loglevel',
-          'error',
-          ...installArgs,
-        ],
-        {
-          stdio: 'inherit',
-        }
-      );
+      spawnSync(packageCMD, installArgs, {
+        stdio: 'inherit',
+      });
 
       console.log('\nInstalled dependencies');
 

@@ -16,6 +16,9 @@
     "library",
     "rollup"
   ],
+  "engines": {
+    "node": ">=14.17.0"
+  },
   "scripts": {
     "start": "npm run clean && babel src -d lib --root-mode upward --watch",
     "build": "npm run clean && babel src -d lib --root-mode upward",
@@ -30,8 +33,10 @@
     "commander": "^9.0.0",
     "cross-spawn": "^7.0.3",
     "fs-extra": "^10.0.1",
+    "glob": "^7.2.0",
     "prompts": "^2.4.2",
+    "semver": "^7.3.5",
     "validate-npm-package-name": "^3.0.0"
   },
-  "gitHead": "97c3dff653b1174a903d903fc69c50055f8757a6"
+  "gitHead": "68f174019962a73933378ab07b69fde97382ccc2"
 }
