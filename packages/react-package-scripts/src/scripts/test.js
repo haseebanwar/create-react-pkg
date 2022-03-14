@@ -1,3 +1,4 @@
+import fs from 'fs-extra';
 import { run as jestRun } from 'jest';
 import { paths } from '../paths';
 
@@ -7,11 +8,15 @@ export function test() {
 
   const argv = process.argv.slice(2);
 
+  const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
+
   const jestConfig = {
     testEnvironment: 'jsdom',
     transform: {
       '.(js|jsx)$': require.resolve('../jest/babelTransform.js'),
-      '.(ts|tsx)$': require.resolve('ts-jest'),
+      ...(isTypescriptConfigured && {
+        '.(ts|tsx)$': require.resolve('ts-jest'),
+      }),
       '.(css|scss|sass|styl|stylus|less)$': require.resolve(
         '../jest/cssTransform.js'
       ),
