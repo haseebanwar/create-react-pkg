@@ -1,3 +1,4 @@
+import https from 'https';
 import { execSync } from 'child_process';
 import {
   basePackageJSON,
@@ -5,6 +6,30 @@ import {
   tsDependencies,
   storybookDependencies,
 } from './pkgTemplate';
+import packageJSON from '../package.json';
+
+export function checkForLatestVersion() {
+  return new Promise((resolve, reject) => {
+    https
+      .get(
+        `https://registry.npmjs.org/-/package/${packageJSON.name}/dist-tags`,
+        (res) => {
+          if (res.statusCode === 200) {
+            let body = '';
+            res.on('data', (data) => (body += data));
+            res.on('end', () => {
+              resolve(JSON.parse(body).latest);
+            });
+          } else {
+            reject(new Error('Failed to check for the latest version of CLI'));
+          }
+        }
+      )
+      .on('error', () => {
+        reject(new Error('Failed to check for the latest version of CLI'));
+      });
+  });
+}
 
 export function getTemplateName(useTypescript, useStorybook) {
   if (useTypescript && useStorybook) {

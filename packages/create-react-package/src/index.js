@@ -9,6 +9,7 @@ import prompts from 'prompts';
 import chalk from 'chalk';
 import validatePackageName from 'validate-npm-package-name';
 import {
+  checkForLatestVersion,
   getAuthorName,
   composePackageJSON,
   isUsingYarn,
@@ -119,6 +120,39 @@ program
         process.exit(1);
       }
 
+      // check if user is creating a new package with an old version of CLI
+      try {
+        const latestVersionOfCLI = await checkForLatestVersion();
+
+        if (
+          latestVersionOfCLI &&
+          semver.lt(packageJSON.version, latestVersionOfCLI)
+        ) {
+          console.error(
+            chalk.red(
+              `You are running \`create-react-package\` ${chalk.cyan(
+                packageJSON.version
+              )} which is behind the latest release ${chalk.cyan(
+                latestVersionOfCLI
+              )}`
+            )
+          );
+          console.log(
+            '\nPlease remove any global installs with one of the following commands:\n' +
+              '- npm uninstall -g create-react-app\n' +
+              '- yarn global remove create-react-app'
+          );
+          console.log(
+            '\nThe latest instructions for creating a new package can be found here:\n' +
+              'https://github.com/haseebanwar/create-react-package#getting-started'
+          );
+          process.exit(1);
+        }
+      } catch (error) {
+        // ignore and let user continue with old version
+      }
+
+      // start creation of package
       console.log(
         `\nCreating a new package ${chalk.green(packageName)} in ${chalk.green(
           projectPath

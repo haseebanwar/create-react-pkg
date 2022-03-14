@@ -16,6 +16,8 @@
     "bundle",
     "eslint"
   ],
+  "author": "Haseeb Anwar (https://haseebanwar.net/)",
+  "license": "MIT",
   "engines": {
     "node": ">=14.17.0"
   },
@@ -25,8 +27,6 @@
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib"
   },
-  "author": "Haseeb Anwar (https://haseebanwar.net/)",
-  "license": "MIT",
   "dependencies": {
     "@babel/core": "^7.17.5",
     "@babel/plugin-transform-runtime": "^7.17.0",

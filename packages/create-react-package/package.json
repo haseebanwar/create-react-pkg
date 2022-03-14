@@ -16,6 +16,8 @@
     "library",
     "rollup"
   ],
+  "author": "Haseeb Anwar (https://haseebanwar.net/)",
+  "license": "MIT",
   "engines": {
     "node": ">=14.17.0"
   },
@@ -25,8 +27,6 @@
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib"
   },
-  "author": "Haseeb Anwar (https://haseebanwar.net/)",
-  "license": "MIT",
   "dependencies": {
     "@babel/runtime": "^7.17.2",
     "chalk": "^4.1.2",
