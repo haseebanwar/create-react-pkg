@@ -64,6 +64,16 @@ program
         projectDirectory = projectDirectoryInput.projectDirectory;
       }
 
+      // check if user is on non-supported node version
+      const currentNodeVersion = process.versions.node;
+      const nodeMajor = currentNodeVersion?.split('.')[0];
+      if (parseInt(nodeMajor) < 14) {
+        console.error(
+          `You are running Node ${currentNodeVersion}.\nCreate React Package required Node 14 or higher.\nPlease update your version of Node.`
+        );
+        process.exit(1);
+      }
+
       const { storybook, typescript } = flags;
 
       const projectPath = path.resolve(projectDirectory);
