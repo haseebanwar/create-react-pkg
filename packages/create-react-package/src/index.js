@@ -113,7 +113,7 @@ program
           chalk.red(
             `Please make sure that your package directory ${chalk.cyan(
               `"${packageName}"`
-            )} is empty`
+            )} is empty.\nRemove any hidden directories/files as well.`
           )
         );
         process.exit(1);
