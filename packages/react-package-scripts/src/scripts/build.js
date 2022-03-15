@@ -56,7 +56,7 @@ export async function build() {
   } catch (error) {
     buildFailed = true;
     clearConsole();
-    console.log(chalk.red('Failed to compile.'));
+    console.error(chalk.red('Failed to compile.'));
     logBuildError(error);
   } finally {
     if (bundle) {

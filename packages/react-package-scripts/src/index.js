@@ -1,35 +1,41 @@
 #!/usr/bin/env node
 
 import chalk from 'chalk';
-import { start } from './scripts/start';
+import { watch } from './scripts/watch';
 import { build } from './scripts/build';
 import { test } from './scripts/test';
 
 const commands = {
-  start: 'start',
+  watch: 'watch',
   build: 'build',
   test: 'test',
 };
 
 const args = process.argv.slice(2);
-const command = args[0];
+const command = args.find((arg) => Object.keys(commands).includes(arg));
+
+let cleanArgs = [];
+if (command) {
+  cleanArgs = args.filter((arg) => arg !== command);
+}
 
 switch (command) {
-  case commands.start:
-    start();
+  case commands.watch:
+    watch();
     break;
   case commands.build:
     build();
     break;
   case commands.test:
-    test();
+    test(cleanArgs);
     break;
   default:
     console.error(
-      `Unkown command ${chalk.cyan(`"${command}"`)}. Valid commands are`
-    );
-    Object.entries(commands).forEach(([, validCommand]) =>
-      console.log(`- ${chalk.cyan(validCommand)}`)
+      `Unkown command. Valid commands are`,
+      Object.entries(commands).reduce((acc, [, validCommand]) => {
+        acc += `\n- ${chalk.cyan(validCommand)}`;
+        return acc;
+      }, '')
     );
     process.exit(1);
 }

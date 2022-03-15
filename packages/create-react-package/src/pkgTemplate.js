@@ -5,7 +5,7 @@ export const basePackageJSON = {
   files: ['dist'],
   license: 'MIT',
   scripts: {
-    start: `react-package-scripts start`,
+    start: `react-package-scripts watch`,
     build: `react-package-scripts build`,
     test: `react-package-scripts test`,
   },
@@ -29,7 +29,7 @@ export const basePackageJSON = {
 
 export const dependencies = [
   // 'react-package-scripts',
-  '@haseebanwar/react-package-scripts',
+  // '@haseebanwar/react-package-scripts',
   'react',
   'react-dom',
 ];
