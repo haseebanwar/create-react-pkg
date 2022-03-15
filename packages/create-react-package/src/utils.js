@@ -1,5 +1,6 @@
 import https from 'https';
 import { execSync } from 'child_process';
+import spawn from 'cross-spawn';
 import {
   basePackageJSON,
   dependencies,
@@ -122,4 +123,19 @@ export function makeInstallArgs(cmd, dependencies) {
     default:
       throw new Error('Unkown package manager');
   }
+}
+
+export function executeInstallCommand(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, {
+      stdio: 'inherit',
+    });
+    child.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error('Error installing dependencies'));
+        return;
+      }
+      resolve();
+    });
+  });
 }

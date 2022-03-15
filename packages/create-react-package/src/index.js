@@ -2,7 +2,6 @@
 
 import path from 'path';
 import semver from 'semver';
-import { sync as spawnSync } from 'cross-spawn';
 import fs from 'fs-extra';
 import { program } from 'commander';
 import prompts from 'prompts';
@@ -17,6 +16,7 @@ import {
   makeInstallArgs,
   getTemplateName,
   sanitizePackageName,
+  executeInstallCommand,
 } from './utils';
 import packageJSON from '../package.json';
 
@@ -234,9 +234,7 @@ program
       const dependencies = makePackageDeps(typescript, storybook);
       process.chdir(projectPath);
       const installArgs = makeInstallArgs(packageCMD, dependencies);
-      spawnSync(packageCMD, installArgs, {
-        stdio: 'inherit',
-      });
+      await executeInstallCommand(packageCMD, installArgs);
 
       console.log('\nInstalled dependencies');
 
@@ -260,7 +258,7 @@ program
 
       process.exit(0);
     } catch (error) {
-      console.error(chalk.red('Failed to create package'));
+      console.error(chalk.red(`Failed to create package: ${error.message}`));
       console.log('error', error);
       process.exit(1);
     }
