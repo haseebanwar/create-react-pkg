@@ -7,6 +7,7 @@ import {
   logBuildError,
   logBuildWarnings,
   clearConsole,
+  checkTypescriptSetup,
 } from '../utils';
 import { paths } from '../paths';
 
@@ -19,8 +20,8 @@ export function watch() {
     let hasErrors = false;
     let hasWarnings = false;
 
-    const appPackage = fs.readJSONSync(paths.appPackageJson);
-    const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
+    const appPackage = fs.readJSONSync(paths.packagePackageJson);
+    const isTypescriptConfigured = checkTypescriptSetup();
 
     // const rollupConfig = createRollupConfig({
     //   useTypescript: isTypescriptConfigured,

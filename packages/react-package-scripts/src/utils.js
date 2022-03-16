@@ -11,11 +11,15 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   module.exports = require('./cjs/${safePackageName}.js');
 }`;
-  return fs.outputFileSync(path.join(paths.appDist, 'index.js'), contents);
+  return fs.outputFileSync(path.join(paths.packageDist, 'index.js'), contents);
 }
 
 export function resolvePath(relativePath) {
   return path.resolve(process.cwd(), relativePath);
+}
+
+export function checkTypescriptSetup() {
+  return fs.existsSync(paths.packageTSConfig);
 }
 
 export function sanitizePackageName(packageName) {

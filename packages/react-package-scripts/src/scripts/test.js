@@ -1,14 +1,14 @@
-import fs from 'fs-extra';
 import { run as jestRun } from 'jest';
 import chalk from 'chalk';
 import { paths } from '../paths';
+import { checkTypescriptSetup } from '../utils';
 
 export function test(cleanArgs) {
   try {
     process.env.NODE_ENV = 'test';
     process.env.BABEL_ENV = 'test'; // because we're using babel for transforming JSX
 
-    const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
+    const isTypescriptConfigured = checkTypescriptSetup();
 
     const jestConfig = {
       testEnvironment: 'jsdom',
@@ -25,7 +25,7 @@ export function test(cleanArgs) {
       moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying
       collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
       testMatch: ['<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}'],
-      rootDir: paths.appRoot,
+      rootDir: paths.packageRoot,
       watchPlugins: [
         require.resolve('jest-watch-typeahead/filename'),
         require.resolve('jest-watch-typeahead/testname'),

@@ -23,21 +23,19 @@ export async function build() {
     clearConsole();
     console.log(chalk.cyan('Creating an optimized build...'));
 
-    fs.emptyDirSync(paths.appDist);
+    fs.emptyDirSync(paths.packageDist);
 
-    const appPackage = fs.readJSONSync(paths.appPackageJson);
-    const isTypescriptConfigured = fs.existsSync(paths.tsconfigJson);
+    const packagePackageJson = fs.readJSONSync(paths.packagePackageJson);
 
     const rollupConfig = createRollupConfig({
-      useTypescript: isTypescriptConfigured,
-      packageName: appPackage.name,
-      packagePeerDeps: appPackage.peerDependencies,
+      packageName: packagePackageJson.name,
+      packagePeerDeps: packagePackageJson.peerDependencies,
     });
 
     bundle = await rollup({
       ...rollupConfig,
       onwarn: (warning, warn) => {
-        // print this message only when there were no previous warnings for this build
+        // print this message only when there are no previous warnings for this build
         if (!hasWarnings) {
           console.log(chalk.yellow('Compiled with warnings.'));
         }
@@ -46,7 +44,7 @@ export async function build() {
       },
     });
 
-    writeCjsEntryFile(appPackage.name);
+    writeCjsEntryFile(packagePackageJson.name);
 
     for (const output of rollupConfig.output) {
       await bundle.write(output);

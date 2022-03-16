@@ -10,13 +10,14 @@ import autoprefixer from 'autoprefixer';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
 import { eslintFormatter } from '../eslint/eslintFormatter';
-import { sanitizePackageName } from '../utils';
+import { checkTypescriptSetup, sanitizePackageName } from '../utils';
 import { paths } from '../paths';
 
 const buildModules = ['cjs', 'esm', 'umd'];
 
 export function createRollupConfig(options) {
-  const { packageName, useTypescript, packagePeerDeps } = options;
+  const { packageName, packagePeerDeps } = options;
+  const useTypescript = checkTypescriptSetup();
   const safePackageName = sanitizePackageName(packageName);
 
   const config = {
@@ -30,7 +31,7 @@ export function createRollupConfig(options) {
       json(),
       useTypescript &&
         typescript({
-          tsconfig: paths.tsconfigJson,
+          tsconfig: paths.packageTSConfig,
           useTsconfigDeclarationDir: true,
           tsconfigDefaults: {
             exclude: [
@@ -77,7 +78,7 @@ export function createRollupConfig(options) {
   const output = buildModules
     .map((buildModule) => {
       const baseOutput = {
-        dir: `${paths.appDist}`,
+        dir: `${paths.packageDist}`,
         format: buildModule,
         sourcemap: true,
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
@@ -152,7 +153,7 @@ export function createRollupConfig2(options) {
       json(),
       useTypescript &&
         typescript({
-          tsconfig: paths.tsconfigJson,
+          tsconfig: paths.packageTSConfig,
           useTsconfigDeclarationDir: true,
           tsconfigDefaults: {
             exclude: [
@@ -196,7 +197,7 @@ export function createRollupConfig2(options) {
   return buildModules
     .map((buildModule) => {
       const baseOutput = {
-        dir: `${paths.appDist}`,
+        dir: `${paths.packageDist}`,
         format: buildModule,
         sourcemap: true,
         freeze: false, // do not call Object.freeze on imported objects with import * syntax
