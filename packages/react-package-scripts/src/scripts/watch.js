@@ -54,9 +54,11 @@ export function watch() {
       packageName: appPackage.name,
     });
     const watcher = rollupWatch(
-      rollupConfigs.map((config) => ({
+      rollupConfigs.map((config, idx) => ({
         ...config,
         onwarn: (warning, warn) => {
+          if (idx !== 0) return;
+
           // print this message only when there were no previous warnings for this build
           if (!hasWarnings) {
             clearConsole();

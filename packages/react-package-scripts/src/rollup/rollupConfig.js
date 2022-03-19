@@ -13,6 +13,8 @@ import { eslintFormatter } from '../eslint/eslintFormatter';
 import { checkTypescriptSetup, sanitizePackageName } from '../utils';
 import { paths } from '../paths';
 
+import replace from '@rollup/plugin-replace';
+
 const buildModules = ['cjs', 'esm', 'umd'];
 
 export function createRollupConfig(options) {
@@ -58,9 +60,14 @@ export function createRollupConfig(options) {
           exclude: 'node_modules/**',
           babelHelpers: 'bundled',
           presets: [
-            [require.resolve('@babel/preset-react')],
             [require.resolve('@babel/preset-env')],
+            [require.resolve('@babel/preset-react')],
           ],
+          // plugins: [
+          //   require.resolve('babel-plugin-annotate-pure-calls'),
+          //   require.resolve('babel-plugin-dev-expression'),
+          //   require.resolve('babel-plugin-minify-dead-code-elimination'),
+          // ],
           babelrc: false,
         }),
       postcss({
@@ -148,6 +155,9 @@ export function createRollupConfig2(options) {
   const baseConfig = {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     plugins: [
+      eslint({
+        formatter: eslintFormatter,
+      }),
       resolve(),
       commonjs({ include: /node_modules/ }),
       json(),
@@ -211,12 +221,7 @@ export function createRollupConfig2(options) {
         case 'esm': {
           return {
             ...baseConfig,
-            plugins: [
-              eslint({
-                formatter: eslintFormatter,
-              }),
-              ...baseConfig.plugins,
-            ],
+
             output: {
               ...baseOutput,
             },

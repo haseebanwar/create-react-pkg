@@ -22,7 +22,19 @@ function eslint(options = {}) {
     exclude = [/node_modules/, /\.json|\.s?css$/],
   } = options;
 
-  const eslint = new ESLint();
+  const eslint = new ESLint({
+    baseConfig: {
+      extends: ['eslint-config-react-app'],
+      rules: {
+        'no-unused-vars': 'warn',
+      },
+    },
+    overrideConfig: {
+      rules: {
+        'no-unused-vars': 'warn',
+      },
+    },
+  });
   const filter = createFilter(include, exclude);
 
   return {
