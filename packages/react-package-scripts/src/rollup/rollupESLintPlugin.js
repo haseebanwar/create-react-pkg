@@ -23,17 +23,20 @@ function eslint(options = {}) {
   } = options;
 
   const eslint = new ESLint({
-    baseConfig: {
-      extends: ['eslint-config-react-app'],
-      rules: {
-        'no-unused-vars': 'warn',
-      },
-    },
-    overrideConfig: {
-      rules: {
-        'no-unused-vars': 'warn',
-      },
-    },
+    // baseConfig: {
+    //   extends: 'eslint:recommended',
+    // },
+    // baseConfig: {
+    //   extends: ['eslint-config-react-app'],
+    //   rules: {
+    //     'no-unused-vars': 'warn',
+    //   },
+    // },
+    // overrideConfig: {
+    //   rules: {
+    //     'no-unused-vars': 'warn',
+    //   },
+    // },
   });
   const filter = createFilter(include, exclude);
 

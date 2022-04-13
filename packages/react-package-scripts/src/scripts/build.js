@@ -11,6 +11,8 @@ import {
 import { paths } from '../paths';
 
 export async function build() {
+  console.log('THIS IS BUILD!');
+
   // node env is used by many tools like browserslist
   process.env.NODE_ENV = 'production';
   process.env.BABEL_ENV = 'production';
