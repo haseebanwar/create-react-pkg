@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { MyComponent } from '../src';
 
 describe('it', () => {
-  it('renders the right text', () => {
+  it('renders', () => {
     const container = document.createElement('div');
-    ReactDOM.render(<MyComponent />, container);
-    expect(container.textContent).toBe('Show the World what you can build!');
+    const root = createRoot(container);
+    root.render(<MyComponent />);
+    root.unmount(container);
   });
 });
