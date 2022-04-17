@@ -71,7 +71,7 @@ program
       const packageNodeVersion = packageJSON.engines.node;
       if (!semver.satisfies(currentNodeVersion, packageNodeVersion)) {
         console.error(
-          `You are running Node ${currentNodeVersion}.\nCreate React Package required Node ${
+          `You are running Node ${currentNodeVersion}.\nCreate React Package requires Node ${
             semver.minVersion(packageNodeVersion).version
           } or higher.\nPlease update your version of Node.`
         );
@@ -139,8 +139,8 @@ program
           );
           console.log(
             '\nPlease remove any global installs with one of the following commands:\n' +
-              '- npm uninstall -g create-react-app\n' +
-              '- yarn global remove create-react-app'
+              `- npm uninstall -g ${packageJSON.name}\n` +
+              `- yarn global remove ${packageJSON.name}`
           );
           console.log(
             '\nThe latest instructions for creating a new package can be found here:\n' +
