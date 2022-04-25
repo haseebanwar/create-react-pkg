@@ -53,4 +53,7 @@ export const storybookDependencies = [
   '@storybook/react',
   '@storybook/testing-library',
   'babel-loader',
+
+  '@types/babel__core',
 ];
+export const tsStorybookDependencies = ['@types/babel__core'];

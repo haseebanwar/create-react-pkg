@@ -6,6 +6,7 @@ import {
   dependencies,
   tsDependencies,
   storybookDependencies,
+  tsStorybookDependencies,
 } from './pkgTemplate';
 import packageJSON from '../package.json';
 
@@ -75,7 +76,7 @@ export function composePackageJSON(
     main: `dist/index.js`, // CJS entry
     module: `dist/esm/${safePackageName}.js`, // ES entry
     ...(useTypescript && {
-      types: './dist/types/index.d.ts',
+      types: 'dist/types/index.d.ts',
     }),
     // spreading after so name fields appear above base fields in created package
     ...basePackageJSON,
@@ -102,6 +103,7 @@ export function makePackageDeps(useTypescript, useStorybook) {
   }
   if (useStorybook) {
     deps.push(...storybookDependencies);
+    if (useTypescript) deps.push(...tsStorybookDependencies);
   }
 
   return deps;

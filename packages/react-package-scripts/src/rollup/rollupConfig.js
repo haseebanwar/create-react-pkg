@@ -13,7 +13,7 @@ import { eslintFormatter } from '../eslint/eslintFormatter';
 import { checkTypescriptSetup, sanitizePackageName } from '../utils';
 import { paths } from '../paths';
 
-import replace from '@rollup/plugin-replace';
+// import replace from '@rollup/plugin-replace';
 
 const buildModules = ['cjs', 'esm', 'umd'];
 

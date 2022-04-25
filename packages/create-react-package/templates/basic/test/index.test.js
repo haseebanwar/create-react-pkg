@@ -7,6 +7,6 @@ describe('it', () => {
     const container = document.createElement('div');
     const root = createRoot(container);
     root.render(<MyComponent />);
-    root.unmount(container);
+    root.unmount();
   });
 });
