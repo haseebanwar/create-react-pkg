@@ -6,7 +6,7 @@ import {
   writeCjsEntryFile,
   logBuildError,
   logBuildWarnings,
-  clearConsole,
+  // clearConsole,
 } from '../utils';
 import { paths } from '../paths';
 
@@ -22,7 +22,7 @@ export async function build() {
   let hasWarnings = false;
 
   try {
-    clearConsole();
+    // clearConsole();
     console.log(chalk.cyan('Creating an optimized build...'));
 
     fs.emptyDirSync(paths.packageDist);
@@ -55,7 +55,7 @@ export async function build() {
     console.log(chalk.green('Build succeeded!'));
   } catch (error) {
     buildFailed = true;
-    clearConsole();
+    // clearConsole();
     console.error(chalk.red('Failed to compile.'));
     logBuildError(error);
   } finally {

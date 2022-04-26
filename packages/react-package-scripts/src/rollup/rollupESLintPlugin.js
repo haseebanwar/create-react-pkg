@@ -22,27 +22,20 @@ function eslint(options = {}) {
     exclude = [/node_modules/, /\.json|\.s?css$/],
   } = options;
 
+  // creating a new instance of this class automatically loads any eslint config/ignore files
   const eslint = new ESLint({
-    // baseConfig: {
-    //   extends: 'eslint:recommended',
-    // },
-    // baseConfig: {
-    //   extends: ['eslint-config-react-app'],
-    //   rules: {
-    //     'no-unused-vars': 'warn',
-    //   },
-    // },
-    // overrideConfig: {
-    //   rules: {
-    //     'no-unused-vars': 'warn',
-    //   },
-    // },
+    baseConfig: {
+      extends: ['react-app', 'react-app/jest'],
+    },
   });
+
   const filter = createFilter(include, exclude);
 
   return {
     name: 'eslint',
     shouldTransformCachedModule({ id, meta }) {
+      // returning falsy value from this hook will skip the next transform hook for current module
+
       // if current module is a node_module or .json/.css then skip
       if (!filter(id)) return;
 
@@ -57,6 +50,8 @@ function eslint(options = {}) {
       // if current module is a node_module or .json/.css then skip
       if (!filter(id)) return;
 
+      // results would be an empty array if current module (with filepath as id)
+      // is present in .eslintignore file at the root of the package
       const results = await eslint.lintText(code, {
         filePath: id,
       });
