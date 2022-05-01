@@ -1,7 +1,7 @@
 import { run as jestRun } from 'jest';
 import chalk from 'chalk';
 import { paths } from '../paths';
-import { checkTypescriptSetup } from '../utils';
+import { checkTypescriptSetup, readPackageJsonOfPackage } from '../utils';
 
 export function test(cleanArgs) {
   try {
@@ -9,6 +9,7 @@ export function test(cleanArgs) {
     process.env.BABEL_ENV = 'test'; // because we're using babel for transforming JSX
 
     const isTypescriptConfigured = checkTypescriptSetup();
+    const packagePackageJSON = readPackageJsonOfPackage();
 
     const jestConfig = {
       testEnvironment: 'jsdom',
@@ -24,7 +25,10 @@ export function test(cleanArgs) {
       // transformIgnorePatterns already includes node_modules
       moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json', 'node'], // it is default, explicitly specifying
       collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
-      testMatch: ['<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}'],
+      testMatch: [
+        '<rootDir>/**/__tests__/**/*.{js,jsx,ts,tsx}',
+        '<rootDir>/**/*.(spec|test).{ts,tsx,js,jsx}',
+      ],
       rootDir: paths.packageRoot,
       watchPlugins: [
         require.resolve('jest-watch-typeahead/filename'),
@@ -32,7 +36,10 @@ export function test(cleanArgs) {
       ],
     };
 
-    cleanArgs.push('--config', JSON.stringify(jestConfig));
+    cleanArgs.push(
+      '--config',
+      JSON.stringify({ ...jestConfig, ...packagePackageJSON.jest })
+    );
 
     // pass any other options directly to jest
     jestRun(cleanArgs);

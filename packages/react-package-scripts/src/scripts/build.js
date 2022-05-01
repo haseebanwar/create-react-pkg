@@ -6,6 +6,7 @@ import {
   writeCjsEntryFile,
   logBuildError,
   logBuildWarnings,
+  readPackageJsonOfPackage,
   // clearConsole,
 } from '../utils';
 import { paths } from '../paths';
@@ -27,7 +28,7 @@ export async function build() {
 
     fs.emptyDirSync(paths.packageDist);
 
-    const packagePackageJson = fs.readJSONSync(paths.packagePackageJson);
+    const packagePackageJson = readPackageJsonOfPackage();
 
     const rollupConfig = createRollupConfig({
       packageName: packagePackageJson.name,

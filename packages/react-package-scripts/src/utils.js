@@ -22,6 +22,10 @@ export function checkTypescriptSetup() {
   return fs.existsSync(paths.packageTSConfig);
 }
 
+export function readPackageJsonOfPackage() {
+  return fs.readJSONSync(paths.packagePackageJson);
+}
+
 export function sanitizePackageName(packageName) {
   return packageName
     .toLowerCase()

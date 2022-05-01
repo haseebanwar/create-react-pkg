@@ -1,4 +1,3 @@
-import fs from 'fs-extra';
 import chalk from 'chalk';
 import { watch as rollupWatch } from 'rollup';
 import { createRollupConfig2 } from '../rollup/rollupConfig';
@@ -8,8 +7,8 @@ import {
   logBuildWarnings,
   clearConsole,
   checkTypescriptSetup,
+  readPackageJsonOfPackage,
 } from '../utils';
-import { paths } from '../paths';
 
 export function watch() {
   try {
@@ -20,7 +19,7 @@ export function watch() {
     let hasErrors = false;
     let hasWarnings = false;
 
-    const appPackage = fs.readJSONSync(paths.packagePackageJson);
+    const appPackage = readPackageJsonOfPackage();
     const isTypescriptConfigured = checkTypescriptSetup();
 
     // const rollupConfig = createRollupConfig({
