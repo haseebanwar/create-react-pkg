@@ -3,8 +3,8 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
+import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
-import babelPresetReact from '@babel/preset-react';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
 import camelCase from 'camelcase';
@@ -13,270 +13,140 @@ import { eslintFormatter } from '../eslint/eslintFormatter';
 import { checkTypescriptSetup, sanitizePackageName } from '../utils';
 import { paths } from '../paths';
 
-// import replace from '@rollup/plugin-replace';
-
-const buildModules = ['cjs', 'esm', 'umd'];
+const buildModules = [
+  {
+    format: 'cjs',
+    mode: 'development',
+  },
+  {
+    format: 'cjs',
+    mode: 'production',
+  },
+  {
+    format: 'esm',
+  },
+  {
+    format: 'umd',
+    mode: 'development',
+  },
+  {
+    format: 'umd',
+    mode: 'production',
+  },
+];
 
 export function createRollupConfig(options) {
-  const { packageName, packagePeerDeps } = options;
+  const { packagePeerDeps, packageName } = options;
   const useTypescript = checkTypescriptSetup();
   const safePackageName = sanitizePackageName(packageName);
 
-  const config = {
-    input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
-    plugins: [
-      eslint({
-        formatter: eslintFormatter,
+  return buildModules.map((buildModule, idx) => {
+    const { format, mode } = buildModule;
+
+    let output = {
+      dir: `${paths.packageDist}`,
+      format,
+      sourcemap: true,
+      freeze: false, // do not call Object.freeze on imported objects with import * syntax
+      exports: 'named',
+      assetFileNames: '[name][extname]',
+      ...(format === 'umd' && {
+        name: camelCase(safePackageName),
+        // inline dynamic imports for umd modules
+        // because rollup doesn't support code-splitting for IIFE/UMD
+        inlineDynamicImports: true,
+        // tell rollup that external module like 'react' should be named this in IIFE/UMD
+        // for example 'react' will be bound to the window object (in browser) like
+        // window.React = // react
+        globals: { react: 'React', 'react-native': 'ReactNative' },
       }),
-      resolve(),
-      commonjs({ include: /node_modules/ }),
-      json(),
-      useTypescript &&
-        typescript({
-          tsconfig: paths.packageTSConfig,
-          useTsconfigDeclarationDir: true,
-          tsconfigDefaults: {
-            exclude: [
-              // all test files
-              '**/*.spec.ts',
-              '**/*.test.ts',
-              '**/*.spec.tsx',
-              '**/*.test.tsx',
-              '**/*.spec.js',
-              '**/*.test.js',
-              '**/*.spec.jsx',
-              '**/*.test.jsx',
-              // '**/*.+(spec|test).{ts,tsx,js,jsx}',
-              // TS defaults below
-              'node_modules',
-              'bower_components',
-              'jspm_packages',
-              'dist', // outDir is default
-            ],
-          },
-        }),
-      !useTypescript &&
-        babel({
-          exclude: 'node_modules/**',
-          babelHelpers: 'bundled',
-          presets: [
-            [require.resolve('@babel/preset-env')],
-            [require.resolve('@babel/preset-react')],
-          ],
-          // plugins: [
-          //   require.resolve('babel-plugin-annotate-pure-calls'),
-          //   require.resolve('babel-plugin-dev-expression'),
-          //   require.resolve('babel-plugin-minify-dead-code-elimination'),
-          // ],
-          babelrc: false,
-        }),
-      postcss({
-        extract: `css/${safePackageName}.css`,
-        minimize: true,
-        plugins: [autoprefixer()],
-        sourceMap: true,
-        config: false, // do not load postcss config
-        // css modules are by default supported for .module.css, .module.scss, etc
-      }),
-    ].filter(Boolean),
-    external: [...Object.keys(packagePeerDeps || [])],
-  };
+    };
 
-  const output = buildModules
-    .map((buildModule) => {
-      const baseOutput = {
-        dir: `${paths.packageDist}`,
-        format: buildModule,
-        sourcemap: true,
-        freeze: false, // do not call Object.freeze on imported objects with import * syntax
-        exports: 'named',
-        entryFileNames: `${buildModule}/${safePackageName}.js`,
-        chunkFileNames: `${buildModule}/[name]-[hash].js`,
-        assetFileNames: '[name][extname]',
-      };
-
-      switch (buildModule) {
-        case 'esm':
-          return {
-            ...baseOutput,
-            entryFileNames: `${buildModule}/${safePackageName}.js`,
-          };
-        case 'cjs':
-          return [
-            {
-              ...baseOutput,
-            },
-            {
-              ...baseOutput,
-              entryFileNames: `${buildModule}/${safePackageName}.min.js`,
-              chunkFileNames: `${buildModule}/[name]-[hash].min.js`,
-              plugins: [terser()],
-            },
-          ];
-        case 'umd': {
-          const baseUMDOutput = {
-            ...baseOutput,
-            name: camelCase(safePackageName),
-            // inline dynamic imports for umd modules
-            // because rollup doesn't support code-splitting for IIFE/UMD
-            inlineDynamicImports: true,
-            // tell rollup that external module like 'react' should be named this in IIFE/UMD
-            // for example 'react' will be bound to the window object (in browser) like
-            // window.React = // react
-            globals: { react: 'React' },
-          };
-
-          return [
-            {
-              ...baseUMDOutput,
-            },
-            {
-              ...baseUMDOutput,
-              entryFileNames: `${buildModule}/${safePackageName}.min.js`,
-              plugins: [terser()],
-            },
-          ];
-        }
+    switch (mode) {
+      case 'production': {
+        output = {
+          ...output,
+          entryFileNames: `${format}/${safePackageName}.min.js`,
+          chunkFileNames: `${format}/[name]-[hash].min.js`,
+        };
+        break;
       }
-    })
-    .filter(Boolean)
-    .flat();
-
-  config.output = output;
-  return config;
-}
-
-// a dirty workaround until this is fixed
-// https://github.com/rollup/rollup/issues/4415
-export function createRollupConfig2(options) {
-  const { useTypescript, packagePeerDeps, packageName } = options;
-  const safePackageName = sanitizePackageName(packageName);
-
-  const baseConfig = {
-    input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
-    plugins: [
-      eslint({
-        formatter: eslintFormatter,
-      }),
-      resolve(),
-      commonjs({ include: /node_modules/ }),
-      json(),
-      useTypescript &&
-        typescript({
-          tsconfig: paths.packageTSConfig,
-          useTsconfigDeclarationDir: true,
-          tsconfigDefaults: {
-            exclude: [
-              // all test files
-              '**/*.spec.ts',
-              '**/*.test.ts',
-              '**/*.spec.tsx',
-              '**/*.test.tsx',
-              '**/*.spec.js',
-              '**/*.test.js',
-              '**/*.spec.jsx',
-              '**/*.test.jsx',
-              // '**/*.+(spec|test).{ts,tsx,js,jsx}',
-              // TS defaults below
-              'node_modules',
-              'bower_components',
-              'jspm_packages',
-              'dist', // outDir is default
-            ],
-          },
-        }),
-      !useTypescript &&
-        babel({
-          exclude: 'node_modules/**',
-          babelHelpers: 'bundled',
-          presets: [babelPresetReact], // TODO: replace with require.resolve
-          babelrc: false,
-        }),
-      postcss({
-        extract: `css/${safePackageName}.css`,
-        minimize: true,
-        plugins: [autoprefixer()],
-        sourceMap: true,
-        config: false, // do not load postcss config
-        // css modules are by default supported for .module.css, .module.scss, etc
-      }),
-    ].filter(Boolean),
-    external: [...Object.keys(packagePeerDeps || [])],
-  };
-
-  return buildModules
-    .map((buildModule) => {
-      const baseOutput = {
-        dir: `${paths.packageDist}`,
-        format: buildModule,
-        sourcemap: true,
-        freeze: false, // do not call Object.freeze on imported objects with import * syntax
-        exports: 'named',
-        entryFileNames: `${buildModule}/${safePackageName}.js`,
-        chunkFileNames: `${buildModule}/[name]-[hash].js`,
-        assetFileNames: '[name][extname]',
-      };
-
-      switch (buildModule) {
-        case 'esm': {
-          return {
-            ...baseConfig,
-
-            output: {
-              ...baseOutput,
-            },
-          };
-        }
-        case 'cjs': {
-          return [
-            {
-              ...baseConfig,
-              output: {
-                ...baseOutput,
-              },
-            },
-            {
-              ...baseConfig,
-              plugins: [...baseConfig.plugins, terser()],
-              output: {
-                ...baseOutput,
-                entryFileNames: `${buildModule}/${safePackageName}.min.js`,
-                chunkFileNames: `${buildModule}/[name]-[hash].min.js`,
-              },
-            },
-          ];
-        }
-        case 'umd': {
-          const baseUMDOutput = {
-            ...baseOutput,
-            name: camelCase(safePackageName),
-            // inline dynamic imports for umd modules
-            // because rollup doesn't support code-splitting for IIFE/UMD
-            inlineDynamicImports: true,
-            // tell rollup that external module like 'react' should be named this in IIFE/UMD
-            // for example 'react' will be bound to the window object (in browser) like
-            // window.React = // react
-            globals: { react: 'React' },
-          };
-          return [
-            {
-              ...baseConfig,
-              output: {
-                ...baseUMDOutput,
-              },
-            },
-            {
-              ...baseConfig,
-              plugins: [...baseConfig.plugins, terser()],
-              output: {
-                ...baseUMDOutput,
-                entryFileNames: `${buildModule}/${safePackageName}.min.js`,
-              },
-            },
-          ];
-        }
+      default: {
+        output = {
+          ...output,
+          entryFileNames: `${format}/${safePackageName}.js`,
+          chunkFileNames: `${format}/[name]-[hash].js`,
+        };
+        break;
       }
-    })
-    .flat()
-    .filter(Boolean);
+    }
+
+    return {
+      input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
+      plugins: [
+        resolve(),
+        commonjs({ include: /node_modules/ }),
+        json(),
+        useTypescript &&
+          typescript({
+            tsconfig: paths.packageTSConfig,
+            useTsconfigDeclarationDir: true,
+            tsconfigDefaults: {
+              exclude: [
+                // all test files
+                '**/*.spec.ts',
+                '**/*.test.ts',
+                '**/*.spec.tsx',
+                '**/*.test.tsx',
+                '**/*.spec.js',
+                '**/*.test.js',
+                '**/*.spec.jsx',
+                '**/*.test.jsx',
+                // '**/*.+(spec|test).{ts,tsx,js,jsx}',
+                // TS defaults below
+                'node_modules',
+                'bower_components',
+                'jspm_packages',
+                'dist', // outDir is default
+              ],
+            },
+          }),
+        !useTypescript &&
+          babel({
+            exclude: 'node_modules/**',
+            babelHelpers: 'bundled',
+            presets: [
+              [require.resolve('@babel/preset-env')],
+              [require.resolve('@babel/preset-react')],
+            ],
+            babelrc: false,
+          }),
+        // plugins that should run only once for all types of bundles
+        idx === 0 && [
+          eslint({
+            formatter: eslintFormatter,
+          }),
+          postcss({
+            extract: `css/${safePackageName}.css`,
+            minimize: true,
+            plugins: [autoprefixer()],
+            sourceMap: true,
+            config: false, // do not load postcss config
+            // css modules are by default supported for .module.css, .module.scss, etc
+          }),
+        ],
+        mode &&
+          replace({
+            'process.env.NODE_ENV': JSON.stringify(mode),
+            // preventAssignment: true,
+          }),
+        mode === 'production' && terser(),
+      ]
+        .flat()
+        .filter(Boolean),
+      // don't include package peer deps in the bundled code
+      external: [...Object.keys(packagePeerDeps || [])],
+      output,
+    };
+  });
 }

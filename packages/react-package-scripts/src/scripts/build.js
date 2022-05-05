@@ -7,62 +7,61 @@ import {
   logBuildError,
   logBuildWarnings,
   readPackageJsonOfPackage,
-  // clearConsole,
+  clearConsole,
 } from '../utils';
 import { paths } from '../paths';
 
 export async function build() {
-  console.log('THIS IS BUILD!');
-
   // node env is used by many tools like browserslist
   process.env.NODE_ENV = 'production';
   process.env.BABEL_ENV = 'production';
 
-  let bundle;
   let buildFailed = false;
   let hasWarnings = false;
 
   try {
-    // clearConsole();
+    clearConsole();
     console.log(chalk.cyan('Creating an optimized build...'));
 
     fs.emptyDirSync(paths.packageDist);
 
     const packagePackageJson = readPackageJsonOfPackage();
 
-    const rollupConfig = createRollupConfig({
+    const rollupBuilds = createRollupConfig({
       packageName: packagePackageJson.name,
       packagePeerDeps: packagePackageJson.peerDependencies,
     });
 
-    bundle = await rollup({
-      ...rollupConfig,
-      onwarn: (warning, warn) => {
-        // print this message only when there are no previous warnings for this build
-        if (!hasWarnings) {
-          console.log(chalk.yellow('Compiled with warnings.'));
-        }
-        hasWarnings = true;
-        logBuildWarnings(warning, warn);
-      },
-    });
-
     writeCjsEntryFile(packagePackageJson.name);
 
-    for (const output of rollupConfig.output) {
-      await bundle.write(output);
-    }
+    await Promise.all(
+      rollupBuilds.map(async (buildConfig, idx) => {
+        const bundle = await rollup({
+          ...buildConfig,
+          onwarn: (warning, warn) => {
+            // log warnings only for the first bundle (prevents duplicate warnings)
+            if (idx !== 0) return;
+
+            // print this message only when there are no previous warnings for this build
+            if (!hasWarnings) {
+              console.log(chalk.yellow('Compiled with warnings.'));
+            }
+            hasWarnings = true;
+            logBuildWarnings(warning, warn);
+          },
+        });
+        await bundle.write(buildConfig.output);
+        await bundle.close();
+      })
+    );
 
     console.log(chalk.green('Build succeeded!'));
   } catch (error) {
     buildFailed = true;
-    // clearConsole();
+    clearConsole();
     console.error(chalk.red('Failed to compile.'));
     logBuildError(error);
   } finally {
-    if (bundle) {
-      await bundle.close();
-    }
     process.exit(buildFailed ? 1 : 0);
   }
 }

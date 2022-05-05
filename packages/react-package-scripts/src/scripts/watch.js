@@ -1,12 +1,11 @@
 import chalk from 'chalk';
 import { watch as rollupWatch } from 'rollup';
-import { createRollupConfig2 } from '../rollup/rollupConfig';
+import { createRollupConfig } from '../rollup/rollupConfig';
 import {
   writeCjsEntryFile,
   logBuildError,
   logBuildWarnings,
   clearConsole,
-  checkTypescriptSetup,
   readPackageJsonOfPackage,
 } from '../utils';
 
@@ -20,42 +19,17 @@ export function watch() {
     let hasWarnings = false;
 
     const appPackage = readPackageJsonOfPackage();
-    const isTypescriptConfigured = checkTypescriptSetup();
 
-    // const rollupConfig = createRollupConfig({
-    //   useTypescript: isTypescriptConfigured,
-    //   packagePeerDeps: appPackage.peerDependencies,
-    //   packageName: appPackage.name,
-    // });
-    // const watcher = rollupWatch({
-    //   ...rollupConfig,
-    //   watch: {
-    //     silent: true,
-    //     include: ['src/**'],
-    //     exclude: ['node_modules/**'],
-    //   },
-    //   onwarn: (warning, warn) => {
-    //     // clear console only if there were no previous warnings for this round of build
-    //     if (!hasWarnings) {
-    //       clearConsole();
-    //       console.log(chalk.yellow('Compiled with warnings.'));
-    //     }
-    //     hasWarnings = true;
-    //     logBuildWarnings(warning, warn);
-    //   },
-    // });
-
-    // a dirty workaround until this is fixed
-    // https://github.com/rollup/rollup/issues/4415
-    const rollupConfigs = createRollupConfig2({
-      useTypescript: isTypescriptConfigured,
+    const rollupBuilds = createRollupConfig({
       packagePeerDeps: appPackage.peerDependencies,
       packageName: appPackage.name,
     });
+
     const watcher = rollupWatch(
-      rollupConfigs.map((config, idx) => ({
+      rollupBuilds.map((config, idx) => ({
         ...config,
         onwarn: (warning, warn) => {
+          // log warnings only for the first bundle (prevents duplicate warnings)
           if (idx !== 0) return;
 
           // print this message only when there were no previous warnings for this build
