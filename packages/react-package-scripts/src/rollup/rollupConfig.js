@@ -90,7 +90,6 @@ export function createRollupConfig(options) {
         useTypescript &&
           typescript({
             tsconfig: paths.packageTSConfig,
-            useTsconfigDeclarationDir: true,
             tsconfigDefaults: {
               exclude: [
                 // all test files
@@ -110,6 +109,15 @@ export function createRollupConfig(options) {
                 'dist', // outDir is default
               ],
             },
+            // write declaration files only once (not again and again for all build formats)
+            useTsconfigDeclarationDir: idx === 0,
+            ...(idx !== 0 && {
+              tsconfigOverride: {
+                compilerOptions: {
+                  declaration: false,
+                },
+              },
+            }),
           }),
         !useTypescript &&
           babel({
@@ -138,7 +146,7 @@ export function createRollupConfig(options) {
         mode &&
           replace({
             'process.env.NODE_ENV': JSON.stringify(mode),
-            // preventAssignment: true,
+            preventAssignment: true,
           }),
         mode === 'production' && terser(),
       ]

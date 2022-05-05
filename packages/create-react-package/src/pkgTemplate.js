@@ -36,13 +36,13 @@ export const dependencies = [
 export const tsDependencies = [
   '@types/react',
   '@types/react-dom',
-  '@types/jest',
+  '@types/jest@^27',
   '@types/node',
   // TODO: remove hard-coded version when this is fixed
   // https://github.com/facebook/create-react-app/issues/12150
   'typescript@~4.5.0',
   'tslib',
-  'ts-jest',
+  'ts-jest@^27',
 ];
 export const storybookDependencies = [
   '@babel/core',
@@ -53,7 +53,5 @@ export const storybookDependencies = [
   '@storybook/react',
   '@storybook/testing-library',
   'babel-loader',
-
-  '@types/babel__core',
 ];
 export const tsStorybookDependencies = ['@types/babel__core'];
