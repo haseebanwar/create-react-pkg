@@ -5,6 +5,8 @@
   "bin": {
     "react-package-scripts": "lib/index.js"
   },
+  "main": "lib/config.js",
+  "types": "lib/types/index.d.ts",
   "files": [
     "lib"
   ],
@@ -22,8 +24,8 @@
     "node": ">=14.17.0"
   },
   "scripts": {
-    "start": "npm run clean && babel src -d lib --root-mode upward --watch",
-    "build": "npm run clean && babel src -d lib --root-mode upward",
+    "start": "npm run clean && babel src -d lib --root-mode upward --copy-files --watch",
+    "build": "npm run clean && babel src -d lib --root-mode upward --copy-files",
     "prepublishOnly": "npm run build",
     "clean": "rimraf lib"
   },

@@ -3,7 +3,7 @@ import fs from 'fs-extra';
 import chalk from 'chalk';
 import { paths } from './paths';
 
-export function writeCjsEntryFile(packageName) {
+export function writeCjsEntryFile(packageName, filepath) {
   const safePackageName = sanitizePackageName(packageName);
   const contents = `'use strict';
 if (process.env.NODE_ENV === 'production') {
@@ -11,7 +11,10 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   module.exports = require('./cjs/${safePackageName}.js');
 }`;
-  return fs.outputFileSync(path.join(paths.packageDist, 'index.js'), contents);
+  return fs.outputFileSync(
+    path.join(filepath || paths.packageDist, 'index.js'),
+    contents
+  );
 }
 
 export function resolvePath(relativePath) {

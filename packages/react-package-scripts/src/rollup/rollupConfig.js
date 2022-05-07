@@ -10,10 +10,15 @@ import autoprefixer from 'autoprefixer';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
 import { eslintFormatter } from '../eslint/eslintFormatter';
-import { checkTypescriptSetup, sanitizePackageName } from '../utils';
+import {
+  checkTypescriptSetup,
+  sanitizePackageName,
+  writeCjsEntryFile,
+  readPackageJsonOfPackage,
+} from '../utils';
 import { paths } from '../paths';
 
-const buildModules = [
+const allBuildFormats = [
   {
     format: 'cjs',
     mode: 'development',
@@ -35,23 +40,40 @@ const buildModules = [
   },
 ];
 
-export function createRollupConfig(options) {
-  const { packagePeerDeps, packageName } = options;
+export function createRollupConfig(customConfig) {
+  const packagePackageJson = readPackageJsonOfPackage();
   const useTypescript = checkTypescriptSetup();
-  const safePackageName = sanitizePackageName(packageName);
+  const safePackageName = sanitizePackageName(packagePackageJson.name);
 
-  return buildModules.map((buildModule, idx) => {
+  const config = {
+    outDir: paths.packageDist,
+    input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
+    name: camelCase(safePackageName),
+    formats: ['cjs', 'esm'],
+    ...customConfig,
+  };
+  const { input, outDir, formats, name, rollupOptions } = config;
+
+  const buildFormats = allBuildFormats.filter((buildModule) =>
+    formats.includes(buildModule.format)
+  );
+
+  if (buildFormats.find(({ format }) => format === 'cjs')) {
+    writeCjsEntryFile(packagePackageJson.name, config.outDir);
+  }
+
+  return buildFormats.map((buildModule, idx) => {
     const { format, mode } = buildModule;
 
     let output = {
-      dir: `${paths.packageDist}`,
+      dir: outDir,
       format,
       sourcemap: true,
       freeze: false, // do not call Object.freeze on imported objects with import * syntax
       exports: 'named',
       assetFileNames: '[name][extname]',
       ...(format === 'umd' && {
-        name: camelCase(safePackageName),
+        name,
         // inline dynamic imports for umd modules
         // because rollup doesn't support code-splitting for IIFE/UMD
         inlineDynamicImports: true,
@@ -82,7 +104,11 @@ export function createRollupConfig(options) {
     }
 
     return {
-      input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
+      input,
+      // don't include package peer deps in the bundled code
+      external: [...Object.keys(packagePackageJson.peerDependencies || [])],
+      // allow user defined rollup root options
+      ...(rollupOptions || {}),
       plugins: [
         resolve(),
         commonjs({ include: /node_modules/ }),
@@ -129,7 +155,7 @@ export function createRollupConfig(options) {
             ],
             babelrc: false,
           }),
-        // plugins that should run only once for all types of bundles
+        // plugins that should run only once for all bundle formats
         idx === 0 && [
           eslint({
             formatter: eslintFormatter,
@@ -149,12 +175,16 @@ export function createRollupConfig(options) {
             preventAssignment: true,
           }),
         mode === 'production' && terser(),
+        // push user defined rollup plugins
+        rollupOptions?.plugins,
       ]
-        .flat()
-        .filter(Boolean),
-      // don't include package peer deps in the bundled code
-      external: [...Object.keys(packagePeerDeps || [])],
-      output,
+        .filter(Boolean)
+        .flat(),
+      // allow user defined rollup options for output
+      output: {
+        ...output,
+        ...(rollupOptions?.output || {}),
+      },
     };
   });
 }

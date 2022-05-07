@@ -1,29 +1,25 @@
+import fs from 'fs-extra';
 import chalk from 'chalk';
 import { watch as rollupWatch } from 'rollup';
 import { createRollupConfig } from '../rollup/rollupConfig';
-import {
-  writeCjsEntryFile,
-  logBuildError,
-  logBuildWarnings,
-  clearConsole,
-  readPackageJsonOfPackage,
-} from '../utils';
+import { logBuildError, logBuildWarnings, clearConsole } from '../utils';
+import { paths } from '../paths';
 
 export function watch() {
   try {
-    // node env is used by many tools like browserslist
+    // node env is used by tools like browserslist, babel, etc.
     process.env.NODE_ENV = 'development';
     process.env.BABEL_ENV = 'development';
 
     let hasErrors = false;
     let hasWarnings = false;
 
-    const appPackage = readPackageJsonOfPackage();
+    let config = {};
+    if (fs.existsSync(paths.packageConfig)) {
+      config = require(paths.packageConfig);
+    }
 
-    const rollupBuilds = createRollupConfig({
-      packagePeerDeps: appPackage.peerDependencies,
-      packageName: appPackage.name,
-    });
+    const rollupBuilds = createRollupConfig(config);
 
     const watcher = rollupWatch(
       rollupBuilds.map((config, idx) => ({
@@ -59,7 +55,6 @@ export function watch() {
       if (evt.code === 'START') {
         clearConsole();
         console.log(chalk.yellow(`Compiling...`));
-        writeCjsEntryFile(appPackage.name);
       }
 
       if (evt.code === 'ERROR') {

@@ -2,17 +2,11 @@ import fs from 'fs-extra';
 import { rollup } from 'rollup';
 import chalk from 'chalk';
 import { createRollupConfig } from '../rollup/rollupConfig';
-import {
-  writeCjsEntryFile,
-  logBuildError,
-  logBuildWarnings,
-  readPackageJsonOfPackage,
-  clearConsole,
-} from '../utils';
+import { logBuildError, logBuildWarnings, clearConsole } from '../utils';
 import { paths } from '../paths';
 
 export async function build() {
-  // node env is used by many tools like browserslist
+  // node env is used by tools like browserslist, babel, etc.
   process.env.NODE_ENV = 'production';
   process.env.BABEL_ENV = 'production';
 
@@ -23,16 +17,18 @@ export async function build() {
     clearConsole();
     console.log(chalk.cyan('Creating an optimized build...'));
 
-    fs.emptyDirSync(paths.packageDist);
+    let config = {};
+    if (fs.existsSync(paths.packageConfig)) {
+      config = require(paths.packageConfig);
+    }
 
-    const packagePackageJson = readPackageJsonOfPackage();
+    if (config.outDir) {
+      fs.emptyDirSync(config.outDir);
+    } else {
+      fs.emptyDirSync(paths.packageDist);
+    }
 
-    const rollupBuilds = createRollupConfig({
-      packageName: packagePackageJson.name,
-      packagePeerDeps: packagePackageJson.peerDependencies,
-    });
-
-    writeCjsEntryFile(packagePackageJson.name);
+    const rollupBuilds = createRollupConfig(config);
 
     await Promise.all(
       rollupBuilds.map(async (buildConfig, idx) => {
