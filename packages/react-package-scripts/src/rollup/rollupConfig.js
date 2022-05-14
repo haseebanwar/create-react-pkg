@@ -1,6 +1,7 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
+import { DEFAULT_EXTENSIONS as DEFAULT_BABEL_EXTENSIONS } from '@babel/core';
 import { babel } from '@rollup/plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
 import replace from '@rollup/plugin-replace';
@@ -151,18 +152,20 @@ export function createRollupConfig(customConfig) {
               },
             }),
           }),
-        !useTypescript &&
-          babel({
-            exclude: [/@babel\/runtime/, 'node_modules/**'],
-            babelHelpers: 'runtime',
+        babel({
+          exclude: [/@babel\/runtime/, 'node_modules/**'],
+          extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
+          ...(!useTypescript && {
             presets: [
               [require.resolve('@babel/preset-env')],
               [require.resolve('@babel/preset-react')],
             ],
-            // replace reference of the babal helper functions to the @babel/runtime version
-            // more: https://babeljs.io/docs/en/babel-runtime#why
-            plugins: ['@babel/plugin-transform-runtime'],
           }),
+          babelHelpers: 'runtime',
+          // replace reference of the babal helper functions to the @babel/runtime version
+          // more: https://babeljs.io/docs/en/babel-runtime#why
+          plugins: ['@babel/plugin-transform-runtime'],
+        }),
         // postcss should run only once for all bundle formats
         idx === 0 &&
           postcss({
