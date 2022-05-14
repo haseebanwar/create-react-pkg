@@ -50,9 +50,10 @@ export function createRollupConfig(customConfig) {
     input: `src/index.${useTypescript ? 'tsx' : 'js'}`,
     name: camelCase(safePackageName),
     formats: ['cjs', 'esm'],
+    disableESLint: false,
     ...customConfig,
   };
-  const { input, outDir, formats, name, rollupOptions } = config;
+  const { input, outDir, formats, name, disableESLint, rollupOptions } = config;
 
   const buildFormats = allBuildFormats.filter((buildModule) =>
     formats.includes(buildModule.format)
@@ -110,6 +111,11 @@ export function createRollupConfig(customConfig) {
       // allow user defined rollup root options
       ...(rollupOptions || {}),
       plugins: [
+        idx === 0 &&
+          disableESLint === false &&
+          eslint({
+            formatter: eslintFormatter,
+          }),
         resolve(),
         commonjs({ include: /node_modules/ }),
         json(),
@@ -147,19 +153,18 @@ export function createRollupConfig(customConfig) {
           }),
         !useTypescript &&
           babel({
-            exclude: 'node_modules/**',
-            babelHelpers: 'bundled',
+            exclude: [/@babel\/runtime/, 'node_modules/**'],
+            babelHelpers: 'runtime',
             presets: [
               [require.resolve('@babel/preset-env')],
               [require.resolve('@babel/preset-react')],
             ],
-            babelrc: false,
+            // replace reference of the babal helper functions to the @babel/runtime version
+            // more: https://babeljs.io/docs/en/babel-runtime#why
+            plugins: ['@babel/plugin-transform-runtime'],
           }),
-        // plugins that should run only once for all bundle formats
-        idx === 0 && [
-          eslint({
-            formatter: eslintFormatter,
-          }),
+        // postcss should run only once for all bundle formats
+        idx === 0 &&
           postcss({
             extract: `css/${safePackageName}.css`,
             minimize: true,
@@ -168,7 +173,6 @@ export function createRollupConfig(customConfig) {
             config: false, // do not load postcss config
             // css modules are by default supported for .module.css, .module.scss, etc
           }),
-        ],
         mode &&
           replace({
             'process.env.NODE_ENV': JSON.stringify(mode),
@@ -177,9 +181,7 @@ export function createRollupConfig(customConfig) {
         mode === 'production' && terser(),
         // push user defined rollup plugins
         rollupOptions?.plugins,
-      ]
-        .filter(Boolean)
-        .flat(),
+      ].filter(Boolean),
       // allow user defined rollup options for output
       output: {
         ...output,

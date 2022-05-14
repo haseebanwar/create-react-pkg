@@ -23,6 +23,11 @@ export declare interface UserConfig {
    */
   formats?: ['esm' | 'cjs' | 'umd'];
   /**
+   * Disable code linting with ESLint
+   * @default false
+   */
+  disableESLint?: boolean;
+  /**
    * Will be merged with internal rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
