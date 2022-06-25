@@ -14,16 +14,16 @@ export function watch() {
     let hasErrors = false;
     let hasWarnings = false;
 
-    let config = {};
+    let customConfig = {};
     if (fs.existsSync(paths.packageConfig)) {
-      config = require(paths.packageConfig);
+      customConfig = require(paths.packageConfig);
     }
 
-    const rollupBuilds = createRollupConfig(config);
+    const rollupBuilds = createRollupConfig(customConfig);
 
     const watcher = rollupWatch(
-      rollupBuilds.map((config, idx) => ({
-        ...config,
+      rollupBuilds.map((buildConfig, idx) => ({
+        ...buildConfig,
         onwarn: (warning, warn) => {
           // log warnings only for the first bundle (prevents duplicate warnings)
           if (idx !== 0) return;

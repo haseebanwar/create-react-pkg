@@ -17,18 +17,18 @@ export async function build() {
     clearConsole();
     console.log(chalk.cyan('Creating an optimized build...'));
 
-    let config = {};
+    let customConfig = {};
     if (fs.existsSync(paths.packageConfig)) {
-      config = require(paths.packageConfig);
+      customConfig = require(paths.packageConfig);
     }
 
-    if (config.outDir) {
-      fs.emptyDirSync(config.outDir);
+    if (customConfig.outDir) {
+      fs.emptyDirSync(customConfig.outDir);
     } else {
       fs.emptyDirSync(paths.packageDist);
     }
 
-    const rollupBuilds = createRollupConfig(config);
+    const rollupBuilds = createRollupConfig(customConfig);
 
     await Promise.all(
       rollupBuilds.map(async (buildConfig, idx) => {

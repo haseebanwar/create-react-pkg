@@ -54,6 +54,7 @@ function logError(error) {
 export function logBuildError(error) {
   switch (error.plugin) {
     case 'eslint':
+      // lintErrors are from custom eslint rollup plugin, already formatted
       if (error.lintErrors) console.error(error.lintErrors);
       else logError(error);
       return;
