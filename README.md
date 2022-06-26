@@ -21,7 +21,7 @@ You **don’t** need to install or configure tools like Rollup, Babel, or ESLint
 - [Create React Package](#create-react-package)
   - [Quick Overview](#quick-overview)
   - [Table of Contents](#table-of-contents)
-- [Why](#why)
+  - [Why](#why)
   - [Choose Package Manager](#choose-package-manager)
     - [npm](#npm)
     - [yarn](#yarn)
@@ -49,7 +49,7 @@ You **don’t** need to install or configure tools like Rollup, Babel, or ESLint
   - [Author](#author)
   - [License](#license)
 
-# Why
+## Why
 
 - Out of the box support for CSS, SASS, and JSON files
 - Compile-time linting (ESLint)
