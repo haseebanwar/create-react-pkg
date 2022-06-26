@@ -28,7 +28,7 @@ export declare interface UserConfig {
    */
   disableESLint?: boolean;
   /**
-   * Will be merged with internal rollup options.
+   * Rollup Options, will be merged with internal rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
   rollupOptions?: Omit<RollupOptions, 'onwarn'>;
