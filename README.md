@@ -34,7 +34,7 @@ You **don’t** need to install or configure tools like Rollup, Babel, or ESLint
   - [What’s Included?](#whats-included)
   - [Customization](#customization)
     - [Config Intellisense](#config-intellisense)
-    - [Options](#options-1)
+    - [Config Options](#config-options)
       - [input](#input)
       - [outDir](#outdir)
       - [name](#name)
@@ -68,7 +68,7 @@ You **don’t** need to install or configure tools like Rollup, Babel, or ESLint
 
 **You’ll need to have Node 14.0.0 or later version on your local development machine** (but it’s not required on the server). We recommend using the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
-To create a new app, you may choose one of the following methods:
+To create a new package, you may choose one of the following methods:
 
 ### npm
 
@@ -90,7 +90,7 @@ yarn create react-package my-package
 
 ## Options
 
-`create-react-package` comes with the following options
+`create-react-package` comes with the following options:
 
 - **--ts, --typescript**: Initialize a TypeScript project.
 - **--sb, --storybook**: Add storybook support.
@@ -101,8 +101,7 @@ Inside the newly created project, you can run some built-in commands:
 
 ### `npm start` or `yarn start`
 
-Watches for file changes in developmnet mode<br>
-You will see the build errors and lint warnings in the console.
+Watches for file changes in developmnet mode. You will see the build errors and lint warnings in the console.
 
 <p align='center'>
 <img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
@@ -117,10 +116,7 @@ By default, runs tests related to files changed since the last commit.
 
 ### `npm run build` or `yarn build`
 
-Builds the package for production to the `dist` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br>
+Builds the package for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
 
 Your package is ready to be published.
 
@@ -171,6 +167,8 @@ module.exports = config;
 Alternatively, you can use the defineConfig helper which should provide intellisense without the need for jsdoc annotations:
 
 ```js
+// rps.config.js
+
 const { defineConfig } = require('react-package-scripts');
 
 module.exports = defineConfig({
@@ -178,7 +176,7 @@ module.exports = defineConfig({
 });
 ```
 
-### Options
+### Config Options
 
 Following options are supported
 
@@ -206,9 +204,9 @@ Following options are supported
 #### formats
 
 - **Type**: `string`
-- **Default**: `['cjs','esm']`
+- **Default**: `['cjs', 'esm']`
 
-  Bundle formats
+  Bundle formats. Available formats are `cjs`, `esm`, and `umd`
 
 #### disableESLint
 
@@ -271,6 +269,8 @@ module.exports = defineConfig({
 });
 ```
 
+To ignore any files, create a `.eslintignore` at the root of the package.
+
 ### Jest
 
 The following files will be executed with the test runner
@@ -281,7 +281,7 @@ The following files will be executed with the test runner
 
 Pass your [Jest Configuration](https://jestjs.io/docs/configuration#reference) in the package.json and react package scripts will shallow merge it.
 
-```json
+```js
 {
   "name": "your-package",
   "jest": {
