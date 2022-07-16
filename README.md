@@ -19,14 +19,15 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 ## Contents <!-- omit in toc -->
 
 - [Why](#why)
-- [Choose Package Manager](#choose-package-manager)
-  - [npm](#npm)
-  - [yarn](#yarn)
-- [Options](#options)
-- [Quick Start](#quick-start)
-  - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
-  - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
-  - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
+- [Getting Started](#getting-started)
+  - [Choose Package Manager](#choose-package-manager)
+    - [npm](#npm)
+    - [yarn](#yarn)
+  - [Options](#options)
+  - [Quick Start](#quick-start)
+    - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
+    - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
+    - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
@@ -62,13 +63,15 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - Pre-configured Browserslist, Sourcemaps, and Minification
 - VSCode friendly errors
 
-## Choose Package Manager
+## Getting Started
+
+### Choose Package Manager
 
 **You’ll need to have Node 14.17.0 or a later version on your local development machine**. It is recommended to use the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
 To create a new package, you may choose one of the following methods:
 
-### npm
+#### npm
 
 ```sh
 npx create-react-package my-package
@@ -80,24 +83,24 @@ or
 npm init react-package my-package
 ```
 
-### yarn
+#### yarn
 
 ```sh
 yarn create react-package my-package
 ```
 
-## Options
+### Options
 
 `create-react-package` comes with the following options:
 
 - **--ts, --typescript**: Initialize a TypeScript project.
 - **--sb, --storybook**: Add storybook support.
 
-## Quick Start
+### Quick Start
 
 Inside the newly created project, you can run some built-in commands:
 
-### `npm start` or `yarn start`
+#### `npm start` or `yarn start`
 
 Watches for file changes in development mode. You will see the build errors and lint warnings in the console.
 
@@ -105,14 +108,14 @@ Watches for file changes in development mode. You will see the build errors and 
 <img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
 </p>
 
-### `npm test` or `yarn test`
+#### `npm test` or `yarn test`
 
 Runs the test watcher in an interactive mode.<br>
 By default, runs tests related to files changed since the last commit.
 
 [Read more about testing.](https://facebook.github.io/create-react-app/docs/running-tests)
 
-### `npm run build` or `yarn build`
+#### `npm run build` or `yarn build`
 
 Builds the package for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
 
