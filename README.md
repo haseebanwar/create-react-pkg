@@ -10,17 +10,17 @@ cd my-package
 npm start
 ```
 
-You **don’t** need to install or configure tools like Rollup, Babel, or ESLint. They are preconfigured and hidden so that you can focus on the code.
+You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are preconfigured and hidden so that you can focus on the code.
 
 <p align='center'>
 <img src='https://cdn.jsdelivr.net/gh/facebook/create-react-app@27b42ac7efa018f2541153ab30d63180f5fa39e0/screencast.svg' width='600' alt='npm start'>
 </p>
 
-## Table of Contents
+## Contents
 
 - [Create React Package](#create-react-package)
   - [Quick Overview](#quick-overview)
-  - [Table of Contents](#table-of-contents)
+  - [Contents](#contents)
   - [Why](#why)
   - [Choose Package Manager](#choose-package-manager)
     - [npm](#npm)
@@ -51,22 +51,23 @@ You **don’t** need to install or configure tools like Rollup, Babel, or ESLint
 
 ## Why
 
-- Out of the box support for CSS, SASS, and JSON files
-- Compile-time linting (ESLint)
+- Get started in seconds, easy to maintain, just one dependency
+- CJS, ESM, and UMD module support
+- Pre-configured Rollup, Babel, Jest, and ESLint
+- Completely customizable
 - Tree-shaking
-- Typescript support
-- VSCode friendly errors
-- 1 dependency 'react-package-scripts'
-- CJS, ES, and UMD module support
+- Code-splitting support
 - Dev/Production builds
-- Sourcemaps
-- Jest
-- Rollup
-- Code-splitting
+- Typescript support
+- Storybook support
+- Compile-time linting with ESLint
+- Out-of-the-box support for CSS, SASS, and JSON files
+- Pre-configured Browserslist, Sourcemaps, and Minification
+- VSCode friendly errors
 
 ## Choose Package Manager
 
-**You’ll need to have Node 14.0.0 or later version on your local development machine** (but it’s not required on the server). We recommend using the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
+**You’ll need to have Node 14.17.0 or a later version on your local development machine**. It is recommended to use the latest LTS version. You can use [nvm](https://github.com/creationix/nvm#installation) (macOS/Linux) or [nvm-windows](https://github.com/coreybutler/nvm-windows#node-version-manager-nvm-for-windows) to switch Node versions between different projects.
 
 To create a new package, you may choose one of the following methods:
 
@@ -79,7 +80,7 @@ npx create-react-package my-package
 or
 
 ```sh
-npm init create-react-package my-package
+npm init react-package my-package
 ```
 
 ### yarn
@@ -101,7 +102,7 @@ Inside the newly created project, you can run some built-in commands:
 
 ### `npm start` or `yarn start`
 
-Watches for file changes in developmnet mode. You will see the build errors and lint warnings in the console.
+Watches for file changes in development mode. You will see the build errors and lint warnings in the console.
 
 <p align='center'>
 <img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
