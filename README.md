@@ -1,8 +1,8 @@
-# Create React Package
+# Create React Package <!-- omit in toc -->
 
 Create React packages with no build configuration.
 
-## Quick Overview
+## Quick Overview <!-- omit in toc -->
 
 ```sh
 npx create-react-package my-package
@@ -16,38 +16,35 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 <img src='https://cdn.jsdelivr.net/gh/facebook/create-react-app@27b42ac7efa018f2541153ab30d63180f5fa39e0/screencast.svg' width='600' alt='npm start'>
 </p>
 
-## Contents
+## Contents <!-- omit in toc -->
 
-- [Create React Package](#create-react-package)
-  - [Quick Overview](#quick-overview)
-  - [Contents](#contents)
-  - [Why](#why)
-  - [Choose Package Manager](#choose-package-manager)
-    - [npm](#npm)
-    - [yarn](#yarn)
-  - [Options](#options)
-  - [Quick Start](#quick-start)
-    - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
-    - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
-    - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
-  - [How to Update to New Versions?](#how-to-update-to-new-versions)
-  - [What’s Included?](#whats-included)
-  - [Customization](#customization)
-    - [Config Intellisense](#config-intellisense)
-    - [Config Options](#config-options)
-      - [input](#input)
-      - [outDir](#outdir)
-      - [name](#name)
-      - [formats](#formats)
-      - [disableESLint](#disableeslint)
-      - [rollupOptions](#rollupoptions)
-    - [Rollup](#rollup)
-    - [Babel](#babel)
-      - [Example: Optimize Lodash](#example-optimize-lodash)
-    - [ESLint](#eslint)
-    - [Jest](#jest)
-  - [Author](#author)
-  - [License](#license)
+- [Why](#why)
+- [Choose Package Manager](#choose-package-manager)
+  - [npm](#npm)
+  - [yarn](#yarn)
+- [Options](#options)
+- [Quick Start](#quick-start)
+  - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
+  - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
+  - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
+- [How to Update to New Versions?](#how-to-update-to-new-versions)
+- [What’s Included?](#whats-included)
+- [Customization](#customization)
+  - [Config Intellisense](#config-intellisense)
+  - [Config Options](#config-options)
+    - [input](#input)
+    - [outDir](#outdir)
+    - [name](#name)
+    - [formats](#formats)
+    - [disableESLint](#disableeslint)
+    - [rollupOptions](#rollupoptions)
+  - [Rollup](#rollup)
+  - [Babel](#babel)
+    - [Example: Optimize Lodash](#example-optimize-lodash)
+  - [ESLint](#eslint)
+  - [Jest](#jest)
+- [Author](#author)
+- [License](#license)
 
 ## Why
 
