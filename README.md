@@ -27,8 +27,6 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
   - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
   - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
-- [How to Update to New Versions?](#how-to-update-to-new-versions)
-- [What’s Included?](#whats-included)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
@@ -43,6 +41,8 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [Example: Optimize Lodash](#example-optimize-lodash)
   - [ESLint](#eslint)
   - [Jest](#jest)
+- [How to Update to New Versions?](#how-to-update-to-new-versions)
+- [What’s Included?](#whats-included)
 - [Author](#author)
 - [License](#license)
 
@@ -118,22 +118,9 @@ Builds the package for production to the `dist` folder. It correctly bundles Rea
 
 Your package is ready to be published.
 
-## How to Update to New Versions?
-
-Please refer to the [User Guide](https://facebook.github.io/create-react-app/docs/updating-to-new-releases) for this and other information.
-
-## What’s Included?
-
-Your environment will have everything you need to build a modern single-page React app:
-
-- React, JSX, ES6, TypeScript and Flow syntax support.
-- Language extras beyond ES6 like the object spread operator.
-- Autoprefixed CSS, so you don’t need `-webkit-` or other prefixes.
-- A fast interactive unit test runner with built-in support for coverage reporting.
-- A live development server that warns about common mistakes.
-- A build script to bundle JS, CSS, and images for production, with hashes and sourcemaps.
-
 ## Customization
+
+Create react package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured for you but can be customized to your needs.
 
 Create a file called `rps.config.js` at the root of your project like so:
 
@@ -287,6 +274,21 @@ Pass your [Jest Configuration](https://jestjs.io/docs/configuration#reference) i
   }
 }
 ```
+
+## How to Update to New Versions?
+
+Please refer to the [User Guide](https://facebook.github.io/create-react-app/docs/updating-to-new-releases) for this and other information.
+
+## What’s Included?
+
+Your environment will have everything you need to build a modern single-page React app:
+
+- React, JSX, ES6, TypeScript and Flow syntax support.
+- Language extras beyond ES6 like the object spread operator.
+- Autoprefixed CSS, so you don’t need `-webkit-` or other prefixes.
+- A fast interactive unit test runner with built-in support for coverage reporting.
+- A live development server that warns about common mistakes.
+- A build script to bundle JS, CSS, and images for production, with hashes and sourcemaps.
 
 ## Author
 
