@@ -13,17 +13,17 @@ export declare interface UserConfig {
    */
   outDir?: string;
   /**
-   * Name to expose in the UMD build.
+   * Bundle formats
+   * @default ['cjs','esm']
+   */
+   formats?: ['esm' | 'cjs' | 'umd'];
+  /**
+   * Name to expose in the UMD build. Use this option when you are using `umd` as one of the build formats.
    * @default 'camel-cased version of your package name'
    */
   name?: string;
   /**
-   * Bundle formats
-   * @default ['cjs','esm']
-   */
-  formats?: ['esm' | 'cjs' | 'umd'];
-  /**
-   * Disable code linting with ESLint
+   * Disable code linting with ESLint.
    * @default false
    */
   disableESLint?: boolean;

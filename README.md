@@ -24,17 +24,18 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [npm](#npm)
     - [yarn](#yarn)
   - [Options](#options)
-  - [Quick Start](#quick-start)
+  - [Available Scripts](#available-scripts)
     - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
     - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
     - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
+- [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
     - [input](#input)
     - [outDir](#outdir)
-    - [name](#name)
     - [formats](#formats)
+    - [name](#name)
     - [disableESLint](#disableeslint)
     - [rollupOptions](#rollupoptions)
   - [Rollup](#rollup)
@@ -54,7 +55,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - Pre-configured Rollup, Babel, Jest, and ESLint
 - Completely customizable
 - Tree-shaking
-- Code-splitting support
+- Code-splitting
 - Dev/Production builds
 - Typescript support
 - Storybook support
@@ -96,7 +97,7 @@ yarn create react-package my-package
 - **--ts, --typescript**: Initialize a TypeScript project.
 - **--sb, --storybook**: Add storybook support.
 
-### Quick Start
+### Available Scripts
 
 Inside the newly created project, you can run some built-in commands:
 
@@ -121,9 +122,16 @@ Builds the package for production to the `dist` folder. It correctly bundles Rea
 
 Your package is ready to be published.
 
+## Philosophy
+
+Create React Package is divided into two packages:
+
+- `create-react-package` is a command line tool that you use to create new react packages.
+- `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
+
 ## Customization
 
-Create react package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured for you but can be customized to your needs.
+Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enogh for most packages but you can customize them to your needs.
 
 Create a file called `rps.config.js` at the root of your project like so:
 
@@ -135,9 +143,11 @@ module.exports = defineConfig({
 });
 ```
 
+> Note: Create React Package does not support ES modules syntax in the config file, so use plain Node.js
+
 ### Config Intellisense
 
-Since react-package-scripts ships with TypeScript typings, you can leverage your IDE's intellisense with jsdoc type hints:
+Since Create React Package ships with TypeScript typings, you can leverage your IDE's intellisense with JSDoc type hints:
 
 ```js
 // rps.config.js
@@ -152,7 +162,7 @@ const config = {
 module.exports = config;
 ```
 
-Alternatively, you can use the defineConfig helper which should provide intellisense without the need for jsdoc annotations:
+Alternatively, you can use the `defineConfig` helper which should provide intellisense without the need for JSDoc annotations:
 
 ```js
 // rps.config.js
@@ -166,7 +176,7 @@ module.exports = defineConfig({
 
 ### Config Options
 
-Following options are supported
+You can provide the following options to customize the build.
 
 #### input
 
@@ -182,13 +192,6 @@ Following options are supported
 
   Directory relative from `root` where build output will be placed. If the directory exists, it will be removed before the build.
 
-#### name
-
-- **Type**: `string`
-- **Default**: `camel-cased version of your package name`
-
-  Name to expose in the UMD build.
-
 #### formats
 
 - **Type**: `string`
@@ -196,18 +199,25 @@ Following options are supported
 
   Bundle formats. Available formats are `cjs`, `esm`, and `umd`
 
+#### name
+
+- **Type**: `string`
+- **Default**: `camel-cased version of your package name`
+
+  Name to expose in the UMD build. Use this option when you are using `umd` as one of the build formats.
+
 #### disableESLint
 
 - **Type**: `boolean`
 - **Default**: `false`
 
-  Disable code linting with ESLint
+  Disable code linting with ESLint.
 
 #### rollupOptions
 
 - **Type**: [`RollupOptions`](https://rollupjs.org/guide/en/#big-list-of-options)
 
-  Directly customize the underlying Rollup bundle. This is the same as options that can be exported from a Rollup config file and will be merged with react package script's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
+  Directly customize the underlying Rollup bundle. This is the same as options that can be exported from a Rollup config file and will be merged with `react-package-script`'s internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
 ### Rollup
 
