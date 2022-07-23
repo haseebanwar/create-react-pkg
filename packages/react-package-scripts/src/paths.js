@@ -5,5 +5,5 @@ export const paths = {
   packagePackageJson: resolvePath('package.json'),
   packageDist: resolvePath('dist'),
   packageTSConfig: resolvePath('tsconfig.json'),
-  packageConfig: resolvePath('rps.config.js'),
+  packageConfig: resolvePath('crp.config.js'),
 };

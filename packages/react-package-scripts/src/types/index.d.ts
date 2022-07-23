@@ -28,14 +28,14 @@ export declare interface UserConfig {
    */
   disableESLint?: boolean;
   /**
-   * Directly customize the underlying Rollup bundle. These options will be merged with `react-package-script`'s internal Rollup options.
+   * Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
   rollupOptions?: Omit<RollupOptions, 'onwarn'>;
 }
 
 /**
- * Type helper to make it easier to use rps.config.js
+ * Type helper to make it easier to use crp.config.js
  * accepts a direct {@link UserConfig} object
  */
 export declare function defineConfig(config: UserConfig): UserConfig;

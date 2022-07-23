@@ -134,7 +134,7 @@ Create React Package is divided into two packages:
 
 Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enogh for most packages but you can customize them to your needs.
 
-Create a file called `rps.config.js` at the root of your project like so:
+Create a file called `crp.config.js` at the root of your project like so:
 
 ```js
 const { defineConfig } = require('react-package-scripts');
@@ -151,7 +151,7 @@ module.exports = defineConfig({
 Since Create React Package ships with TypeScript typings, you can leverage your IDE's intellisense with JSDoc type hints:
 
 ```js
-// rps.config.js
+// crp.config.js
 
 /**
  * @type {import('react-package-scripts').UserConfig}
@@ -166,7 +166,7 @@ module.exports = config;
 Alternatively, you can use the `defineConfig` helper which should provide intellisense without the need for JSDoc annotations:
 
 ```js
-// rps.config.js
+// crp.config.js
 
 const { defineConfig } = require('react-package-scripts');
 
@@ -218,7 +218,7 @@ You can provide the following options to customize the build.
 
 - **Type**: [`RollupOptions`](https://rollupjs.org/guide/en/#big-list-of-options)
 
-  Directly customize the underlying Rollup bundle. These options will be merged with `react-package-script`'s internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
+  Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
 ### Rollup
 
@@ -258,7 +258,7 @@ Now, your bundle will not include all of lodash's methods. Just the methods you 
 
 Create React Package respects [ESLint configuration files](https://eslint.org/docs/latest/user-guide/configuring/configuration-files).
 
-To disable linting, pass `disableESLint: true` option to `rps.config.js` like
+To disable linting, pass `disableESLint: true` option to `crp.config.js` like
 
 ```js
 const { defineConfig } = require('react-package-scripts');
