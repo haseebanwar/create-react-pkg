@@ -132,7 +132,7 @@ Create React Package is divided into two packages:
 
 ## Customization
 
-Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enogh for most packages but you can customize them to your needs.
+Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enough for most packages but you can customize them to your needs.
 
 Create a file called `crp.config.js` at the root of your project like so:
 
@@ -148,7 +148,7 @@ module.exports = defineConfig({
 
 ### Config Intellisense
 
-Since Create React Package ships with TypeScript typings, you can leverage your IDE's intellisense with JSDoc type hints:
+Since Create React Package ships with TypeScript typings, you can leverage your IDE's IntelliSense with JSDoc type hints:
 
 ```js
 // crp.config.js
@@ -163,7 +163,7 @@ const config = {
 module.exports = config;
 ```
 
-Alternatively, you can use the `defineConfig` helper which should provide intellisense without the need for JSDoc annotations:
+Alternatively, you can use the `defineConfig` helper which should provide IntelliSense without the need for JSDoc annotations:
 
 ```js
 // crp.config.js
@@ -254,7 +254,7 @@ Create a file `.babelrc` at the root of your project with the following.
 }
 ```
 
-This Babel configuration will be merged with Create React Package's internal config. Now, your bundle will not include all of lodash's methods, just the methods you import in your project.
+This Babel configuration will be merged with Create React Package's internal config. Now, your bundle will not include all of lodash's methods, just the methods you import into your project.
 
 ### ESLint
 
