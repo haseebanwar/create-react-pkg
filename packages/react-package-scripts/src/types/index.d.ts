@@ -28,7 +28,7 @@ export declare interface UserConfig {
    */
   disableESLint?: boolean;
   /**
-   * Rollup Options, will be merged with internal rollup options.
+   * Directly customize the underlying Rollup bundle. These options will be merged with `react-package-script`'s internal Rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
   rollupOptions?: Omit<RollupOptions, 'onwarn'>;

@@ -47,6 +47,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - [What’s Included?](#whats-included)
 - [Author](#author)
 - [License](#license)
+- [Styling](#styling)
 
 ## Why
 
@@ -217,7 +218,7 @@ You can provide the following options to customize the build.
 
 - **Type**: [`RollupOptions`](https://rollupjs.org/guide/en/#big-list-of-options)
 
-  Directly customize the underlying Rollup bundle. This is the same as options that can be exported from a Rollup config file and will be merged with `react-package-script`'s internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
+  Directly customize the underlying Rollup bundle. These options will be merged with `react-package-script`'s internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
 ### Rollup
 
@@ -310,3 +311,5 @@ Your environment will have everything you need to build a modern single-page Rea
 ## License
 
 Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
+
+## Styling
