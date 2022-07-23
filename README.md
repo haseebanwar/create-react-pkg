@@ -191,7 +191,7 @@ You can provide the following options to customize the build.
 - **Type**: `string`
 - **Default**: `dist`
 
-  Directory relative from `root` where build output will be placed. If the directory exists, it will be removed before the build.
+  Directory relative from root where build output will be placed. If the directory exists, it will be removed before the build.
 
 #### formats
 
@@ -228,7 +228,9 @@ Create React Package respects [Babel configuration files](https://babeljs.io/doc
 
 #### Example: Optimize Lodash
 
-Install [lodash](https://www.npmjs.com/package/lodash) and [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import)
+If you use a lodash function in your library, the compiled bundle will contain all of the lodash's library. Ideally, your compiled bundle should only contain what you use in the source of your library. Create React Package helps you do that by adding some Babel configuration.
+
+Install [lodash](https://www.npmjs.com/package/lodash) and [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import) in your package.
 
 ```sh
 npm i lodash
@@ -252,13 +254,13 @@ Create a file `.babelrc` at the root of your project with the following.
 }
 ```
 
-Now, your bundle will not include all of lodash's methods. Just the methods you import in your project.
+This Babel configuration will be merged with Create React Package's internal config. Now, your bundle will not include all of lodash's methods, just the methods you import in your project.
 
 ### ESLint
 
 Create React Package respects [ESLint configuration files](https://eslint.org/docs/latest/user-guide/configuring/configuration-files).
 
-To disable linting, pass `disableESLint: true` option to `crp.config.js` like
+To disable linting, pass `disableESLint: true` option to `crp.config.js`
 
 ```js
 const { defineConfig } = require('react-package-scripts');
@@ -268,26 +270,37 @@ module.exports = defineConfig({
 });
 ```
 
-To ignore any files, create a `.eslintignore` at the root of the package.
+To ignore any files, create a `.eslintignore` file at the root of the package.
 
 ### Jest
 
-The following files will be executed with the test runner
+Create React Package executes the following files with Jest test runner:
 
-- Files with .js suffix in **tests** folders. (under any level not only in src)
-- Files with .test.js suffix.
-- Files with .spec.js suffix.
+- Files with `.js` suffix in `__tests__` folders. (under any level not only in src)
+- Files with `.test.js` suffix.
+- Files with `.spec.js` suffix.
 
-Pass your [Jest Configuration](https://jestjs.io/docs/configuration#reference) in the package.json and react package scripts will shallow merge it.
+> `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
-```js
+You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#reference) to package.json.
+
+Example package.json
+
+```json
 {
   "name": "your-package",
   "jest": {
-    // jest config
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "**/*.{js,jsx}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
+    ]
   }
 }
 ```
+
+Note that this config is shallow merged.
 
 ## How to Update to New Versions?
 

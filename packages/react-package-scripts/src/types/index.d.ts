@@ -7,7 +7,7 @@ export declare interface UserConfig {
    */
   input?: string;
   /**
-   * Directory relative from `root` where build output will be placed. If the
+   * Directory relative from root where build output will be placed. If the
    * directory exists, it will be removed before the build.
    * @default 'dist'
    */
