@@ -152,6 +152,7 @@ export function createRollupConfig(customConfig) {
               },
             }),
           }),
+        // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
         babel({
           exclude: [/@babel\/runtime/, 'node_modules/**'],
           extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
@@ -184,7 +185,9 @@ export function createRollupConfig(customConfig) {
         mode === 'production' && terser(),
         // push user defined rollup plugins
         rollupOptions?.plugins,
-      ].filter(Boolean),
+      ]
+        .flat()
+        .filter(Boolean),
       // allow user defined rollup options for output
       output: {
         ...output,

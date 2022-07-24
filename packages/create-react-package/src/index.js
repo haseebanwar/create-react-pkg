@@ -107,8 +107,26 @@ program
       // create package directory if it doesn't exist
       fs.ensureDirSync(projectPath);
 
-      // throw an error if package folder is not empty
-      const files = fs.readdirSync(projectPath);
+      // throw an error if package folder contains files except valid files
+      const validFiles = [
+        '.DS_Store',
+        '.git',
+        '.gitattributes',
+        '.gitignore',
+        '.gitlab-ci.yml',
+        '.hg',
+        '.hgcheck',
+        '.hgignore',
+        '.idea',
+        '.npmignore',
+        '.travis.yml',
+        'docs',
+        'mkdocs.yml',
+        'Thumbs.db',
+      ];
+      const files = fs
+        .readdirSync(projectPath)
+        .filter((file) => !validFiles.includes(file));
       if (files.length) {
         console.error(
           chalk.red(
