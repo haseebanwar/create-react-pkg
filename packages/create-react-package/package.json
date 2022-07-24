@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/create-react-package",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Zero config CLI for creating react packages",
   "bin": {
     "create-react-package": "lib/index.js"
