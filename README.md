@@ -39,7 +39,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [disableESLint](#disableeslint)
     - [rollupOptions](#rollupoptions)
   - [Rollup](#rollup)
-    - [With image](#with-image)
+    - [Example: Import images](#example-import-images)
   - [Babel](#babel)
     - [Example: Optimize Lodash](#example-optimize-lodash)
   - [ESLint](#eslint)
@@ -226,9 +226,54 @@ You can provide the following options to customize the build.
 
 ### Rollup
 
-some text
+Create React Package uses Rollup to bundle your library. To customize the rollup configuration, create a file `crp.config.js` at the root of your package and pass any rollup options.
 
-#### With image
+```js
+const { defineConfig } = require('@haseebanwar/react-package-scripts');
+
+module.exports = defineConfig({
+  rollupOptions: {
+    // rollup options
+  },
+});
+```
+
+#### Example: Import images
+
+To import and ship your package with JPG, PNG, GIF, SVG, and WebP files, use [@rollup/plugin-image](https://www.npmjs.com/package/@rollup/plugin-image). First, install it as a dev dependency
+
+```sh
+npm i -D @rollup/plugin-image
+```
+
+And use it in the `crp.config.js`
+
+```js
+const { defineConfig } = require('@haseebanwar/react-package-scripts');
+const images = require('@rollup/plugin-image');
+
+module.exports = defineConfig({
+  rollupOptions: {
+    plugins: [images()],
+  },
+});
+```
+
+Now, you can import images like
+
+```jsx
+import React from 'react';
+import image from './image.png';
+
+return <img src={image} />;
+```
+
+> If you are using TypeScript, create a folder and file `types/index.d.ts` at the root of your project with the following to make it work with TypeScript compiler.
+
+```ts
+declare module '*.png';
+declare module '*.jpg';
+```
 
 ### Babel
 
