@@ -167,16 +167,15 @@ export function createRollupConfig(customConfig) {
           // more: https://babeljs.io/docs/en/babel-runtime#why
           plugins: ['@babel/plugin-transform-runtime'],
         }),
-        // postcss should run only once for all bundle formats
-        idx === 0 &&
-          postcss({
-            extract: `css/${safePackageName}.css`,
-            minimize: true,
-            plugins: [autoprefixer()],
-            sourceMap: true,
-            config: false, // do not load postcss config
-            // css modules are by default supported for .module.css, .module.scss, etc
-          }),
+        postcss({
+          // extract css only once for all bundle formats
+          extract: idx === 0 ? `css/${safePackageName}.css` : false,
+          minimize: true,
+          plugins: [autoprefixer()],
+          sourceMap: true,
+          config: false, // do not load postcss config
+          // css modules are by default supported for .module.css, .module.scss, etc
+        }),
         mode &&
           replace({
             'process.env.NODE_ENV': JSON.stringify(mode),

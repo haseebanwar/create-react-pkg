@@ -49,6 +49,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - [Author](#author)
 - [License](#license)
 - [Styling](#styling)
+- [note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
 
 ## Why
 
@@ -333,3 +334,7 @@ Your environment will have everything you need to build a modern single-page Rea
 Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
 
 ## Styling
+
+for sass, install `sass` or `node-sass`
+
+## note about which deps are external to rollup
