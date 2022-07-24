@@ -136,7 +136,7 @@ Create React Package is divided into two packages:
 
 Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enough for most packages but you can customize them to your needs.
 
-> Customization can invalidate the default behavior of Create React Package, please use with discretion
+> ⚠️ Customization can invalidate the default behavior of Create React Package, please use with discretion
 
 Create a file called `crp.config.js` at the root of your project like so:
 
