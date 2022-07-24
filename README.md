@@ -39,6 +39,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [disableESLint](#disableeslint)
     - [rollupOptions](#rollupoptions)
   - [Rollup](#rollup)
+    - [With image](#with-image)
   - [Babel](#babel)
     - [Example: Optimize Lodash](#example-optimize-lodash)
   - [ESLint](#eslint)
@@ -134,6 +135,8 @@ Create React Package is divided into two packages:
 
 Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enough for most packages but you can customize them to your needs.
 
+> Customization can invalidate the default behavior of Create React Package, please use with discretion
+
 Create a file called `crp.config.js` at the root of your project like so:
 
 ```js
@@ -222,13 +225,17 @@ You can provide the following options to customize the build.
 
 ### Rollup
 
+some text
+
+#### With image
+
 ### Babel
 
 Create React Package respects [Babel configuration files](https://babeljs.io/docs/en/config-files).
 
 #### Example: Optimize Lodash
 
-If you use a lodash function in your library, the compiled bundle will contain all of the lodash's library. Ideally, your compiled bundle should only contain what you use in the source of your library. Create React Package helps you do that by adding some Babel configuration.
+If you use a lodash function in your library, the compiled bundle will contain all of the lodash's library. Ideally, your compiled bundle should only contain what you use in the source of your library. Create React Package helps you do that with some Babel configuration.
 
 Install [lodash](https://www.npmjs.com/package/lodash) and [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import) in your package.
 
