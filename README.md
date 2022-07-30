@@ -12,10 +12,6 @@ npm start
 
 You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are preconfigured and hidden so that you can focus on the code.
 
-<p align='center'>
-<img src='https://cdn.jsdelivr.net/gh/facebook/create-react-app@27b42ac7efa018f2541153ab30d63180f5fa39e0/screencast.svg' width='600' alt='npm start'>
-</p>
-
 ## Contents <!-- omit in toc -->
 
 - [Why](#why)
@@ -109,7 +105,7 @@ Inside the newly created project, you can run some built-in commands:
 Watches for file changes in development mode. You will see the build errors and lint warnings in the console.
 
 <p align='center'>
-<img src='https://cdn.jsdelivr.net/gh/marionebl/create-react-app@9f6282671c54f0874afd37a72f6689727b562498/screencast-error.svg' width='600' alt='Build errors'>
+<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1659162437/create-react-package/npm_start_cci7ro.gif' width='600' alt='npm start'>
 </p>
 
 #### `npm test` or `yarn test`
@@ -136,7 +132,7 @@ Create React Package is divided into two packages:
 
 Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enough for most packages but you can customize them to your needs.
 
-> ⚠️ Customization can invalidate the default behavior of Create React Package, please use with discretion
+> Customization can invalidate the default behavior of Create React Package, please use with discretion.
 
 Create a file called `crp.config.js` at the root of your project like so:
 
@@ -144,7 +140,7 @@ Create a file called `crp.config.js` at the root of your project like so:
 const { defineConfig } = require('react-package-scripts');
 
 module.exports = defineConfig({
-  // react-package-scripts options
+  // options
 });
 ```
 
@@ -161,7 +157,7 @@ Since Create React Package ships with TypeScript typings, you can leverage your 
  * @type {import('react-package-scripts').UserConfig}
  */
 const config = {
-  // react-package-scripts options
+  // options
 };
 
 module.exports = config;
@@ -175,7 +171,7 @@ Alternatively, you can use the `defineConfig` helper which should provide Intell
 const { defineConfig } = require('react-package-scripts');
 
 module.exports = defineConfig({
-  // react-package-scripts options
+  // options
 });
 ```
 
