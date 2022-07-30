@@ -109,11 +109,11 @@ Runs the project in development mode, watches for file changes, and rebuilds on 
 
 #### `npm test` or `yarn test`
 
-This command runs your tests with Jest test runner.
+Runs your tests with Jest test runner.
 
 #### `npm run build` or `yarn build`
 
-Creates an optimized production build of your package that can be published to NPM.
+Creates an optimized production build of your package in CommonJS, ES Module, and UMD formats.
 
 ## Philosophy
 
@@ -126,7 +126,7 @@ Create React Package is divided into two packages:
 
 Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured, and the default configuration is enough for most packages but you can customize them to your needs.
 
-> Customization can invalidate the default behavior of Create React Package, please use with discretion.
+> Customization can invalidate the default behavior of Create React Package. Please use with discretion.
 
 Create a file called `crp.config.js` at the root of your project like so:
 
@@ -258,7 +258,7 @@ import image from './image.png';
 return <img src={image} />;
 ```
 
-> If you are using TypeScript, create a folder and file `types/index.d.ts` at the root of your project with the following to make it work with TypeScript compiler.
+> Note: If you are using TypeScript, create a folder and file `types/index.d.ts` at the root of your project with the following to make it work with TypeScript compiler.
 
 ```ts
 declare module '*.png';
@@ -271,7 +271,9 @@ Create React Package respects [Babel configuration files](https://babeljs.io/doc
 
 #### Example: Optimize Lodash
 
-If you use a lodash function in your library, the compiled bundle will contain all of the lodash's library. Ideally, your compiled bundle should only contain what you use in the source of your library. Create React Package helps you do that with some Babel configuration.
+If you use a lodash function in your library like `import { cloneDeep } from 'lodash'` the compiled bundle will contain all of the lodash's library.
+
+Ideally, your compiled bundle should only contain what you use in the source of your library. Create React Package helps you do that with some Babel configuration.
 
 Install [lodash](https://www.npmjs.com/package/lodash) and [babel-plugin-import](https://www.npmjs.com/package/babel-plugin-import) in your package.
 
