@@ -40,11 +40,10 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [Example: Optimize Lodash](#example-optimize-lodash)
   - [ESLint](#eslint)
   - [Jest](#jest)
-- [How to Update to New Versions?](#how-to-update-to-new-versions)
-- [What’s Included?](#whats-included)
+    - [CLI Options](#cli-options)
+- [Styling](#styling)
 - [Author](#author)
 - [License](#license)
-- [Styling](#styling)
 - [note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
 
 ## Why
@@ -102,24 +101,19 @@ Inside the newly created project, you can run some built-in commands:
 
 #### `npm start` or `yarn start`
 
-Watches for file changes in development mode. You will see the build errors and lint warnings in the console.
+Runs the project in development mode. It watches for files changes, and rebuilds on change. The build errors and lint warnings are printed in the console as you go.
 
 <p align='center'>
-<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1659162437/create-react-package/npm_start_cci7ro.gif' width='600' alt='npm start'>
+<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1659168243/create-react-package/npm-start_qjwfv2.gif' width='600' alt='npm start'>
 </p>
 
 #### `npm test` or `yarn test`
 
-Runs the test watcher in an interactive mode.<br>
-By default, runs tests related to files changed since the last commit.
-
-[Read more about testing.](https://facebook.github.io/create-react-app/docs/running-tests)
+This command runs your tests with Jest test runner.
 
 #### `npm run build` or `yarn build`
 
-Builds the package for production to the `dist` folder. It correctly bundles React in production mode and optimizes the build for the best performance.
-
-Your package is ready to be published.
+Creates an optimized production build of your package that can be published to NPM.
 
 ## Philosophy
 
@@ -225,7 +219,7 @@ You can provide the following options to customize the build.
 Create React Package uses Rollup to bundle your library. To customize the rollup configuration, create a file `crp.config.js` at the root of your package and pass any rollup options.
 
 ```js
-const { defineConfig } = require('@haseebanwar/react-package-scripts');
+const { defineConfig } = require('react-package-scripts');
 
 module.exports = defineConfig({
   rollupOptions: {
@@ -245,7 +239,7 @@ npm i -D @rollup/plugin-image
 And use it in the `crp.config.js`
 
 ```js
-const { defineConfig } = require('@haseebanwar/react-package-scripts');
+const { defineConfig } = require('react-package-scripts');
 const images = require('@rollup/plugin-image');
 
 module.exports = defineConfig({
@@ -303,7 +297,7 @@ Create a file `.babelrc` at the root of your project with the following.
 }
 ```
 
-This Babel configuration will be merged with Create React Package's internal config. Now, your bundle will not include all of lodash's methods, just the methods you import into your project.
+This Babel configuration will be merged with Create React Package's internal config. Now, your bundle will not include all lodash functions, just the functions you import into your project.
 
 ### ESLint
 
@@ -351,20 +345,20 @@ Example package.json
 
 Note that this config is shallow merged.
 
-## How to Update to New Versions?
+#### CLI Options
 
-Please refer to the [User Guide](https://facebook.github.io/create-react-app/docs/updating-to-new-releases) for this and other information.
+You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `react-package-scripts test` command in your package.json.
 
-## What’s Included?
+```diff
+  "scripts": {
+-    "test": "react-package-scripts test"
++    "test": "react-package-scripts test --watchAll"
+  }
+```
 
-Your environment will have everything you need to build a modern single-page React app:
+## Styling
 
-- React, JSX, ES6, TypeScript and Flow syntax support.
-- Language extras beyond ES6 like the object spread operator.
-- Autoprefixed CSS, so you don’t need `-webkit-` or other prefixes.
-- A fast interactive unit test runner with built-in support for coverage reporting.
-- A live development server that warns about common mistakes.
-- A build script to bundle JS, CSS, and images for production, with hashes and sourcemaps.
+for sass, install `sass` or `node-sass`
 
 ## Author
 
@@ -373,9 +367,5 @@ Your environment will have everything you need to build a modern single-page Rea
 ## License
 
 Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
-
-## Styling
-
-for sass, install `sass` or `node-sass`
 
 ## note about which deps are external to rollup
