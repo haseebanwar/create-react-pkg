@@ -42,9 +42,13 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Jest](#jest)
     - [CLI Options](#cli-options)
 - [Styling](#styling)
+- [Advanced Usage](#advanced-usage)
+  - [Code splitting](#code-splitting)
+  - [Note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
+  - [Browserslist](#browserslist)
+  - [Storybook](#storybook)
 - [Author](#author)
 - [License](#license)
-- [note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
 
 ## Why
 
@@ -360,7 +364,20 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `test` scrip
 
 ## Styling
 
+Intro with example
+
+Sass
 for sass, install `sass` or `node-sass`
+
+## Advanced Usage
+
+### Code splitting
+
+### Note about which deps are external to rollup
+
+### Browserslist
+
+### Storybook
 
 ## Author
 
@@ -369,5 +386,3 @@ for sass, install `sass` or `node-sass`
 ## License
 
 Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
-
-## note about which deps are external to rollup
