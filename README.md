@@ -10,7 +10,7 @@ cd my-package
 npm start
 ```
 
-You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are preconfigured and hidden so that you can focus on the code.
+You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are pre-configured and hidden so that you can focus on the code.
 
 ## Contents <!-- omit in toc -->
 
@@ -101,7 +101,7 @@ Inside the newly created project, you can run some built-in commands:
 
 #### `npm start` or `yarn start`
 
-Runs the project in development mode. It watches for files changes, and rebuilds on change. The build errors and lint warnings are printed in the console as you go.
+Runs the project in development mode, watches for file changes, and rebuilds on change. The build errors and lint warnings are printed in the console as you go.
 
 <p align='center'>
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1659168243/create-react-package/npm-start_qjwfv2.gif' width='600' alt='npm start'>
@@ -119,12 +119,12 @@ Creates an optimized production build of your package that can be published to N
 
 Create React Package is divided into two packages:
 
-- `create-react-package` is a command line tool that you use to create new react packages.
+- `create-react-package` is a command line tool used to create new react packages.
 - `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
 
-Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured and the default configuration is enough for most packages but you can customize them to your needs.
+Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These tools are pre-configured, and the default configuration is enough for most packages but you can customize them to your needs.
 
 > Customization can invalidate the default behavior of Create React Package, please use with discretion.
 
@@ -319,7 +319,7 @@ To ignore any files, create a `.eslintignore` file at the root of the package.
 
 Create React Package executes the following files with Jest test runner:
 
-- Files with `.js` suffix in `__tests__` folders. (under any level not only in src)
+- Files with `.js` suffix in `__tests__` folders. (under any level, not only in src)
 - Files with `.test.js` suffix.
 - Files with `.spec.js` suffix.
 
@@ -347,7 +347,7 @@ Note that this config is shallow merged.
 
 #### CLI Options
 
-You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `react-package-scripts test` command in your package.json.
+You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `test` script in your package.json.
 
 ```diff
   "scripts": {
