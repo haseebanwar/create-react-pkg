@@ -43,6 +43,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [CLI Options](#cli-options)
 - [Styling](#styling)
   - [Sass/Stylus/Less Files](#sassstylusless-files)
+  - [Post-Processing CSS](#post-processing-css)
 - [Advanced Usage](#advanced-usage)
   - [Code splitting](#code-splitting)
   - [Note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
@@ -365,7 +366,7 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `test` scrip
 
 ## Styling
 
-Create React Package lets you ship your package with CSS assets. You can import css/sass files in your JavaScript files out of the box.
+Create React Package lets you ship your package with CSS assets. You can import stylesheets in your JavaScript files straightaway without doing any additional setup.
 
 ```css
 /* Button.css */
@@ -390,15 +391,41 @@ const Button = () => {
 
 Create React Package concatenates all your stylesheets into a single minified `.css` file and place it in the build output.
 
-> Create React Package also supports CSS Modules
+> Tip: CSS Modules are also supported
 
 ### Sass/Stylus/Less Files
 
-- For Sass install `sass`: `npm i -D sass`
-- For Stylus install `stylus`: `npm i -D stylus`
-- For Less install `less:` `npm i -D less`
+- For Sass install [sass](https://www.npmjs.com/package/sass): `npm i -D sass`
+- For Stylus install [stylus](https://www.npmjs.com/package/stylus): `npm i -D stylus`
+- For Less install [less](https://www.npmjs.com/package/less): `npm i -D less`
 
 That's it, you can now import `.styl` `.scss` `.sass` `.less` files in your project.
+
+### Post-Processing CSS
+
+This project uses [rollup-plugin-postcss
+](https://www.npmjs.com/package/rollup-plugin-postcss) that integrates Rollup and [PostCSS](https://github.com/postcss/postcss) together. In addition to that, it adds adds vendor prefixes automatically to bundled CSS through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
+
+You can customize your target support browsers by adjusting the `browserslist` key in package.json according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
+
+For example, this:
+
+```css
+div {
+  user-select: none;
+}
+```
+
+is transformed to this
+
+```css
+div {
+  -webkit-user-select: none;
+  user-select: none;
+}
+```
+
+If you need to disable autoprefixing, follow [autoprefixer disabling section](https://github.com/postcss/autoprefixer#disabling)
 
 ## Advanced Usage
 
