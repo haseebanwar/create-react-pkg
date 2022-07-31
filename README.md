@@ -24,6 +24,9 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
     - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
     - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
+- [Building your Package](#building-your-package)
+  - [Note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
+  - [Storybook](#storybook)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
@@ -45,10 +48,9 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Sass/Stylus/Less Files](#sassstylusless-files)
   - [Post-Processing CSS](#post-processing-css)
 - [Advanced Usage](#advanced-usage)
-  - [Code splitting](#code-splitting)
-  - [Note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
-  - [Browserslist](#browserslist)
-  - [Storybook](#storybook)
+  - [Code Splitting](#code-splitting)
+    - [write about chunks](#write-about-chunks)
+  - [Configure Supported Browsers](#configure-supported-browsers)
 - [Author](#author)
 - [License](#license)
 
@@ -120,6 +122,12 @@ Runs your tests with Jest test runner.
 #### `npm run build` or `yarn build`
 
 Creates an optimized production build of your package in CommonJS, ES Module, and UMD formats.
+
+## Building your Package
+
+### Note about which deps are external to rollup
+
+### Storybook
 
 ## Philosophy
 
@@ -355,7 +363,7 @@ Note that this config is shallow merged.
 
 #### CLI Options
 
-You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `test` script in your package.json.
+You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to the `test` script in your package.json.
 
 ```diff
   "scripts": {
@@ -366,7 +374,7 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to `test` scrip
 
 ## Styling
 
-Create React Package lets you ship your package with CSS assets. You can import stylesheets in your JavaScript files straightaway without doing any additional setup.
+Create React Package lets you ship your package with CSS assets. You can import stylesheets in your JavaScript files straight away without doing any additional setup.
 
 ```css
 /* Button.css */
@@ -389,7 +397,7 @@ const Button = () => {
 };
 ```
 
-Create React Package concatenates all your stylesheets into a single minified `.css` file and place it in the build output.
+Create React Package concatenates all your stylesheets into a single minified `.css` file and places it in the build output.
 
 > Tip: CSS Modules are also supported
 
@@ -404,9 +412,9 @@ That's it, you can now import `.styl` `.scss` `.sass` `.less` files in your proj
 ### Post-Processing CSS
 
 This project uses [rollup-plugin-postcss
-](https://www.npmjs.com/package/rollup-plugin-postcss) that integrates Rollup and [PostCSS](https://github.com/postcss/postcss) together. In addition to that, it adds adds vendor prefixes automatically to bundled CSS through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
+](https://www.npmjs.com/package/rollup-plugin-postcss) that integrates Rollup and [PostCSS](https://github.com/postcss/postcss) together. In addition to that, it adds vendor prefixes automatically to bundled CSS through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
 
-You can customize your target support browsers by adjusting the `browserslist` key in package.json according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
+You can customize your target support browsers by adjusting the `browserslist` key in package.json. You can read more about Browserslist configuration [here](#configure-supported-browsers).
 
 For example, this:
 
@@ -429,13 +437,71 @@ If you need to disable autoprefixing, follow [autoprefixer disabling section](ht
 
 ## Advanced Usage
 
-### Code splitting
+### Code Splitting
 
-### Note about which deps are external to rollup
+It is recommended that you code split your app and not library. But if you still need to code split your library for some reason, Create React Pakcage got your back.
 
-### Browserslist
+This project supports code splitting via dynamic `import()`
 
-### Storybook
+For example
+
+```js
+// greeting.js
+
+const greeting = 'Hi there!';
+
+export { greeting };
+```
+
+```jsx
+// index.js
+
+import React from 'react';
+
+const MyComponent = () => {
+  const handleClick = async () => {
+    try {
+      const { greeting } = await import('./greeting');
+      console.log(greeting); // prints: Hi there!
+    } catch (error) {
+      // handle failure
+    }
+  };
+
+  return <button onClick={handleClick}>Load</button>;
+};
+```
+
+#### write about chunks
+
+You can also use React `lazy` and `Suspense` to load components lazily.
+
+> Note: Code-splitting is not supported for UMD module format.
+
+### Configure Supported Browsers
+
+Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes Browserslist configuration in package.json
+
+```json
+"browserslist": {
+  "production": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all"
+  ],
+  "development": [
+    "last 1 chrome version",
+    "last 1 firefox version",
+    "last 1 safari version"
+  ]
+  },
+```
+
+The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with `start` script.
+
+You can adjust it according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
+
+> Note: This configuration does not include polyfills automatically.
 
 ## Author
 
