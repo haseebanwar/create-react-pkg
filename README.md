@@ -25,8 +25,10 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
     - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
 - [Building your Package](#building-your-package)
-  - [Note about which deps are external to rollup](#note-about-which-deps-are-external-to-rollup)
-  - [Storybook](#storybook)
+  - [Installing a Dependency](#installing-a-dependency)
+  - [Managing External Dependencies](#managing-external-dependencies)
+  - [Preview with Storybook/Another App](#preview-with-storybookanother-app)
+  - [Publish](#publish)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
@@ -125,9 +127,41 @@ Creates an optimized production build of your package in CommonJS, ES Module, an
 
 ## Building your Package
 
-### Note about which deps are external to rollup
+### Installing a Dependency
 
-### Storybook
+The generated project includes `react` and `react-dom` as development dependencies along with the scripts used by Create React Package.
+
+You may install other dependencies, for example Material UI.
+
+```sh
+npm install @mui/material -D
+```
+
+Since you are building a library, it is a very good chance that you need that dependency as a development dependency because the consumer of your library will probably have it installed already.
+
+This leads us to next section
+
+### Managing External Dependencies
+
+External dependencies are those that should not be included in your bundled code. To specifiy external deps, add them to `peerDependencies` key in your package.json
+
+```json
+"peerDependencies": {
+  "react": ">=17",
+  "react-dom": ">=17",
+  "@mui/material": "^5.9.2"
+},
+```
+
+By default, `react` and `react-dom` are already specified as peer dependencies because we don't two copies of React running.
+
+### Preview with Storybook/Another App
+
+### Publish
+
+- Run the `build` script to create an optimized production build.
+- Publish the package to NPM.
+- In package.json under key `files`, the `dist` folder specified. This tells NPM to push only `dist` folder.
 
 ## Philosophy
 
