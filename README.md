@@ -51,7 +51,6 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Post-Processing CSS](#post-processing-css)
 - [Advanced Usage](#advanced-usage)
   - [Code Splitting](#code-splitting)
-    - [write about chunks](#write-about-chunks)
   - [Configure Supported Browsers](#configure-supported-browsers)
 - [Author](#author)
 - [License](#license)
@@ -458,7 +457,7 @@ div {
 }
 ```
 
-is transformed into this
+is transformed into this:
 
 ```css
 div {
@@ -473,11 +472,11 @@ If you need to disable autoprefixing, follow [autoprefixer disabling section](ht
 
 ### Code Splitting
 
-It is recommended that you code split your app and not library. But if you still need to code split your library for some reason, Create React Pakcage got your back.
+It is recommended that you do code splitting in your app and not library. But if you still need to code split your library for some reason, Create React Pakcage got your back.
 
-This project supports code splitting via dynamic `import()`
+This project supports code splitting via dynamic `import()`.
 
-For example
+For example:
 
 ```js
 // greeting.js
@@ -505,8 +504,6 @@ const MyComponent = () => {
   return <button onClick={handleClick}>Load</button>;
 };
 ```
-
-#### write about chunks
 
 You can also use React `lazy` and `Suspense` to load components lazily.
 
