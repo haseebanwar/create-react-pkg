@@ -168,7 +168,7 @@ export function createRollupConfig(customConfig) {
           plugins: ['@babel/plugin-transform-runtime'],
         }),
         postcss({
-          extract: true,
+          extract: `css/${safePackageName}.min.css`,
           minimize: true,
           plugins: [autoprefixer()],
           sourceMap: true,
