@@ -458,7 +458,7 @@ div {
 }
 ```
 
-is transformed to this
+is transformed into this
 
 ```css
 div {
