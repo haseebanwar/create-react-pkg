@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/react-package-scripts",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Scripts for Create React Package",
   "bin": {
     "react-package-scripts": "lib/index.js"
