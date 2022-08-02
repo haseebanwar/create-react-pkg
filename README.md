@@ -511,7 +511,7 @@ You can also use React `lazy` and `Suspense` to load components lazily.
 
 ### Configure Supported Browsers
 
-Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes Browserslist configuration in package.json
+Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes Browserslist configuration in package.json.
 
 ```json
 "browserslist": {
@@ -525,12 +525,12 @@ Create React Package uses [Browserslist](https://github.com/browserslist/browser
     "last 1 firefox version",
     "last 1 safari version"
   ]
-  },
+},
 ```
 
-The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with `start` script.
+The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with `watch` script.
 
-You can adjust it according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
+You can adjust this configuration according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
 
 > Note: This configuration does not include polyfills automatically.
 
