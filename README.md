@@ -123,7 +123,7 @@ Runs your tests with Jest test runner.
 
 #### `npm run build` or `yarn build`
 
-Creates an optimized production build of your package in CommonJS, ES Module, and UMD formats.
+Creates an optimized production build of your package in CommonJS, ES, and UMD module formats.
 
 ## Building your Package
 
@@ -237,7 +237,7 @@ You can provide the following options to customize the build.
 
 #### formats
 
-- **Type**: `string`
+- **Type**: `string[]`
 - **Default**: `['cjs', 'esm']`
 
   Bundle formats. Available formats are `cjs`, `esm`, and `umd`
