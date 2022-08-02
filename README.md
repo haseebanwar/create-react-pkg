@@ -446,7 +446,7 @@ That's it, you can now import `.styl` `.scss` `.sass` `.less` files in your proj
 ### Post-Processing CSS
 
 This project uses [rollup-plugin-postcss
-](https://www.npmjs.com/package/rollup-plugin-postcss) that integrates Rollup with [PostCSS](https://github.com/postcss/postcss). In addition to that, it adds vendor prefixes automatically to bundled CSS through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
+](https://www.npmjs.com/package/rollup-plugin-postcss) that integrates Rollup with [PostCSS](https://github.com/postcss/postcss). In addition to that, it adds vendor prefixes automatically to the bundled CSS through [Autoprefixer](https://github.com/postcss/autoprefixer) so you don’t need to worry about it.
 
 You can customize your target support browsers by adjusting the `browserslist` key in package.json. You can read more about Browserslist configuration [here](#configure-supported-browsers).
 
