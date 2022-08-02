@@ -467,7 +467,7 @@ div {
 }
 ```
 
-If you need to disable autoprefixing, follow [autoprefixer disabling section](https://github.com/postcss/autoprefixer#disabling)
+If you need to disable autoprefixing, follow [autoprefixer disabling section](https://github.com/postcss/autoprefixer#disabling).
 
 ## Advanced Usage
 
