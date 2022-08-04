@@ -35,7 +35,7 @@
     "fs-extra": "^10.0.1",
     "prompts": "^2.4.2",
     "semver": "^7.3.5",
-    "validate-npm-package-name": "^3.0.0"
+    "validate-npm-package-name": "^4.0.0"
   },
   "gitHead": "68f174019962a73933378ab07b69fde97382ccc2"
 }
