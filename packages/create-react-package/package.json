@@ -2,6 +2,7 @@
   "name": "@haseebanwar/create-react-package",
   "version": "0.1.34",
   "description": "Zero config CLI for creating react packages",
+  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/create-react-package",
   "bin": {
     "create-react-package": "lib/index.js"
   },
