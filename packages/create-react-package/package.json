@@ -2,14 +2,6 @@
   "name": "@haseebanwar/create-react-package",
   "version": "0.1.35",
   "description": "Zero config CLI for creating react packages",
-  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/create-react-package",
-  "bin": {
-    "create-react-package": "lib/index.js"
-  },
-  "files": [
-    "lib",
-    "templates"
-  ],
   "keywords": [
     "react",
     "cli",
@@ -17,8 +9,24 @@
     "library",
     "rollup"
   ],
+  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/create-react-package",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haseebanwar/create-react-package.git",
+    "directory": "packages/create-react-package"
+  },
+  "bugs": {
+    "url": "https://github.com/haseebanwar/create-react-package/issues"
+  },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
+  "bin": {
+    "create-react-package": "lib/index.js"
+  },
+  "files": [
+    "lib",
+    "templates"
+  ],
   "engines": {
     "node": ">=14.17.0"
   },

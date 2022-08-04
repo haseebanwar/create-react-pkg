@@ -2,15 +2,6 @@
   "name": "@haseebanwar/react-package-scripts",
   "version": "0.1.35",
   "description": "Scripts for Create React Package",
-  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/react-package-scripts",
-  "bin": {
-    "react-package-scripts": "lib/index.js"
-  },
-  "main": "lib/config.js",
-  "types": "lib/types/index.d.ts",
-  "files": [
-    "lib"
-  ],
   "keywords": [
     "react",
     "package",
@@ -19,8 +10,25 @@
     "bundle",
     "eslint"
   ],
+  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/react-package-scripts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haseebanwar/create-react-package.git",
+    "directory": "packages/react-package-scripts"
+  },
+  "bugs": {
+    "url": "https://github.com/haseebanwar/create-react-package/issues"
+  },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
+  "bin": {
+    "react-package-scripts": "lib/index.js"
+  },
+  "main": "lib/config.js",
+  "types": "lib/types/index.d.ts",
+  "files": [
+    "lib"
+  ],
   "engines": {
     "node": ">=14.17.0"
   },
