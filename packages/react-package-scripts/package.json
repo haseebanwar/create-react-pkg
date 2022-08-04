@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/react-package-scripts",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "description": "Scripts for Create React Package",
   "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/react-package-scripts",
   "bin": {
