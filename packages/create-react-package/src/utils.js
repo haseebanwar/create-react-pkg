@@ -48,11 +48,14 @@ export function getTemplateName(useTypescript, useStorybook) {
 export function getAuthorName() {
   let author = '';
 
-  author = execSync('npm config get init-author-name').toString().trim();
-  if (author) return author;
+  // TODO
+  // author = execSync('npm config get init-author-name').toString().trim();
+  // const NPMVersion = execSync('npm -v').toString().trim();
+  // console.log('NPMVersion', NPMVersion);
+  // if (author) return author;
 
-  author = execSync('git config --global user.name').toString().trim();
-  if (author) return author;
+  // author = execSync('git config --global user.name').toString().trim();
+  // if (author) return author;
 
   return author;
 }

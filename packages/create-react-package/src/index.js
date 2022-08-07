@@ -185,39 +185,40 @@ program
         projectPath
       );
 
+      // TODO
       // copy base files
-      await fs.copy(
-        path.resolve(__dirname, '../templates/baseFiles'),
-        projectPath
-      );
+      // await fs.copy(
+      //   path.resolve(__dirname, '../templates/baseFiles'),
+      //   projectPath
+      // );
 
       // fix gitignore
-      await fs.move(
-        path.resolve(projectPath, './gitignore'),
-        path.resolve(projectPath, './.gitignore')
-      );
+      // await fs.move(
+      //   path.resolve(projectPath, './gitignore'),
+      //   path.resolve(projectPath, './.gitignore')
+      // );
 
       // get author name
       let author = getAuthorName();
 
       // prompt to get author name if not present
-      if (!author) {
-        const authorInput = await prompts({
-          type: 'text',
-          name: 'author',
-          message: 'Package author',
-        });
+      // if (!author) {
+      //   const authorInput = await prompts({
+      //     type: 'text',
+      //     name: 'author',
+      //     message: 'Package author',
+      //   });
 
-        author = authorInput.author;
-      }
+      //   author = authorInput.author;
+      // }
 
       // fix license
-      const licensePath = path.resolve(projectPath, 'LICENSE');
-      let license = fs.readFileSync(licensePath, { encoding: 'utf-8' });
+      // const licensePath = path.resolve(projectPath, 'LICENSE');
+      // let license = fs.readFileSync(licensePath, { encoding: 'utf-8' });
 
-      license = license.replace(/\[year\]/g, new Date().getFullYear());
-      license = license.replace(/\[author\]/g, author);
-      fs.writeFileSync(licensePath, license, { encoding: 'utf-8' });
+      // license = license.replace(/\[year\]/g, new Date().getFullYear());
+      // license = license.replace(/\[author\]/g, author);
+      // fs.writeFileSync(licensePath, license, { encoding: 'utf-8' });
 
       // generate package.json
       const pkg = composePackageJSON(
