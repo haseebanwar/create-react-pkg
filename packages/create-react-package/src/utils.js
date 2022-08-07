@@ -120,8 +120,8 @@ export function makeInstallArgs(cmd, dependencies) {
         ...dependencies,
         '--save-dev',
         '--no-audit', // https://github.com/facebook/create-react-app/issues/11174
-        '--loglevel',
-        'error',
+        // '--loglevel',
+        // 'error',
       ];
     case 'yarn':
       return ['add', ...dependencies, '--dev'];
