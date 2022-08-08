@@ -50,6 +50,8 @@ export const storybookDependencies = [
   '@storybook/addon-essentials',
   '@storybook/addon-interactions',
   '@storybook/addon-links',
+  '@storybook/builder-webpack4',
+  '@storybook/manager-webpack4',
   '@storybook/react',
   '@storybook/testing-library',
   'babel-loader',
