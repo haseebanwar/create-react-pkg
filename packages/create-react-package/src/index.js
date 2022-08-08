@@ -17,6 +17,8 @@ import {
   getTemplateName,
   sanitizePackageName,
   executeInstallCommand,
+  getNPMVersion,
+  setLegacyPeerDeps,
 } from './utils';
 import packageJSON from '../package.json';
 
@@ -36,8 +38,8 @@ program
           {
             type: 'text',
             name: 'projectDirectory',
-            initial: 'my-package',
             message: 'What is your package named?',
+            initial: 'my-package',
           },
           {
             onCancel: () => {
@@ -185,40 +187,39 @@ program
         projectPath
       );
 
-      // TODO
       // copy base files
-      // await fs.copy(
-      //   path.resolve(__dirname, '../templates/baseFiles'),
-      //   projectPath
-      // );
+      await fs.copy(
+        path.resolve(__dirname, '../templates/baseFiles'),
+        projectPath
+      );
 
       // fix gitignore
-      // await fs.move(
-      //   path.resolve(projectPath, './gitignore'),
-      //   path.resolve(projectPath, './.gitignore')
-      // );
+      await fs.move(
+        path.resolve(projectPath, './gitignore'),
+        path.resolve(projectPath, './.gitignore')
+      );
 
       // get author name
       let author = getAuthorName();
 
       // prompt to get author name if not present
-      // if (!author) {
-      //   const authorInput = await prompts({
-      //     type: 'text',
-      //     name: 'author',
-      //     message: 'Package author',
-      //   });
+      if (!author) {
+        const authorInput = await prompts({
+          type: 'text',
+          name: 'author',
+          message: 'Package author',
+        });
 
-      //   author = authorInput.author;
-      // }
+        author = authorInput.author;
+      }
 
       // fix license
-      // const licensePath = path.resolve(projectPath, 'LICENSE');
-      // let license = fs.readFileSync(licensePath, { encoding: 'utf-8' });
+      const licensePath = path.resolve(projectPath, 'LICENSE');
+      let license = fs.readFileSync(licensePath, { encoding: 'utf-8' });
 
-      // license = license.replace(/\[year\]/g, new Date().getFullYear());
-      // license = license.replace(/\[author\]/g, author);
-      // fs.writeFileSync(licensePath, license, { encoding: 'utf-8' });
+      license = license.replace(/\[year\]/g, new Date().getFullYear());
+      license = license.replace(/\[author\]/g, author);
+      fs.writeFileSync(licensePath, license, { encoding: 'utf-8' });
 
       // generate package.json
       const pkg = composePackageJSON(
@@ -233,7 +234,44 @@ program
 
       // decide whether to use npm or yarn for installing deps
       const useYarn = isUsingYarn();
-      const packageCMD = useYarn ? 'yarn' : 'npm';
+      const packageManager = useYarn ? 'yarn' : 'npm';
+
+      // if user is setting up storybook with npm v7+, use legacy peer deps until storybook 7 is released
+      // more https://github.com/storybookjs/storybook/issues/18298#issuecomment-1136158953
+      let useLegacyPeerDeps = false;
+      let setNPMRCForLegacyPeerDeps = false;
+      if (packageManager === 'npm' && storybook) {
+        const npmVersion = getNPMVersion();
+
+        if (semver.gte(npmVersion, '7.0.0')) {
+          // use legacy peer deps (for this install) even if user says no to the prompt below
+          useLegacyPeerDeps = true;
+
+          console.log(
+            `\nWe've detected you are running npm version ${chalk.cyan(
+              npmVersion
+            )} which has peer dependency semantics which Storybook is incompatible with.`
+          );
+          console.log(
+            `In order to work with Storybook's package structure, you'll need to run \`npm\` with the \`--legacy-peer-deps=true\` flag`
+          );
+          console.log(
+            `\nMore info: ${chalk.yellow(
+              'https://github.com/storybookjs/storybook/issues/18298'
+            )}\n`
+          );
+
+          const legacyPeerDepsInput = await prompts({
+            type: 'confirm',
+            name: 'setNPMRCForLegacyPeerDeps',
+            message: `Generate an \`.npmrc\` to run \`npm\` with the \`--legacy-peer-deps=true\` flag?`,
+            initial: true,
+          });
+
+          setNPMRCForLegacyPeerDeps =
+            legacyPeerDepsInput.setNPMRCForLegacyPeerDeps;
+        }
+      }
 
       console.log(
         '\nInstalling dependencies. This might take a couple of minutes.'
@@ -252,8 +290,17 @@ program
       // install deps
       const dependencies = makePackageDeps(typescript, storybook);
       process.chdir(projectPath);
-      const installArgs = makeInstallArgs(packageCMD, dependencies);
-      await executeInstallCommand(packageCMD, installArgs);
+
+      if (setNPMRCForLegacyPeerDeps) {
+        setLegacyPeerDeps();
+      }
+
+      const installArgs = makeInstallArgs(
+        packageManager,
+        dependencies,
+        useLegacyPeerDeps
+      );
+      await executeInstallCommand(packageManager, installArgs);
 
       console.log('\nInstalled dependencies');
 
@@ -262,15 +309,17 @@ program
         'Inside that directory, you can run the following commands:\n'
       );
 
-      console.log(chalk.cyan(`  ${packageCMD} start`));
+      console.log(chalk.cyan(`  ${packageManager} start`));
       console.log('    Watches for changes as you build.\n');
 
       console.log(
-        chalk.cyan(`  ${packageCMD}${packageCMD === 'npm' ? ' run' : ''} build`)
+        chalk.cyan(
+          `  ${packageManager}${packageManager === 'npm' ? ' run' : ''} build`
+        )
       );
       console.log('    Creates an optimized production build.\n');
 
-      console.log(chalk.cyan(`  ${packageCMD} test`));
+      console.log(chalk.cyan(`  ${packageManager} test`));
       console.log('    Runs tests with Jest.\n');
 
       console.log('Show the World what you can build!');

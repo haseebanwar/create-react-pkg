@@ -48,14 +48,11 @@ export function getTemplateName(useTypescript, useStorybook) {
 export function getAuthorName() {
   let author = '';
 
-  // TODO
-  // author = execSync('npm config get init-author-name').toString().trim();
-  // const NPMVersion = execSync('npm -v').toString().trim();
-  // console.log('NPMVersion', NPMVersion);
-  // if (author) return author;
+  author = execSync('npm config get init-author-name').toString().trim();
+  if (author) return author;
 
-  // author = execSync('git config --global user.name').toString().trim();
-  // if (author) return author;
+  author = execSync('git config --global user.name').toString().trim();
+  if (author) return author;
 
   return author;
 }
@@ -93,6 +90,14 @@ export function composePackageJSON(
   };
 }
 
+export function getNPMVersion() {
+  return execSync('npm --version').toString().trim();
+}
+
+export function setLegacyPeerDeps() {
+  execSync('npm config set legacy-peer-deps=true --location=project');
+}
+
 // taken from create-react-app
 // https://github.com/facebook/create-react-app/blob/main/packages/create-react-app/createReactApp.js
 export function isUsingYarn() {
@@ -112,7 +117,7 @@ export function makePackageDeps(useTypescript, useStorybook) {
   return deps;
 }
 
-export function makeInstallArgs(cmd, dependencies) {
+export function makeInstallArgs(cmd, dependencies, useLegacyPeerDeps) {
   switch (cmd) {
     case 'npm':
       return [
@@ -120,9 +125,10 @@ export function makeInstallArgs(cmd, dependencies) {
         ...dependencies,
         '--save-dev',
         '--no-audit', // https://github.com/facebook/create-react-app/issues/11174
-        // '--loglevel',
-        // 'error',
-      ];
+        '--loglevel',
+        'error',
+        useLegacyPeerDeps ? '--legacy-peer-deps' : '',
+      ].filter(Boolean);
     case 'yarn':
       return ['add', ...dependencies, '--dev'];
     default:
