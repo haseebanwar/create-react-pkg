@@ -130,7 +130,7 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 The generated project includes `react` and `react-dom` as development dependencies along with the scripts used by Create React Package.
 
-You may install other dependencies, for example Material UI.
+You may install other dependencies, for example Material UI
 
 ```sh
 npm install @mui/material -D
