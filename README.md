@@ -540,4 +540,4 @@ You can adjust this configuration according to the [Browserslist specification](
 
 ## License
 
-Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
+Create React Package is an open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
