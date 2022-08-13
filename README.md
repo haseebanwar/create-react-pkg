@@ -58,7 +58,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 ## Why
 
 - Get started in seconds, easy to maintain, just one dependency
-- CJS, ESM, and UMD module support
+- CJS, ESM, and UMD modules support
 - Pre-configured Rollup, Babel, Jest, and ESLint
 - Completely customizable
 - Tree-shaking
@@ -128,15 +128,15 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 ### Install a Dependency
 
-The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as Development Dependencies.
+The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as development dependencies.
 
 You may install other dependencies, for example, Material UI:
 
 ```sh
-npm install @mui/material -D
+npm i -D @mui/material
 ```
 
-Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is the responsibility of the app consuming your library to have those dependencies installed.
+Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is the responsibility of the app consuming your library to have these dependencies installed.
 
 It is important that you define such dependencies as external dependencies.
 
@@ -161,7 +161,7 @@ Create React package already specifies `react` and `react-dom` as peer dependenc
 To preview and test your library before publishing, you can use
 
 - [Storybook](https://storybook.js.org/)
-- [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app.
+- [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app
 
 Using Storybook with Create React Package is simple. Initialize a new project with Storybook using `--sb` or `--storybook` flag.
 
@@ -182,7 +182,7 @@ Create an optimized production build by running the `build` script. This will cr
 - cjs: Your library bundled in CommonJS format.
 - esm: Your library bundled in ES Modules format.
 - umd: Your library bundled in Universal Module Definition.
-- types: TypeScript typings.
+- types: TypeScript declarations.
 - css: Minified CSS Bundle.
 
 > Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod builds based on the NodeJS environment.
@@ -193,7 +193,7 @@ Create React Package adds the following NPM configuration to your package.json.
 {
   "main": "dist/index.js (path to CJS build)",
   "module": "dist/esm/{your-package-name}.js (path to ES Module build)",
-  "types": "dist/types/index.d.ts (path to TypeScript typings)",
+  "types": "dist/types/index.d.ts (path to TypeScript declarations)",
   "files": ["dist (files/folders that will be published to the NPM registry)"]
 }
 ```
@@ -204,7 +204,7 @@ This build can now be published to NPM.
 
 Create React Package is divided into two packages:
 
-- `create-react-package` is a command line tool used to create new react packages.
+- `create-react-package` is a command line tool used to set up a new React package.
 - `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
