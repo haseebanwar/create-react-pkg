@@ -128,21 +128,23 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 ### Installing a Dependency
 
-The generated project includes `react` and `react-dom` as development dependencies along with the scripts used by Create React Package.
+The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as Development Dependencies.
 
-You may install other dependencies, for example Material UI
+You may install other dependencies, for example Material UI:
 
 ```sh
 npm install @mui/material -D
 ```
 
-Since you are building a library, it is a very good chance that you need that dependency as a development dependency because the consumer of your library will probably have it installed already.
+Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is responsibility of the app consuming your library to install those dependencies installed.
 
-This leads us to next section
+To do this, it is important that you define these dependencies as external dependencies.
 
 ### Managing External Dependencies
 
-External dependencies are those that should not be included in your bundled code. To specifiy external deps, add them to `peerDependencies` key in your package.json
+External dependencies are those that should not be included in the bundled code of your library and should by installed by the consumer of your library.
+
+To specifiy external dependencies, add them to `peerDependencies` key in your package.json
 
 ```json
 "peerDependencies": {
@@ -152,7 +154,7 @@ External dependencies are those that should not be included in your bundled code
 },
 ```
 
-By default, `react` and `react-dom` are already specified as peer dependencies because we don't two copies of React running.
+Create React package already specifies `react` and `react-dom` as peer dependencies.
 
 ### Preview with Storybook/Another App
 
