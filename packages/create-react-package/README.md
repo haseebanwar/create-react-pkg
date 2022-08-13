@@ -1,12 +1,12 @@
-# create-react-package <!-- omit in toc -->
+# create-react-package
 
 This package includes the global command for Create React Package. A zero-config CLI for creating react packages.
 
-# Create React Package <!-- omit in toc -->
+# Create React Package
 
 Create React packages with no build configuration.
 
-## Quick Overview <!-- omit in toc -->
+## Quick Overview
 
 > **NOTE: This documentation uses names of requested packages. To test it, you need to add `@haseebanwar` before the package name. For example, to create a new project use `npx @haseebanwar/create-react-package my-package`**
 
@@ -18,7 +18,7 @@ npm start
 
 You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are pre-configured and hidden so that you can focus on the code.
 
-## Contents <!-- omit in toc -->
+## Contents
 
 - [Why](#why)
 - [Getting Started](#getting-started)
@@ -30,6 +30,11 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [`npm start` or `yarn start`](#npm-start-or-yarn-start)
     - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
     - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
+- [Building your Package](#building-your-package)
+  - [Install a Dependency](#install-a-dependency)
+  - [Manage External Dependencies](#manage-external-dependencies)
+  - [Preview](#preview)
+  - [Build and Publish](#build-and-publish)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
@@ -59,7 +64,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 ## Why
 
 - Get started in seconds, easy to maintain, just one dependency
-- CJS, ESM, and UMD module support
+- CJS, ESM, and UMD modules support
 - Pre-configured Rollup, Babel, Jest, and ESLint
 - Completely customizable
 - Tree-shaking
@@ -125,11 +130,87 @@ Runs your tests with Jest test runner.
 
 Creates an optimized production build of your package in CommonJS, ES, and UMD module formats.
 
+## Building your Package
+
+### Install a Dependency
+
+The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as development dependencies.
+
+You may install other dependencies, for example, Material UI:
+
+```sh
+npm i -D @mui/material
+```
+
+Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is the responsibility of the app consuming your library to have these dependencies installed.
+
+It is important that you define such dependencies as external dependencies.
+
+### Manage External Dependencies
+
+External dependencies are those that should not be included in the bundled code of your library and should be installed by the consumer of the library.
+
+To specify external dependencies, add them to `peerDependencies` key in your package.json
+
+```json
+"peerDependencies": {
+  "react": ">=17",
+  "react-dom": ">=17",
+  "@mui/material": "^5.9.2"
+},
+```
+
+Create React package already specifies `react` and `react-dom` as peer dependencies.
+
+### Preview
+
+To preview and test your library before publishing, you can use:
+
+- [Storybook](https://storybook.js.org/)
+- [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app
+
+Using Storybook with Create React Package is simple. Initialize a new project with Storybook using `--sb` or `--storybook` flag.
+
+```sh
+npx create-react-package my-package --sb
+```
+
+Or, add Storybook to your existing project by running:
+
+```sh
+npx storybook init
+```
+
+### Build and Publish
+
+Create an optimized production build by running the `build` script. This will create a `dist` folder that may contain any or all of the folders based on your project setup and configuration:
+
+- cjs: Your library bundled in CommonJS format.
+- esm: Your library bundled in ECMAScript Modules format.
+- umd: Your library bundled in Universal Module Definition.
+- types: TypeScript declarations.
+- css: Minified CSS Bundle.
+
+> Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod builds based on the NodeJS environment.
+
+Create React Package adds the following NPM configuration to your package.json.
+
+```json
+{
+  "main": "dist/index.js (path to CJS build)",
+  "module": "dist/esm/{your-package-name}.js (path to ES Module build)",
+  "types": "dist/types/index.d.ts (path to TypeScript declarations)",
+  "files": ["dist (files/folders that will be published to the NPM registry)"]
+}
+```
+
+This build can now be published to NPM.
+
 ## Philosophy
 
 Create React Package is divided into two packages:
 
-- `create-react-package` is a command line tool used to create new react packages.
+- `create-react-package` is a command line tool to set up a new React package.
 - `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
@@ -335,9 +416,9 @@ Create React Package executes the following files with Jest test runner:
 - Files with `.test.js` suffix.
 - Files with `.spec.js` suffix.
 
-> `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
+> Note: `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
-You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#reference) to package.json.
+You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/27.x/configuration#options) to package.json.
 
 Example package.json
 
@@ -399,9 +480,9 @@ Create React Package concatenates all your stylesheets into a single minified `.
 
 ### Sass/Stylus/Less Files
 
-- For Sass install [sass](https://www.npmjs.com/package/sass): `npm i -D sass`
-- For Stylus install [stylus](https://www.npmjs.com/package/stylus): `npm i -D stylus`
-- For Less install [less](https://www.npmjs.com/package/less): `npm i -D less`
+- For Sass, install [sass](https://www.npmjs.com/package/sass): `npm i -D sass`
+- For Stylus, install [stylus](https://www.npmjs.com/package/stylus): `npm i -D stylus`
+- For Less, install [less](https://www.npmjs.com/package/less): `npm i -D less`
 
 That's it, you can now import `.styl` `.scss` `.sass` `.less` files in your project.
 
@@ -435,7 +516,7 @@ If you need to disable autoprefixing, follow [autoprefixer disabling section](ht
 
 ### Code Splitting
 
-It is recommended that you do code splitting in your app and not library. But if you still need to code split your library for some reason, Create React Pakcage got your back.
+It is recommended that you do code splitting in your app and not in the library. But if you still need to code split your library for some reason, Create React Package got your back.
 
 This project supports code splitting via dynamic `import()`.
 
@@ -470,11 +551,11 @@ const MyComponent = () => {
 
 You can also use React `lazy` and `Suspense` to load components lazily.
 
-> Note: Code-splitting is not supported for UMD module format.
+> Note: Code-splitting is not supported for UMD format.
 
 ### Configure Supported Browsers
 
-Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes Browserslist configuration in package.json.
+Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes the following Browserslist configuration in package.json.
 
 ```json
 "browserslist": {
@@ -491,7 +572,7 @@ Create React Package uses [Browserslist](https://github.com/browserslist/browser
 },
 ```
 
-The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with `watch` script.
+The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with the `watch` script.
 
 You can adjust this configuration according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
 
@@ -503,4 +584,4 @@ You can adjust this configuration according to the [Browserslist specification](
 
 ## License
 
-Create React Package is open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
+Create React Package is open-source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
