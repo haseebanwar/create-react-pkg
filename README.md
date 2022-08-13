@@ -138,11 +138,11 @@ npm install @mui/material -D
 
 Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is responsibility of the app consuming your library to have those dependencies installed.
 
-To do this, it is important that you define such dependencies as external dependencies.
+It is important that you define such dependencies as external dependencies.
 
 ### Manage External Dependencies
 
-External dependencies are those that should not be included in the bundled code of your library and should by installed by the consumer of your library.
+External dependencies are those that should not be included in the bundled code of your library and should be installed by the consumer of your library.
 
 To specifiy external dependencies, add them to `peerDependencies` key in your package.json
 
@@ -158,15 +158,18 @@ Create React package already specifies `react` and `react-dom` as peer dependenc
 
 ### Preview
 
-To preview and test your library before publishing, you can use [Storybook](https://storybook.js.org/) or by using [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React application.
+To preview and test your library before publishing, you can use
 
-Using Storybook with Create React Package is simple. Initialize a new project with Storybook with `--sb` or `--storybook` flag.
+- [Storybook](https://storybook.js.org/)
+- [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app.
+
+Using Storybook with Create React Package is simple. Initialize a new project with Storybook using `--sb` or `--storybook` flag.
 
 ```sh
 npx create-react-package my-package --sb
 ```
 
-Or, add Storybook in your existing Create React Project by running:
+Or, add Storybook in your existing project by running:
 
 ```sh
 npx storybook init
@@ -184,12 +187,12 @@ Create an optimized production build by running the `build` script. This will cr
 
 > Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod module based on NodeJS environment.
 
-Create React Package specifies the following in your package.json
+Create React Package specifies the following NPM configuration in your package.json.
 
 ```json
 {
-  "main": "dist/index.js (path to your CJS build)",
-  "module": "dist/esm/{your-package-name}.js (path to your ES Module build)",
+  "main": "dist/index.js (path to CJS build)",
+  "module": "dist/esm/{your-package-name}.js (path to ES Module build)",
   "types": "dist/types/index.d.ts (path to TypeScript typings)",
   "files": ["dist (files/folders that will be published to the NPM registry)"]
 }
