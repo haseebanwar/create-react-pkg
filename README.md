@@ -27,7 +27,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - [Building your Package](#building-your-package)
   - [Installing a Dependency](#installing-a-dependency)
   - [Managing External Dependencies](#managing-external-dependencies)
-  - [Preview with Storybook/Another App](#preview-with-storybookanother-app)
+  - [Preview](#preview)
   - [Publish](#publish)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
@@ -136,9 +136,9 @@ You may install other dependencies, for example Material UI:
 npm install @mui/material -D
 ```
 
-Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is responsibility of the app consuming your library to install those dependencies installed.
+Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is responsibility of the app consuming your library to have those dependencies installed.
 
-To do this, it is important that you define these dependencies as external dependencies.
+To do this, it is important that you define such dependencies as external dependencies.
 
 ### Managing External Dependencies
 
@@ -156,13 +156,48 @@ To specifiy external dependencies, add them to `peerDependencies` key in your pa
 
 Create React package already specifies `react` and `react-dom` as peer dependencies.
 
-### Preview with Storybook/Another App
+### Preview
+
+To preview and test your library before publishing, you can use [Storybook](https://storybook.js.org/) or by using [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React application.
+
+Using Storybook with Create React Package is simple. Initialize a new project with Storybook with `--sb` or `--storybook` flag.
+
+```sh
+npx create-react-package my-package --sb
+```
+
+Or, you can add Storybook in your existing Create React Project by running:
+
+```sh
+npx storybook init
+```
 
 ### Publish
 
-- Run the `build` script to create an optimized production build.
-- Publish the package to NPM.
-- In package.json under key `files`, the `dist` folder specified. This tells NPM to push only `dist` folder.
+Create an optimized production build by running the `build` script. This will create a `dist` folder that may contain any or all of the folders based on your project setup and configuration:
+
+- cjs: Your library bundled in CommonJS format.
+- esm: Your library bundled in ES Modules format.
+- umd: Your library bundled in Universal Module Definition.
+- types: TypeScript typings.
+- css: Minified CSS Bundle.
+
+> Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod module based on NodeJS environment.
+
+Create React Package specifies the following in your package.json
+
+```json
+{
+  "main": "path to your CJS build, default is dist/index.js",
+  "module": "path to your ES Module build, default is dist/esm/{your-package-name}.js",
+  "types": "path to TypeScript typings default isdist/types/index.d.ts",
+  "files": ["dist"] // files/folders that will be published to the NPM registry
+}
+```
+
+This build can now be published to NPM.
+
+files
 
 ## Philosophy
 
