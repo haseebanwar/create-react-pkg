@@ -372,7 +372,7 @@ Create React Package executes the following files with Jest test runner:
 - Files with `.test.js` suffix.
 - Files with `.spec.js` suffix.
 
-> `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
+> Note: `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
 You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#reference) to package.json.
 
