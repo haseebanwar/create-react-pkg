@@ -472,7 +472,7 @@ If you need to disable autoprefixing, follow [autoprefixer disabling section](ht
 
 ### Code Splitting
 
-It is recommended that you do code splitting in your app and not library. But if you still need to code split your library for some reason, Create React Pakcage got your back.
+It is recommended that you do code splitting in your app and not in the library. But if you still need to code split your library for some reason, Create React Package got your back.
 
 This project supports code splitting via dynamic `import()`.
 
@@ -511,7 +511,7 @@ You can also use React `lazy` and `Suspense` to load components lazily.
 
 ### Configure Supported Browsers
 
-Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes Browserslist configuration in package.json.
+Create React Package uses [Browserslist](https://github.com/browserslist/browserslist) to target a broad range of browsers. By default, the generated project includes the following Browserslist configuration in package.json.
 
 ```json
 "browserslist": {
