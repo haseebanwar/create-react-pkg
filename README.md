@@ -25,10 +25,10 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [`npm test` or `yarn test`](#npm-test-or-yarn-test)
     - [`npm run build` or `yarn build`](#npm-run-build-or-yarn-build)
 - [Building your Package](#building-your-package)
-  - [Installing a Dependency](#installing-a-dependency)
-  - [Managing External Dependencies](#managing-external-dependencies)
+  - [Install a Dependency](#install-a-dependency)
+  - [Manage External Dependencies](#manage-external-dependencies)
   - [Preview](#preview)
-  - [Publish](#publish)
+  - [Build and Publish](#build-and-publish)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
@@ -126,7 +126,7 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 ## Building your Package
 
-### Installing a Dependency
+### Install a Dependency
 
 The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as Development Dependencies.
 
@@ -140,7 +140,7 @@ Since you are building a library, you probably need to install Material UI or ot
 
 To do this, it is important that you define such dependencies as external dependencies.
 
-### Managing External Dependencies
+### Manage External Dependencies
 
 External dependencies are those that should not be included in the bundled code of your library and should by installed by the consumer of your library.
 
@@ -172,7 +172,7 @@ Or, add Storybook in your existing Create React Project by running:
 npx storybook init
 ```
 
-### Publish
+### Build and Publish
 
 Create an optimized production build by running the `build` script. This will create a `dist` folder that may contain any or all of the folders based on your project setup and configuration:
 
