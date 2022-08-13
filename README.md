@@ -412,7 +412,7 @@ Create React Package executes the following files with Jest test runner:
 
 > Note: `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
-You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#options) to package.json.
+You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/27.x/configuration#options) to package.json.
 
 Example package.json
 
