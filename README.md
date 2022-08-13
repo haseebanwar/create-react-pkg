@@ -474,9 +474,9 @@ Create React Package concatenates all your stylesheets into a single minified `.
 
 ### Sass/Stylus/Less Files
 
-- For Sass install [sass](https://www.npmjs.com/package/sass): `npm i -D sass`
-- For Stylus install [stylus](https://www.npmjs.com/package/stylus): `npm i -D stylus`
-- For Less install [less](https://www.npmjs.com/package/less): `npm i -D less`
+- For Sass, install [sass](https://www.npmjs.com/package/sass): `npm i -D sass`
+- For Stylus, install [stylus](https://www.npmjs.com/package/stylus): `npm i -D stylus`
+- For Less, install [less](https://www.npmjs.com/package/less): `npm i -D less`
 
 That's it, you can now import `.styl` `.scss` `.sass` `.less` files in your project.
 
