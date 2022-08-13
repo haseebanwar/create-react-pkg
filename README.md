@@ -158,7 +158,7 @@ Create React package already specifies `react` and `react-dom` as peer dependenc
 
 ### Preview
 
-To preview and test your library before publishing, you can use
+To preview and test your library before publishing, you can use:
 
 - [Storybook](https://storybook.js.org/)
 - [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app
@@ -180,7 +180,7 @@ npx storybook init
 Create an optimized production build by running the `build` script. This will create a `dist` folder that may contain any or all of the folders based on your project setup and configuration:
 
 - cjs: Your library bundled in CommonJS format.
-- esm: Your library bundled in ES Modules format.
+- esm: Your library bundled in ECMAScript Modules format.
 - umd: Your library bundled in Universal Module Definition.
 - types: TypeScript declarations.
 - css: Minified CSS Bundle.
@@ -204,7 +204,7 @@ This build can now be published to NPM.
 
 Create React Package is divided into two packages:
 
-- `create-react-package` is a command line tool used to set up a new React package.
+- `create-react-package` is a command line tool to set up a new React package.
 - `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
@@ -412,7 +412,7 @@ Create React Package executes the following files with Jest test runner:
 
 > Note: `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
-You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#reference) to package.json.
+You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/configuration#options) to package.json.
 
 Example package.json
 
