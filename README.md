@@ -1,8 +1,8 @@
-# Create React Package <!-- omit in toc -->
+# Create React Package
 
 Create React packages with no build configuration.
 
-## Quick Overview <!-- omit in toc -->
+## Quick Overview
 
 ```sh
 npx create-react-package my-package
@@ -12,7 +12,7 @@ npm start
 
 You don’t need to install or configure tools like Rollup, Babel, or ESLint. They are pre-configured and hidden so that you can focus on the code.
 
-## Contents <!-- omit in toc -->
+## Contents
 
 - [Why](#why)
 - [Getting Started](#getting-started)
