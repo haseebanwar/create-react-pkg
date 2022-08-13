@@ -166,7 +166,7 @@ Using Storybook with Create React Package is simple. Initialize a new project wi
 npx create-react-package my-package --sb
 ```
 
-Or, you can add Storybook in your existing Create React Project by running:
+Or, add Storybook in your existing Create React Project by running:
 
 ```sh
 npx storybook init
@@ -188,16 +188,14 @@ Create React Package specifies the following in your package.json
 
 ```json
 {
-  "main": "path to your CJS build, default is dist/index.js",
-  "module": "path to your ES Module build, default is dist/esm/{your-package-name}.js",
-  "types": "path to TypeScript typings default isdist/types/index.d.ts",
-  "files": ["dist"] // files/folders that will be published to the NPM registry
+  "main": "dist/index.js (path to your CJS build)",
+  "module": "dist/esm/{your-package-name}.js (path to your ES Module build)",
+  "types": "dist/types/index.d.ts (path to TypeScript typings)",
+  "files": ["dist (files/folders that will be published to the NPM registry)"]
 }
 ```
 
 This build can now be published to NPM.
-
-files
 
 ## Philosophy
 
