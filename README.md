@@ -545,7 +545,7 @@ const MyComponent = () => {
 
 You can also use React `lazy` and `Suspense` to load components lazily.
 
-> Note: Code-splitting is not supported for UMD module format.
+> Note: Code-splitting is not supported for UMD format.
 
 ### Configure Supported Browsers
 
