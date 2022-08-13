@@ -130,21 +130,21 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 The generated project includes `react` and `react-dom` along with the scripts used by Create React Package as Development Dependencies.
 
-You may install other dependencies, for example Material UI:
+You may install other dependencies, for example, Material UI:
 
 ```sh
 npm install @mui/material -D
 ```
 
-Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is responsibility of the app consuming your library to have those dependencies installed.
+Since you are building a library, you probably need to install Material UI or other related frameworks as dev dependencies. It is the responsibility of the app consuming your library to have those dependencies installed.
 
 It is important that you define such dependencies as external dependencies.
 
 ### Manage External Dependencies
 
-External dependencies are those that should not be included in the bundled code of your library and should be installed by the consumer of your library.
+External dependencies are those that should not be included in the bundled code of your library and should be installed by the consumer of the library.
 
-To specifiy external dependencies, add them to `peerDependencies` key in your package.json
+To specify external dependencies, add them to `peerDependencies` key in your package.json
 
 ```json
 "peerDependencies": {
@@ -169,7 +169,7 @@ Using Storybook with Create React Package is simple. Initialize a new project wi
 npx create-react-package my-package --sb
 ```
 
-Or, add Storybook in your existing project by running:
+Or, add Storybook to your existing project by running:
 
 ```sh
 npx storybook init
@@ -185,9 +185,9 @@ Create an optimized production build by running the `build` script. This will cr
 - types: TypeScript typings.
 - css: Minified CSS Bundle.
 
-> Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod module based on NodeJS environment.
+> Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod builds based on the NodeJS environment.
 
-Create React Package specifies the following NPM configuration in your package.json.
+Create React Package adds the following NPM configuration to your package.json.
 
 ```json
 {
@@ -566,7 +566,7 @@ Create React Package uses [Browserslist](https://github.com/browserslist/browser
 },
 ```
 
-The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with `watch` script.
+The `browserslist` configuration controls the outputted JavaScript and CSS so that the emitted code will be compatible with the browsers specified. The `production` list will be used when creating a production build with the `build` script, and the `development` list will be used with the `watch` script.
 
 You can adjust this configuration according to the [Browserslist specification](https://github.com/browserslist/browserslist#readme).
 
@@ -578,4 +578,4 @@ You can adjust this configuration according to the [Browserslist specification](
 
 ## License
 
-Create React Package is an open source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
+Create React Package is open-source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
