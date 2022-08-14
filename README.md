@@ -295,7 +295,8 @@ You can provide the following options to customize the build.
 
 #### rollupOptions
 
-- **Type**: `RollupOptions | ((config: RollupOptions, options: { format: string, mode: string }) => RollupOptions)`
+- **Type**: `RollupOptions | RollupOptionsResolver`
+- **RollupOptionsResolver**: `((config: RollupOptions, options: { format: 'esm' | 'cjs' | 'umd, mode: 'development' | 'production' }) => RollupOptions)`
 
   Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 

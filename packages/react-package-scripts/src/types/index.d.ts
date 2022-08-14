@@ -1,5 +1,13 @@
 import { RollupOptions } from 'rollup';
 
+type RollupOptionsResolver = (
+  config: Omit<RollupOptions, 'onwarn'>,
+  options: {
+    format: 'esm' | 'cjs' | 'umd';
+    mode: 'development' | 'production';
+  }
+) => RollupOptions;
+
 export declare interface UserConfig {
   /**
    * Entry point
@@ -31,15 +39,7 @@ export declare interface UserConfig {
    * Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
-  rollupOptions?:
-    | Omit<RollupOptions, 'onwarn'>
-    | ((
-        config: Omit<RollupOptions, 'onwarn'>,
-        options: {
-          format: 'esm' | 'cjs' | 'umd';
-          mode: 'development' | 'production';
-        }
-      ) => RollupOptions);
+  rollupOptions?: Omit<RollupOptions, 'onwarn'> | RollupOptionsResolver;
 }
 
 /**
