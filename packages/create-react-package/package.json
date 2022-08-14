@@ -1,6 +1,6 @@
 {
   "name": "@haseebanwar/create-react-package",
-  "version": "0.1.42",
+  "version": "0.1.43",
   "description": "Zero config CLI for creating react packages",
   "keywords": [
     "react",
