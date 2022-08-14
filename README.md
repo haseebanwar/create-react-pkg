@@ -295,7 +295,7 @@ You can provide the following options to customize the build.
 
 #### rollupOptions
 
-- **Type**: `[RollupOptions](https://rollupjs.org/guide/en/#big-list-of-options) | ((config: RollupOptions, options) => RollupOptions)`
+- **Type**: `RollupOptions | ((config: RollupOptions, options: { format: string, mode: string }) => RollupOptions)`
 
   Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
@@ -309,6 +309,22 @@ const { defineConfig } = require('react-package-scripts');
 module.exports = defineConfig({
   rollupOptions: {
     // rollup options
+  },
+});
+```
+
+#### Conditional Rollup Config
+
+If the config needs to conditionally determine options based on the module format or the mode being used, a function can be used as value of `rollupOptions`.
+
+```js
+module.exports = defineConfig({
+  rollupOptions: (config, { format, mode }) => {
+    if (format === 'cjs' && mode === 'production') {
+      // config options only for the CJS Production build
+    }
+
+    return config;
   },
 });
 ```
