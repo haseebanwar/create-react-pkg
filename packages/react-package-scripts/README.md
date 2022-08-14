@@ -46,6 +46,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [disableESLint](#disableeslint)
     - [rollupOptions](#rollupoptions)
   - [Rollup](#rollup)
+    - [Conditional Rollup Config](#conditional-rollup-config)
     - [Example: Import images](#example-import-images)
   - [Babel](#babel)
     - [Example: Optimize Lodash](#example-optimize-lodash)
@@ -301,7 +302,7 @@ You can provide the following options to customize the build.
 
 #### rollupOptions
 
-- **Type**: [`RollupOptions`](https://rollupjs.org/guide/en/#big-list-of-options)
+- **Type**: `RollupOptions | ((config: RollupOptions, options) => RollupOptions)`
 
   Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
@@ -315,6 +316,23 @@ const { defineConfig } = require('react-package-scripts');
 module.exports = defineConfig({
   rollupOptions: {
     // rollup options
+  },
+});
+```
+
+#### Conditional Rollup Config
+
+If the config needs to conditionally determine options based on the module format or the mode being used, pass a function to `rollupOptions`.
+
+```js
+const { defineConfig } = require('react-package-scripts');
+
+module.exports = defineConfig({
+  rollupOptions: (config, { format, mode }) => {
+    if (format === 'cjs' && mode === 'production') {
+      // config options only for the CJS Production build
+    }
+    return config;
   },
 });
 ```
