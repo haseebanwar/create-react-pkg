@@ -16,7 +16,7 @@ export declare interface UserConfig {
    * Bundle formats
    * @default ['cjs','esm']
    */
-   formats?: ['esm' | 'cjs' | 'umd'];
+  formats?: ['esm' | 'cjs' | 'umd'];
   /**
    * Name to expose in the UMD build. Use this option when you are using `umd` as one of the build formats.
    * @default 'camel-cased version of your package name'
@@ -31,7 +31,15 @@ export declare interface UserConfig {
    * Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
-  rollupOptions?: Omit<RollupOptions, 'onwarn'>;
+  rollupOptions?:
+    | Omit<RollupOptions, 'onwarn'>
+    | ((
+        config: Omit<RollupOptions, 'onwarn'>,
+        options: {
+          format: 'esm' | 'cjs' | 'umd';
+          mode: 'development' | 'production';
+        }
+      ) => RollupOptions);
 }
 
 /**

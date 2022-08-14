@@ -105,7 +105,7 @@ export function createRollupConfig(customConfig) {
       }
     }
 
-    return {
+    const config = {
       input,
       // don't include package peer deps in the bundled code
       external: [...Object.keys(packagePackageJson.peerDependencies || [])],
@@ -168,7 +168,8 @@ export function createRollupConfig(customConfig) {
           plugins: ['@babel/plugin-transform-runtime'],
         }),
         postcss({
-          extract: `css/${safePackageName}.min.css`,
+          extract: idx === 0 ? `css/${safePackageName}.min.css` : false, // extract css file only once
+          inject: false,
           minimize: true,
           plugins: [autoprefixer()],
           sourceMap: true,
@@ -192,5 +193,11 @@ export function createRollupConfig(customConfig) {
         ...(rollupOptions?.output || {}),
       },
     };
+
+    if (typeof rollupOptions === 'function') {
+      return rollupOptions(config, { format, mode });
+    }
+
+    return config;
   });
 }
