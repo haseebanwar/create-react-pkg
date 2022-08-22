@@ -1,6 +1,6 @@
 # Create React Package
 
-Create React packages with no build configuration.
+Create React packages with no build configuration
 
 ## Quick Overview
 
