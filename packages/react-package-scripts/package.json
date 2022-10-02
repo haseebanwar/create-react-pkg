@@ -1,5 +1,5 @@
 {
-  "name": "@haseebanwar/react-package-scripts",
+  "name": "react-pkg-scripts",
   "version": "0.1.38",
   "description": "Scripts for Create React Package",
   "keywords": [
@@ -22,7 +22,7 @@
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
   "bin": {
-    "react-package-scripts": "lib/index.js"
+    "react-pkg-scripts": "lib/index.js"
   },
   "main": "lib/config.js",
   "types": "lib/types/index.d.ts",

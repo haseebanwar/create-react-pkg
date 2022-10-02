@@ -1,5 +1,5 @@
 {
-  "name": "@haseebanwar/create-react-package",
+  "name": "create-react-pkg",
   "version": "0.1.43",
   "description": "Zero config CLI for creating react packages",
   "keywords": [
@@ -21,7 +21,7 @@
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",
   "bin": {
-    "create-react-package": "lib/index.js"
+    "create-react-pkg": "lib/index.js"
   },
   "files": [
     "lib",

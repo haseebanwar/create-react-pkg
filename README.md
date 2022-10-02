@@ -5,7 +5,7 @@ Create React packages with no build configuration.
 ## Quick Overview
 
 ```sh
-npx create-react-package my-package
+npx create-react-pkg my-package
 cd my-package
 npm start
 ```
@@ -83,24 +83,24 @@ To create a new package, you may choose one of the following methods:
 #### npm
 
 ```sh
-npx create-react-package my-package
+npx create-react-pkg my-package
 ```
 
 or
 
 ```sh
-npm init react-package my-package
+npm create react-pkg my-package
 ```
 
 #### yarn
 
 ```sh
-yarn create react-package my-package
+yarn create react-pkg my-package
 ```
 
 ### Options
 
-`create-react-package` comes with the following options:
+`create-react-pkg` comes with the following options:
 
 - **--ts, --typescript**: Initialize a TypeScript project.
 - **--sb, --storybook**: Add storybook support.
@@ -167,7 +167,7 @@ To preview and test your library before publishing, you can use:
 Using Storybook with Create React Package is simple. Initialize a new project with Storybook using `--sb` or `--storybook` flag.
 
 ```sh
-npx create-react-package my-package --sb
+npx create-react-pkg my-package --sb
 ```
 
 Or, add Storybook to your existing project by running:
@@ -205,8 +205,8 @@ This build can now be published to NPM.
 
 Create React Package is divided into two packages:
 
-- `create-react-package` is a command line tool to set up a new React package.
-- `react-package-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
+- `create-react-pkg` is a command line tool to set up a new React package.
+- `react-pkg-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
 
@@ -217,7 +217,7 @@ Create React Package uses Rollup, Babel, Jest, and ESLint under the hood. These 
 Create a file called `crp.config.js` at the root of your project like so:
 
 ```js
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 
 module.exports = defineConfig({
   // options
@@ -234,7 +234,7 @@ Since Create React Package ships with TypeScript typings, you can leverage your 
 // crp.config.js
 
 /**
- * @type {import('react-package-scripts').UserConfig}
+ * @type {import('react-pkg-scripts').UserConfig}
  */
 const config = {
   // options
@@ -248,7 +248,7 @@ Alternatively, you can use the `defineConfig` helper which should provide Intell
 ```js
 // crp.config.js
 
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 
 module.exports = defineConfig({
   // options
@@ -305,7 +305,7 @@ You can provide the following options to customize the build.
 Create React Package uses Rollup to bundle your library. To customize the rollup configuration, create a file `crp.config.js` at the root of your package and pass any rollup options.
 
 ```js
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 
 module.exports = defineConfig({
   rollupOptions: {
@@ -319,7 +319,7 @@ module.exports = defineConfig({
 If the config needs to conditionally determine options based on the module format or the mode being used, pass a function to `rollupOptions`.
 
 ```js
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 
 module.exports = defineConfig({
   rollupOptions: (config, { format, mode }) => {
@@ -342,7 +342,7 @@ npm i -D @rollup/plugin-image
 And use it in the `crp.config.js`
 
 ```js
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 const images = require('@rollup/plugin-image');
 
 module.exports = defineConfig({
@@ -411,7 +411,7 @@ Create React Package respects [ESLint configuration files](https://eslint.org/do
 To disable linting, pass `disableESLint: true` option to `crp.config.js`
 
 ```js
-const { defineConfig } = require('react-package-scripts');
+const { defineConfig } = require('react-pkg-scripts');
 
 module.exports = defineConfig({
   disableESLint: true,
