@@ -430,7 +430,7 @@ Create React Package executes the following files with Jest test runner:
 
 > Note: `.js`, `.jsx`, `.ts`, `.tsx` file extensions are supported.
 
-You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-package/blob/master/packages/react-package-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/27.x/configuration#options) to package.json.
+You can override Create React Package's [default Jest configuration](https://github.com/haseebanwar/create-react-pkg/blob/master/packages/react-pkg-scripts/src/scripts/test.js) by adding any of the [Jest Options](https://jestjs.io/docs/27.x/configuration#options) to package.json.
 
 Example package.json
 
@@ -456,8 +456,8 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to the `test` s
 
 ```diff
   "scripts": {
--    "test": "react-package-scripts test"
-+    "test": "react-package-scripts test --watchAll"
+-    "test": "react-pkg-scripts test"
++    "test": "react-pkg-scripts test --watchAll"
   }
 ```
 
@@ -596,4 +596,4 @@ You can adjust this configuration according to the [Browserslist specification](
 
 ## License
 
-Create React Package is open-source software [licensed as MIT](https://github.com/haseebanwar/create-react-package/blob/master/LICENSE).
+Create React Package is open-source software [licensed as MIT](https://github.com/haseebanwar/create-react-pkg/blob/master/LICENSE).

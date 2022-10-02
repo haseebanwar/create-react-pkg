@@ -9,14 +9,14 @@
     "library",
     "rollup"
   ],
-  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/create-react-package",
+  "homepage": "https://github.com/haseebanwar/create-react-pkg/tree/master/packages/create-react-pkg",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haseebanwar/create-react-package.git",
-    "directory": "packages/create-react-package"
+    "url": "https://github.com/haseebanwar/create-react-pkg.git",
+    "directory": "packages/create-react-pkg"
   },
   "bugs": {
-    "url": "https://github.com/haseebanwar/create-react-package/issues"
+    "url": "https://github.com/haseebanwar/create-react-pkg/issues"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",

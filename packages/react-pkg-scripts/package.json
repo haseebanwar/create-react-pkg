@@ -10,14 +10,14 @@
     "bundle",
     "eslint"
   ],
-  "homepage": "https://github.com/haseebanwar/create-react-package/tree/master/packages/react-package-scripts",
+  "homepage": "https://github.com/haseebanwar/create-react-pkg/tree/master/packages/react-pkg-scripts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/haseebanwar/create-react-package.git",
-    "directory": "packages/react-package-scripts"
+    "url": "https://github.com/haseebanwar/create-react-pkg.git",
+    "directory": "packages/react-pkg-scripts"
   },
   "bugs": {
-    "url": "https://github.com/haseebanwar/create-react-package/issues"
+    "url": "https://github.com/haseebanwar/create-react-pkg/issues"
   },
   "author": "Haseeb Anwar (https://haseebanwar.net/)",
   "license": "MIT",

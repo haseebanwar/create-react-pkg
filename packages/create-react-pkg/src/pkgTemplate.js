@@ -5,9 +5,9 @@ export const basePackageJSON = {
   files: ['dist'],
   license: 'MIT',
   scripts: {
-    start: `react-package-scripts watch`,
-    build: `react-package-scripts build`,
-    test: `react-package-scripts test`,
+    start: `react-pkg-scripts watch`,
+    build: `react-pkg-scripts build`,
+    test: `react-pkg-scripts test`,
   },
   peerDependencies: {
     react: '>=17',
@@ -27,12 +27,7 @@ export const basePackageJSON = {
   },
 };
 
-export const dependencies = [
-  // 'react-package-scripts',
-  '@haseebanwar/react-package-scripts',
-  'react',
-  'react-dom',
-];
+export const dependencies = ['react-pkg-scripts', 'react', 'react-dom'];
 export const tsDependencies = [
   '@types/react',
   '@types/react-dom',

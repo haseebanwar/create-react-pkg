@@ -150,7 +150,7 @@ program
         ) {
           console.error(
             chalk.red(
-              `You are running \`create-react-package\` ${chalk.cyan(
+              `You are running \`create-react-pkg\` ${chalk.cyan(
                 packageJSON.version
               )} which is behind the latest release ${chalk.cyan(
                 latestVersionOfCLI
@@ -164,7 +164,7 @@ program
           );
           console.log(
             '\nThe latest instructions for creating a new package can be found here:\n' +
-              'https://github.com/haseebanwar/create-react-package#getting-started'
+              'https://github.com/haseebanwar/create-react-pkg#getting-started'
           );
           process.exit(1);
         }
@@ -279,7 +279,7 @@ program
       console.log(
         `Installing ${chalk.cyan('react')}, ${chalk.cyan(
           'react-dom'
-        )}, and ${chalk.cyan('react-package-scripts')}${
+        )}, and ${chalk.cyan('react-pkg-scripts')}${
           typescript || storybook ? ' with' : ''
         }`
       );
