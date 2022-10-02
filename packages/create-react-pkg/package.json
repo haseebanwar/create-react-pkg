@@ -1,6 +1,6 @@
 {
   "name": "create-react-pkg",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero config CLI for creating react packages",
   "keywords": [
     "react",
@@ -46,5 +46,5 @@
     "semver": "^7.3.5",
     "validate-npm-package-name": "^4.0.0"
   },
-  "gitHead": "68f174019962a73933378ab07b69fde97382ccc2"
+  "gitHead": "8d5e7ac1c028829aa70e4ae1256141679b21167b"
 }
