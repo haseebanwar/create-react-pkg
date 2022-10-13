@@ -7,6 +7,9 @@ import typescript from 'rollup-plugin-typescript2';
 import replace from '@rollup/plugin-replace';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss';
+import html from '@rollup/plugin-html';
+import serve from 'rollup-plugin-serve';
+import live from 'rollup-plugin-livereload';
 import autoprefixer from 'autoprefixer';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
@@ -18,6 +21,7 @@ import {
   readPackageJsonOfPackage,
 } from '../utils';
 import { paths } from '../paths';
+import { generateHTML } from './rollupGenerateHtml';
 
 const allBuildFormats = [
   {
@@ -30,6 +34,7 @@ const allBuildFormats = [
   },
   {
     format: 'esm',
+    mode: 'development',
   },
   {
     format: 'umd',
@@ -95,6 +100,7 @@ export function createRollupConfig(customConfig) {
         };
         break;
       }
+      case 'development':
       default: {
         output = {
           ...output,
@@ -176,11 +182,10 @@ export function createRollupConfig(customConfig) {
           config: false, // do not load postcss config
           // css modules are by default supported for .module.css, .module.scss, etc
         }),
-        mode &&
-          replace({
-            'process.env.NODE_ENV': JSON.stringify(mode),
-            preventAssignment: true,
-          }),
+        replace({
+          'process.env.NODE_ENV': JSON.stringify(mode),
+          preventAssignment: true,
+        }),
         mode === 'production' && terser(),
         // push user defined rollup plugins
         rollupOptions?.plugins,
@@ -200,4 +205,60 @@ export function createRollupConfig(customConfig) {
 
     return config;
   });
+}
+
+export function createRollupPlaygroundConfig() {
+  const config = {
+    input: paths.playgroundEntry,
+    external: [],
+    plugins: [
+      resolve(),
+      commonjs({ include: /node_modules/ }),
+      json(),
+      // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
+      babel({
+        exclude: [/@babel\/runtime/, 'node_modules/**'],
+        extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
+        presets: [
+          [require.resolve('@babel/preset-env')],
+          [require.resolve('@babel/preset-react')],
+        ],
+        babelHelpers: 'runtime',
+        // replace reference of the babal helper functions to the @babel/runtime version
+        // more: https://babeljs.io/docs/en/babel-runtime#why
+        plugins: ['@babel/plugin-transform-runtime'],
+      }),
+      postcss({
+        extract: 'styles.css',
+        inject: false,
+        plugins: [autoprefixer()],
+        sourceMap: true,
+        config: false, // do not load postcss config
+        // css modules are by default supported for .module.css, .module.scss, etc
+      }),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('development'),
+        preventAssignment: true,
+      }),
+      html({
+        template: generateHTML,
+      }),
+      serve({
+        open: true,
+        contentBase: paths.playgroundDist,
+      }),
+      live(),
+    ],
+    output: {
+      dir: paths.playgroundDist,
+      format: 'esm',
+      sourcemap: true,
+      freeze: false, // do not call Object.freeze on imported objects with import * syntax
+      exports: 'named',
+      assetFileNames: '[name][extname]',
+      entryFileNames: `[name].js`,
+      chunkFileNames: `[name]-[hash].js`,
+    },
+  };
+  return config;
 }
