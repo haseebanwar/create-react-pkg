@@ -2,11 +2,13 @@
 
 import chalk from 'chalk';
 import { watch } from './scripts/watch';
+import { preview } from './scripts/preview';
 import { build } from './scripts/build';
 import { test } from './scripts/test';
 
 const commands = {
   watch: 'watch',
+  preview: 'preview',
   build: 'build',
   test: 'test',
 };
@@ -22,6 +24,9 @@ if (command) {
 switch (command) {
   case commands.watch:
     watch();
+    break;
+  case commands.preview:
+    preview();
     break;
   case commands.build:
     build();
