@@ -1,6 +1,6 @@
 {
   "name": "create-react-pkg",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Zero config CLI for creating react packages",
   "keywords": [
     "react",
