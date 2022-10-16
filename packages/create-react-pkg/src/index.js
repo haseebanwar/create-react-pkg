@@ -322,7 +322,7 @@ program
       console.log(chalk.cyan(`  ${packageManager} test`));
       console.log('    Runs tests with Jest.\n');
 
-      console.log('Show the World what you can build!');
+      console.log('Build Something Great!');
 
       process.exit(0);
     } catch (error) {
