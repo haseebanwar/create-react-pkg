@@ -36,6 +36,11 @@ export declare interface UserConfig {
    */
   disableESLint?: boolean;
   /**
+   * How Babel helpers are inserted into the Rollup bundle.
+   * @default 'bundled'
+   */
+  babelHelpers?: 'runtime' | 'bundled';
+  /**
    * Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options.
    * https://rollupjs.org/guide/en/#big-list-of-options
    */

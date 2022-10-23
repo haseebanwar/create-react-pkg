@@ -6,8 +6,7 @@ export const paths = {
   packageDist: resolvePath('dist'),
   packageTSConfig: resolvePath('tsconfig.json'),
   packageConfig: resolvePath('crp.config.js'),
-  // playground paths already have "playground" folder in their paths from process.cwd()
-  playgroundEntry: resolvePath('index.js'),
-  playgroundHTML: resolvePath('index.html'),
-  playgroundDist: resolvePath('build'),
+  playgroundEntry: resolvePath('playground/index.js'),
+  playgroundHTML: resolvePath('playground/index.html'),
+  playgroundDist: resolvePath('playground/build'),
 };

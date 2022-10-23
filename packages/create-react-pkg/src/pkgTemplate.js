@@ -13,6 +13,11 @@ export const basePackageJSON = {
     react: '>=17',
     'react-dom': '>=17',
   },
+  peerDependenciesMeta: {
+    'react-dom': {
+      optional: true,
+    },
+  },
   keywords: ['react'],
   eslintConfig: {
     extends: ['react-app', 'react-app/jest'],

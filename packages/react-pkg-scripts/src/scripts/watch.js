@@ -19,12 +19,21 @@ export function watch() {
       customConfig = require(paths.packageConfig);
     }
 
+    if (customConfig.outDir) {
+      fs.emptyDirSync(customConfig.outDir);
+    } else {
+      fs.emptyDirSync(paths.packageDist);
+    }
+
     const rollupBuilds = createRollupConfig(customConfig);
 
     const watcher = rollupWatch(
       rollupBuilds.map((buildConfig, idx) => ({
         ...buildConfig,
         onwarn: (warning, warn) => {
+          // ignoring because eslint already picked them
+          if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
+
           // log warnings only for the first bundle (prevents duplicate warnings)
           if (idx !== 0) return;
 
@@ -34,9 +43,6 @@ export function watch() {
             console.log(chalk.yellow('Compiled with warnings.'));
           }
           hasWarnings = true;
-
-          // ignoring because eslint already picked them
-          if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
 
           logBuildWarnings(warning, warn);
         },
@@ -80,7 +86,7 @@ export function watch() {
       }
     });
   } catch (error) {
-    console.error(chalk.red(`Failed to run in watch mode: ${error.message}`));
+    console.error(chalk.red(`Failed to run watch mode: ${error.message}`));
     console.error('error', error);
     process.exit(1);
   }

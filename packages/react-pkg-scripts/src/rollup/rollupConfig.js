@@ -57,9 +57,18 @@ export function createRollupConfig(customConfig) {
     name: camelCase(safePackageName),
     formats: ['cjs', 'esm'],
     disableESLint: false,
+    babelHelpers: 'bundled',
     ...customConfig,
   };
-  const { input, outDir, formats, name, disableESLint, rollupOptions } = config;
+  const {
+    input,
+    outDir,
+    formats,
+    name,
+    disableESLint,
+    rollupOptions,
+    babelHelpers,
+  } = config;
 
   const buildFormats = allBuildFormats.filter((buildModule) =>
     formats.includes(buildModule.format)
@@ -71,11 +80,13 @@ export function createRollupConfig(customConfig) {
 
   return buildFormats.map((buildModule, idx) => {
     const { format, mode } = buildModule;
+    // for UMD, always bundle babel helpers
+    const babelHelpersExplicitUMD = format === 'umd' ? 'bundled' : babelHelpers;
 
     let output = {
       dir: outDir,
       format,
-      sourcemap: true,
+      sourcemap: format === 'umd' ? 'inline' : true,
       freeze: false, // do not call Object.freeze on imported objects with import * syntax
       exports: 'named',
       assetFileNames: '[name][extname]',
@@ -114,7 +125,10 @@ export function createRollupConfig(customConfig) {
     const config = {
       input,
       // don't include package peer deps in the bundled code
-      external: [...Object.keys(packagePackageJson.peerDependencies || [])],
+      external: [
+        ...Object.keys(packagePackageJson.peerDependencies || []),
+        babelHelpersExplicitUMD === 'runtime' && /@babel\/runtime/,
+      ].filter(Boolean),
       // allow user defined rollup root options
       ...(rollupOptions || {}),
       plugins: [
@@ -160,7 +174,7 @@ export function createRollupConfig(customConfig) {
           }),
         // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
         babel({
-          exclude: [/@babel\/runtime/, 'node_modules/**'],
+          exclude: ['node_modules/**'],
           extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
           ...(!useTypescript && {
             presets: [
@@ -168,10 +182,13 @@ export function createRollupConfig(customConfig) {
               [require.resolve('@babel/preset-react')],
             ],
           }),
-          babelHelpers: 'runtime',
+          babelHelpers: babelHelpersExplicitUMD,
           // replace reference of the babal helper functions to the @babel/runtime version
           // more: https://babeljs.io/docs/en/babel-runtime#why
-          plugins: ['@babel/plugin-transform-runtime'],
+          plugins: [
+            babelHelpersExplicitUMD === 'runtime' &&
+              '@babel/plugin-transform-runtime',
+          ].filter(Boolean),
         }),
         postcss({
           extract: idx === 0 ? `css/${safePackageName}.min.css` : false, // extract css file only once
@@ -217,13 +234,13 @@ export function createRollupPlaygroundConfig() {
       json(),
       // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
       babel({
-        exclude: [/@babel\/runtime/, 'node_modules/**'],
+        exclude: ['node_modules/**'],
         extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
         presets: [
           [require.resolve('@babel/preset-env')],
           [require.resolve('@babel/preset-react')],
         ],
-        babelHelpers: 'runtime',
+        babelHelpers: 'bundled',
         // replace reference of the babal helper functions to the @babel/runtime version
         // more: https://babeljs.io/docs/en/babel-runtime#why
         plugins: ['@babel/plugin-transform-runtime'],
@@ -244,7 +261,7 @@ export function createRollupPlaygroundConfig() {
         template: generateHTML,
       }),
       serve({
-        open: true,
+        // open: true,
         contentBase: paths.playgroundDist,
       }),
       live(),
