@@ -241,9 +241,6 @@ export function createRollupPlaygroundConfig() {
           [require.resolve('@babel/preset-react')],
         ],
         babelHelpers: 'bundled',
-        // replace reference of the babal helper functions to the @babel/runtime version
-        // more: https://babeljs.io/docs/en/babel-runtime#why
-        plugins: ['@babel/plugin-transform-runtime'],
       }),
       postcss({
         extract: 'styles.css',
