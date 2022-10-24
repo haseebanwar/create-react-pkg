@@ -86,7 +86,7 @@ export function createRollupConfig(customConfig) {
     let output = {
       dir: outDir,
       format,
-      sourcemap: format === 'umd' ? 'inline' : true,
+      sourcemap: true,
       freeze: false, // do not call Object.freeze on imported objects with import * syntax
       exports: 'named',
       assetFileNames: '[name][extname]',
