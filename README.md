@@ -105,6 +105,20 @@ yarn create react-pkg my-package
 - **--ts, --typescript**: Initialize a TypeScript project.
 - **--sb, --storybook**: Add storybook support.
 
+```shell
+# npx
+npx create-react-pkg my-package --ts
+
+# npm 6.x
+npm create react-pkg my-package --ts
+
+# npm 7+, extra double dash is needed
+npm create react-pkg my-package -- --ts
+
+# yarn
+yarn create react-pkg my-package --ts
+```
+
 ### Available Scripts
 
 Inside the newly created project, you can run some built-in commands:
@@ -293,6 +307,13 @@ You can provide the following options to customize the build.
 - **Default**: `false`
 
   Disable code linting with ESLint.
+
+#### babelHelpers
+
+- **Type**: `'bundled' | 'runtime'`
+- **Default**: `bundled`
+
+  How Babel helpers are inserted into the Rollup bundle. If you select `runtime`, then you must add [@babel/runtime](https://www.npmjs.com/package/@babel/runtime) as a dependency to your package.json.
 
 #### rollupOptions
 
