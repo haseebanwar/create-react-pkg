@@ -1,14 +1,14 @@
 import fs from 'fs-extra';
 import { makeHtmlAttributes } from '@rollup/plugin-html';
-import { paths } from '../paths';
 import template from 'lodash.template';
+import { paths } from '../paths';
 
 export async function generateHTML({ attributes, files, meta, publicPath }) {
   const htmlTemplate = await fs.readFile(paths.playgroundHTML, {
     encoding: 'utf-8',
   });
 
-  const compiled = template(htmlTemplate);
+  const compileTemplate = template(htmlTemplate);
 
   const scripts = (files.js || [])
     .map(({ fileName, isDynamicEntry }) => {
@@ -33,8 +33,7 @@ export async function generateHTML({ attributes, files, meta, publicPath }) {
     })
     .join('\n');
 
-  const source = compiled({ metas, links, scripts });
-  console.log('source', source);
+  const source = compileTemplate({ metas, links, scripts });
 
   return source;
 }

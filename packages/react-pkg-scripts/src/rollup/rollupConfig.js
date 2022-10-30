@@ -1,4 +1,4 @@
-import resolve from '@rollup/plugin-node-resolve';
+import nodeResolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import { DEFAULT_EXTENSIONS as DEFAULT_BABEL_EXTENSIONS } from '@babel/core';
@@ -137,7 +137,7 @@ export function createRollupConfig(customConfig) {
           eslint({
             formatter: eslintFormatter,
           }),
-        resolve(),
+        nodeResolve(),
         commonjs({ include: /node_modules/ }),
         json(),
         useTypescript &&
@@ -229,8 +229,14 @@ export function createRollupPlaygroundConfig() {
     input: paths.playgroundEntry,
     external: [],
     plugins: [
-      resolve(),
-      commonjs({ include: /node_modules/ }),
+      // eslint({
+      //   formatter: eslintFormatter,
+      // }),
+      nodeResolve(),
+      commonjs({
+        // todo
+        include: [/node_modules/, 'dist/**'],
+      }),
       json(),
       // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
       babel({
@@ -258,7 +264,7 @@ export function createRollupPlaygroundConfig() {
         template: generateHTML,
       }),
       serve({
-        // open: true,
+        open: true,
         contentBase: paths.playgroundDist,
       }),
       live(),
@@ -268,7 +274,6 @@ export function createRollupPlaygroundConfig() {
       format: 'esm',
       sourcemap: true,
       freeze: false, // do not call Object.freeze on imported objects with import * syntax
-      exports: 'named',
       assetFileNames: '[name][extname]',
       entryFileNames: `[name].js`,
       chunkFileNames: `[name]-[hash].js`,
