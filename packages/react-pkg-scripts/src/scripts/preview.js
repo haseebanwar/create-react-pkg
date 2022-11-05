@@ -1,8 +1,9 @@
+import path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
 import { watch as rollupWatch } from 'rollup';
 import { createRollupPlaygroundConfig } from '../rollup/rollupConfig';
-import { logBuildError, clearConsole } from '../utils';
+import { logBuildError, logBuildWarnings, clearConsole } from '../utils';
 import { paths } from '../paths';
 
 export function preview() {
@@ -16,33 +17,54 @@ export function preview() {
 
     fs.emptyDirSync(paths.playgroundDist);
 
-    // if esm is not in formats show error message
+    let customConfig = {};
+    if (fs.existsSync(paths.packageConfig)) {
+      customConfig = require(paths.packageConfig);
+    }
 
-    const rollupPlaygroundBuild = createRollupPlaygroundConfig();
+    const { outDir = paths.packageDist } = customConfig;
+    const packageDistPicomatch = `${path.basename(outDir)}/**`;
+
+    // TODO
+    /**
+     * since preview depends on esm or cjs build of package,
+     * if custom formats are defined and they don't include esm or cjs then show an error
+     * if no custom formats are defined then cjs and esm are used by default, so preview build will work
+     */
+    if (
+      customConfig.formats &&
+      !customConfig.formats.includes('cjs') &&
+      !customConfig.formats.includes('esm')
+    ) {
+      throw new Error(
+        'One of CJS or ESM format is required for preview to work. Please add CJS or ESM format in crp.config.js\n\nMore: https://github.com/haseebanwar/create-react-pkg#formats'
+      );
+    }
+
+    const rollupPlaygroundBuild = createRollupPlaygroundConfig(
+      customConfig,
+      packageDistPicomatch
+    );
 
     const watcher = rollupWatch({
       ...rollupPlaygroundBuild,
       onwarn: (warning, warn) => {
-        // log warnings only for the first bundle (prevents duplicate warnings)
-        // if (idx !== 0) return;
+        // ignoring because eslint already picked them
+        if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
 
         // print this message only when there were no previous warnings for this build
-        // if (!hasWarnings) {
-        //   clearConsole();
-        //   console.log(chalk.yellow('Compiled with warnings.'));
-        // }
-        console.log('WARNING!');
+        if (!hasWarnings) {
+          clearConsole();
+          console.log(chalk.yellow('Compiled with warnings.'));
+        }
         hasWarnings = true;
 
-        warn(warning);
-
-        // ignoring because eslint already picked them
-        // if (warning.code === 'UNUSED_EXTERNAL_IMPORT') return;
-
-        // logBuildWarnings(warning, warn);
+        logBuildWarnings(warning, warn);
       },
       watch: {
+        include: ['playground/**', packageDistPicomatch],
         exclude: ['node_modules/**'],
+        // buildDelay: 500,
       },
     });
 
@@ -75,7 +97,7 @@ export function preview() {
       }
     });
   } catch (error) {
-    console.error(chalk.red(`Failed to run in watch mode: ${error.message}`));
+    console.error(chalk.red(`Failed to build preview: ${error.message}`));
     console.error('error', error);
     process.exit(1);
   }

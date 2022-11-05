@@ -14,6 +14,7 @@ import autoprefixer from 'autoprefixer';
 import camelCase from 'camelcase';
 import eslint from './rollupESLintPlugin';
 import { eslintFormatter } from '../eslint/eslintFormatter';
+import { generateHTML } from './rollupGenerateHtml';
 import {
   checkTypescriptSetup,
   sanitizePackageName,
@@ -21,7 +22,6 @@ import {
   readPackageJsonOfPackage,
 } from '../utils';
 import { paths } from '../paths';
-import { generateHTML } from './rollupGenerateHtml';
 
 const allBuildFormats = [
   {
@@ -224,24 +224,34 @@ export function createRollupConfig(customConfig) {
   });
 }
 
-export function createRollupPlaygroundConfig() {
+export function createRollupPlaygroundConfig(
+  customConfig,
+  packageDistPicomatch
+) {
+  const { disableESLint = false } = customConfig;
+
   const config = {
     input: paths.playgroundEntry,
     external: [],
     plugins: [
-      // eslint({
-      //   formatter: eslintFormatter,
-      // }),
+      !disableESLint &&
+        eslint({
+          formatter: eslintFormatter,
+          packageDistPicomatch,
+        }),
       nodeResolve(),
+      /**
+       * it is important to include package's dist because the bundle for preview app depends on it
+       * and if package is emitting a CJS bundle then commonjs plugin will transform CJS exports from package's dist to ESM for preview app bundle
+       */
       commonjs({
-        // todo
-        include: [/node_modules/, 'dist/**'],
+        include: [/node_modules/, packageDistPicomatch],
       }),
       json(),
       // babel plugins run before presets. Plugin ordering is first to last. Preset ordering is reversed (last to first).
       babel({
-        exclude: ['node_modules/**'],
-        extensions: [...DEFAULT_BABEL_EXTENSIONS, '.ts', '.tsx'],
+        exclude: ['node_modules/**', packageDistPicomatch],
+        extensions: [...DEFAULT_BABEL_EXTENSIONS],
         presets: [
           [require.resolve('@babel/preset-env')],
           [require.resolve('@babel/preset-react')],
@@ -268,7 +278,7 @@ export function createRollupPlaygroundConfig() {
         contentBase: paths.playgroundDist,
       }),
       live(),
-    ],
+    ].filter(Boolean),
     output: {
       dir: paths.playgroundDist,
       format: 'esm',

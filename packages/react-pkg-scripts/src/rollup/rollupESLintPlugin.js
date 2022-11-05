@@ -19,7 +19,11 @@ function eslint(options = {}) {
     throwOnWarning = false,
     formatter = defaultFormatter,
     include = [],
-    exclude = [/node_modules/, /\.json|\.s?css$/],
+    exclude = [
+      /node_modules/,
+      /\.json|\.s?css$/,
+      options.packageDistPicomatch,
+    ].filter(Boolean),
   } = options;
 
   // creating a new instance of this class automatically loads any eslint config/ignore files
