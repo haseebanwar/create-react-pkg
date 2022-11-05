@@ -38,6 +38,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [formats](#formats)
     - [name](#name)
     - [disableESLint](#disableeslint)
+    - [babelHelpers](#babelhelpers)
     - [rollupOptions](#rollupoptions)
   - [Rollup](#rollup)
     - [Conditional Rollup Config](#conditional-rollup-config)
