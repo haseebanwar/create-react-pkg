@@ -315,6 +315,8 @@ You can provide the following options to customize the build.
 
   How Babel helpers are inserted into the Rollup bundle. If you select `runtime`, then you must add [@babel/runtime](https://www.npmjs.com/package/@babel/runtime) as a dependency to your package.json.
 
+  > Note: Babel helpers for UMD module format are always bundled.
+
 #### rollupOptions
 
 - **Type**: `RollupOptions | ((config: RollupOptions, options) => RollupOptions)`
