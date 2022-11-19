@@ -8,6 +8,7 @@ export const basePackageJSON = {
     start: `react-pkg-scripts watch`,
     build: `react-pkg-scripts build`,
     test: `react-pkg-scripts test`,
+    preview: `react-pkg-scripts preview`,
   },
   peerDependencies: {
     react: '>=17',
