@@ -31,22 +31,12 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Preview](#preview)
   - [Build and Publish](#build-and-publish)
 - [Integrated Playground](#integrated-playground)
-  - [Specify port for server](#specify-port-for-server)
-  - [Use CJS build with playground](#use-cjs-build-with-playground)
+  - [Specify port for Server](#specify-port-for-server)
+  - [Use CJS build with Playground](#use-cjs-build-with-playground)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
-    - [input](#input)
-    - [outDir](#outdir)
-    - [formats](#formats)
-    - [name](#name)
-    - [disableESLint](#disableeslint)
-    - [babelHelpers](#babelhelpers)
-    - [rollupOptions](#rollupoptions)
-    - [playground.server](#playgroundserver)
-    - [playground.livereload](#playgroundlivereload)
-    - [playground.rollupOptions](#playgroundrollupoptions)
   - [Rollup](#rollup)
     - [Conditional Rollup Config](#conditional-rollup-config)
     - [Example: Import images](#example-import-images)
@@ -216,7 +206,7 @@ Create an optimized production build by running the `build` script. This will cr
 - types: TypeScript declarations.
 - css: Minified CSS Bundle.
 
-> Note: If you are using CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod builds based on the NodeJS environment.
+> Note: If you use CJS as one of the module formats, it will create a file `dist/index.js` that loads CJS dev/prod builds based on the NodeJS environment.
 
 Create React Package adds the following NPM configuration to your package.json.
 
@@ -249,13 +239,13 @@ Then run the playground inside another terminal:
 npm run preview
 ```
 
-The playground imports and live reloads your library from `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode with either ESM or CJS build, or both. **No symlinking required**.
+The playground imports and live reloads your library from `/dist`, so if you see an out-of-date component, make sure the project is running in watch mode with either ESM or CJS build, or both. **No symlinking required**.
 
 <p align='center'>
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
 </p>
 
-### Specify port for server
+### Specify port for Server
 
 By default, the server runs on port 10001, you can change it by creating a file `crp.config.js` at the root of package with the following.
 
@@ -271,7 +261,7 @@ module.exports = defineConfig({
 });
 ```
 
-### Use CJS build with playground
+### Use CJS build with Playground
 
 By default, the playground tries to use the ESM build of your library from `/dist`. But you can use the CJS build by removing the `module` property from package.json
 
