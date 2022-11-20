@@ -1,4 +1,6 @@
 import { RollupOptions } from 'rollup';
+import { RollupServeOptions } from 'rollup-plugin-serve';
+import { RollupLivereloadOptions } from 'rollup-plugin-livereload';
 
 type RollupOptionsResolver = (
   config: Omit<RollupOptions, 'onwarn'>,
@@ -6,6 +8,10 @@ type RollupOptionsResolver = (
     format: 'esm' | 'cjs' | 'umd';
     mode: 'development' | 'production';
   }
+) => RollupOptions;
+
+type RollupPlaygroundOptionsResolver = (
+  config: Omit<RollupOptions, 'onwarn'>
 ) => RollupOptions;
 
 export declare interface UserConfig {
@@ -45,6 +51,28 @@ export declare interface UserConfig {
    * https://rollupjs.org/guide/en/#big-list-of-options
    */
   rollupOptions?: Omit<RollupOptions, 'onwarn'> | RollupOptionsResolver;
+  /**
+   * Integrated playground configuration
+   */
+  playground: {
+    /**
+     * Development server configuration
+     * https://github.com/thgh/rollup-plugin-serve#options
+     */
+    server: RollupServeOptions;
+    /**
+     * Configure development server livereload
+     * https://github.com/thgh/rollup-plugin-livereload#options
+     */
+    livereload: RollupLivereloadOptions;
+    /**
+     * Customize Rollup playground app bundle
+     * https://rollupjs.org/guide/en/#big-list-of-options
+     */
+    rollupOptions?:
+      | Omit<RollupOptions, 'onwarn'>
+      | RollupPlaygroundOptionsResolver;
+  };
 }
 
 /**

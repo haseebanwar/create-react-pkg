@@ -205,10 +205,8 @@ export function createRollupConfig(customConfig) {
         }),
         mode === 'production' && terser(),
         // push user defined rollup plugins
-        rollupOptions?.plugins,
-      ]
-        .flat()
-        .filter(Boolean),
+        ...(rollupOptions?.plugins || []),
+      ].filter(Boolean),
       // allow user defined rollup options for output
       output: {
         ...output,
@@ -228,11 +226,13 @@ export function createRollupPlaygroundConfig(
   customConfig,
   packageDistPicomatch
 ) {
-  const { disableESLint = false } = customConfig;
+  const { disableESLint = false, playground } = customConfig;
 
   const config = {
     input: paths.playgroundEntry,
     external: [],
+    // allow user defined rollup root options
+    ...(playground?.rollupOptions || {}),
     plugins: [
       !disableESLint &&
         eslint({
@@ -276,8 +276,13 @@ export function createRollupPlaygroundConfig(
       serve({
         open: true,
         contentBase: paths.playgroundDist,
+        ...(playground?.server || {}),
       }),
-      live(),
+      live({
+        ...(playground?.livereload || {}),
+      }),
+      // user defined rollup plugins
+      ...(playground?.rollupOptions?.plugins || []),
     ].filter(Boolean),
     output: {
       dir: paths.playgroundDist,
@@ -287,7 +292,13 @@ export function createRollupPlaygroundConfig(
       assetFileNames: '[name][extname]',
       entryFileNames: `[name].js`,
       chunkFileNames: `[name]-[hash].js`,
+      ...(playground?.rollupOptions?.output || {}),
     },
   };
+
+  if (typeof playground?.rollupOptions === 'function') {
+    return playground?.rollupOptions(config);
+  }
+
   return config;
 }

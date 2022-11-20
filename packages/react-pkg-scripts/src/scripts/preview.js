@@ -25,22 +25,6 @@ export function preview() {
     const { outDir = paths.packageDist } = customConfig;
     const packageDistPicomatch = `${path.basename(outDir)}/**`;
 
-    // TODO
-    /**
-     * since preview depends on esm or cjs build of package,
-     * if custom formats are defined and they don't include esm or cjs then show an error
-     * if no custom formats are defined then cjs and esm are used by default, so preview build will work
-     */
-    if (
-      customConfig.formats &&
-      !customConfig.formats.includes('cjs') &&
-      !customConfig.formats.includes('esm')
-    ) {
-      throw new Error(
-        'One of CJS or ESM format is required for preview to work. Please add CJS or ESM format in crp.config.js\n\nMore: https://github.com/haseebanwar/create-react-pkg#formats'
-      );
-    }
-
     const rollupPlaygroundBuild = createRollupPlaygroundConfig(
       customConfig,
       packageDistPicomatch
@@ -64,7 +48,6 @@ export function preview() {
       watch: {
         include: ['playground/**', packageDistPicomatch],
         exclude: ['node_modules/**'],
-        // buildDelay: 500,
       },
     });
 
@@ -87,7 +70,6 @@ export function preview() {
 
       if (evt.code === 'END') {
         if (!hasErrors && !hasWarnings) {
-          // clearConsole();
           console.log(chalk.green('Compiled successfully!'));
         }
 

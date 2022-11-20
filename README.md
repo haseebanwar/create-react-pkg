@@ -140,6 +140,12 @@ Runs your tests with Jest test runner.
 
 Creates an optimized production build of your package in CommonJS, ES, and UMD module formats.
 
+#### `npm run preview` or `yarn preview`
+
+Opens the integrated playground app from `playground/index.js` in the browser for developing and previewing your library. The development server comes with live reload that makes development much easier.
+
+Read more in [Integrated playground](#integrated-plyaground) section.
+
 ## Building your Package
 
 ### Install a Dependency
@@ -176,6 +182,7 @@ Create React package already specifies `react` and `react-dom` as peer dependenc
 
 To preview and test your library before publishing, you can use:
 
+- [Integrated Playground](#integrated-plyaground)
 - [Storybook](https://storybook.js.org/)
 - [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app
 
@@ -323,6 +330,24 @@ You can provide the following options to customize the build.
 - **Type**: `RollupOptions | ((config: RollupOptions, options) => RollupOptions)`
 
   Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
+
+#### playground.serve
+
+- **Type**: `{}`
+
+  Server options
+
+#### playground.livereload
+
+- **Type**: `{}`
+
+  Server livereload options
+
+#### playground.rollupOptions
+
+- **Type**: `RollupOptions | ((config: RollupOptions) => RollupOptions)`
+
+  Rollup options for playground bundle.
 
 ### Rollup
 
@@ -484,6 +509,30 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to the `test` s
 +    "test": "react-pkg-scripts test --watchAll"
   }
 ```
+
+## Integrated Plyaground
+
+Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
+
+To get started with the playground, run.
+
+```shell
+npm start
+```
+
+This builds to `/dist` and starts the project in watch mode so any edits you save inside `/src` causes a rebuild to `/dist`.
+
+Then run the playground inside another:
+
+```shell
+npm run preview
+```
+
+The playground imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode and has an ESM build. **No symlinking required**.
+
+<p align='center'>
+<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
+</p>
 
 ## Styling
 
