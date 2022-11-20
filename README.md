@@ -31,6 +31,8 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Preview](#preview)
   - [Build and Publish](#build-and-publish)
 - [Integrated Playground](#integrated-playground)
+  - [Specify port for server](#specify-port-for-server)
+  - [Use CJS build with playground](#use-cjs-build-with-playground)
 - [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
@@ -42,7 +44,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
     - [disableESLint](#disableeslint)
     - [babelHelpers](#babelhelpers)
     - [rollupOptions](#rollupoptions)
-    - [playground.serve](#playgroundserve)
+    - [playground.server](#playgroundserver)
     - [playground.livereload](#playgroundlivereload)
     - [playground.rollupOptions](#playgroundrollupoptions)
   - [Rollup](#rollup)
@@ -253,6 +255,22 @@ The playground imports and live reloads your library from `/dist`, so if you are
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
 </p>
 
+### Specify port for server
+
+By default, the server runs on port 10001, you can change it by creating a file `crp.config.js` at the root of package with the following.
+
+```js
+const { defineConfig } = require('react-pkg-scripts');
+
+module.exports = defineConfig({
+  playground: {
+    server: {
+      port: 3000, // define port of your choice
+    },
+  },
+});
+```
+
 ### Use CJS build with playground
 
 By default, the playground tries to use the ESM build of your library from `/dist`. But you can use the CJS build by removing the `module` property from package.json
@@ -384,23 +402,23 @@ You can provide the following options to customize the build.
 
   Directly customize the underlying Rollup bundle. These options will be merged with Create React Package's internal Rollup options. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
-#### playground.serve
+#### playground.server
 
-- **Type**: `{}`
+- **Type**: `RollupServeOptions`
 
-  Server options
+  Development server configuration. See options [here](https://github.com/thgh/rollup-plugin-serve#options)
 
 #### playground.livereload
 
-- **Type**: `{}`
+- **Type**: `RollupLivereloadOptions`
 
-  Server livereload options
+  Development server livereload configuration. See options [here](https://github.com/thgh/rollup-plugin-livereload#options)
 
 #### playground.rollupOptions
 
 - **Type**: `RollupOptions | ((config: RollupOptions) => RollupOptions)`
 
-  Rollup options for playground bundle.
+  Rollup options for playground app bundle. See [Rollup options docs](https://rollupjs.org/guide/en/#big-list-of-options) for more details.
 
 ### Rollup
 
