@@ -30,8 +30,8 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Manage External Dependencies](#manage-external-dependencies)
   - [Preview](#preview)
   - [Build and Publish](#build-and-publish)
-- [Philosophy](#philosophy)
 - [Integrated Playground](#integrated-playground)
+- [Philosophy](#philosophy)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
@@ -229,13 +229,6 @@ Create React Package adds the following NPM configuration to your package.json.
 
 This build can now be published to NPM.
 
-## Philosophy
-
-Create React Package is divided into two packages:
-
-- `create-react-pkg` is a command line tool to set up a new React package.
-- `react-pkg-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
-
 ## Integrated Playground
 
 Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
@@ -259,6 +252,13 @@ The playground imports and live reloads whatever is in `/dist`, so if you are se
 <p align='center'>
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
 </p>
+
+## Philosophy
+
+Create React Package is divided into two packages:
+
+- `create-react-pkg` is a command line tool to set up a new React package.
+- `react-pkg-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
 
 ## Customization
 
