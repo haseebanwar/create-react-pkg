@@ -31,6 +31,7 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [Preview](#preview)
   - [Build and Publish](#build-and-publish)
 - [Philosophy](#philosophy)
+- [Integrated Playground](#integrated-playground)
 - [Customization](#customization)
   - [Config Intellisense](#config-intellisense)
   - [Config Options](#config-options)
@@ -52,7 +53,6 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
   - [ESLint](#eslint)
   - [Jest](#jest)
     - [CLI Options](#cli-options)
-- [Integrated Plyaground](#integrated-plyaground)
 - [Styling](#styling)
   - [Sass/Stylus/Less Files](#sassstylusless-files)
   - [Post-Processing CSS](#post-processing-css)
@@ -68,10 +68,11 @@ You don’t need to install or configure tools like Rollup, Babel, or ESLint. Th
 - CJS, ESM, and UMD modules support
 - Pre-configured Rollup, Babel, Jest, and ESLint
 - Completely customizable
+- Integrated Playground
 - Tree-shaking
 - Code-splitting
 - Dev/Production builds
-- Typescript support
+- TypeScript support
 - Storybook support
 - Compile-time linting with ESLint
 - Out-of-the-box support for CSS, SASS, and JSON files
@@ -149,7 +150,7 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 Opens the integrated playground app from `playground/index.js` in the browser for developing and previewing your library. The development server comes with live reload that makes development much easier.
 
-Read more in [Integrated playground](#integrated-plyaground) section.
+Read more in [Integrated playground](#integrated-playground) section.
 
 ## Building your Package
 
@@ -187,7 +188,7 @@ Create React package already specifies `react` and `react-dom` as peer dependenc
 
 To preview and test your library before publishing, you can use:
 
-- [Integrated Playground](#integrated-plyaground)
+- [Integrated Playground](#integrated-playground)
 - [Storybook](https://storybook.js.org/)
 - [npm-link](https://docs.npmjs.com/cli/v8/commands/npm-link) with your React app
 
@@ -234,6 +235,30 @@ Create React Package is divided into two packages:
 
 - `create-react-pkg` is a command line tool to set up a new React package.
 - `react-pkg-scripts` is a development dependency in the generated projects that encapsulates all the build tools.
+
+## Integrated Playground
+
+Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
+
+To get started with the playground, run.
+
+```shell
+npm start
+```
+
+This builds to `/dist` and starts the project in watch mode so any edits you save inside `/src` causes a rebuild to `/dist`.
+
+Then run the playground inside another:
+
+```shell
+npm run preview
+```
+
+The playground imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode and has an ESM build. **No symlinking required**.
+
+<p align='center'>
+<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
+</p>
 
 ## Customization
 
@@ -514,30 +539,6 @@ You can pass [Jest CLI options](https://jestjs.io/docs/27.x/cli) to the `test` s
 +    "test": "react-pkg-scripts test --watchAll"
   }
 ```
-
-## Integrated Plyaground
-
-Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
-
-To get started with the playground, run.
-
-```shell
-npm start
-```
-
-This builds to `/dist` and starts the project in watch mode so any edits you save inside `/src` causes a rebuild to `/dist`.
-
-Then run the playground inside another:
-
-```shell
-npm run preview
-```
-
-The playground imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode and has an ESM build. **No symlinking required**.
-
-<p align='center'>
-<img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
-</p>
 
 ## Styling
 
