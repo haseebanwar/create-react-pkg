@@ -142,7 +142,7 @@ Creates an optimized production build of your package in CommonJS, ES, and UMD m
 
 Opens the integrated playground app from `playground/index.js` in the browser for developing and previewing your library. The development server comes with live reload that makes development much easier.
 
-Read more in [Integrated playground](#integrated-playground) section.
+Read more in [Integrated Playground](#integrated-playground) section.
 
 ## Building your Package
 
