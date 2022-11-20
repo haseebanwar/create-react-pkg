@@ -223,7 +223,7 @@ This build can now be published to NPM.
 
 ## Integrated Playground
 
-Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
+Integrated playground is a React app development server that makes it significantly easier to build and view your React library in browser.
 
 To get started with the playground, first run:
 
@@ -244,6 +244,8 @@ The playground imports and live reloads your library from `/dist`, so if you see
 <p align='center'>
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
 </p>
+
+> Tip: Use [`playground.rollupOptions`](#playgroundrollupoptions) config option for customizing the app bundle. For example, if you need to import images in your playground app.
 
 ### Specify port for Server
 
@@ -267,7 +269,7 @@ By default, the playground tries to use the ESM build of your library from `/dis
 
 ```diff
 {
-  "name": "foo.js",
+  "name": "foo",
   "main": "dist/index.js"
 - "module": "dist/esm/foo.js"
 }
@@ -277,7 +279,7 @@ Or you can point the module entry to CJS entry point
 
 ```diff
 {
-  "name": "foo.js",
+  "name": "foo",
   "main": "dist/index.js"
 - "module": "dist/esm/foo.js"
 + "module": "dist/index.js"
