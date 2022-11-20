@@ -233,25 +233,48 @@ This build can now be published to NPM.
 
 Integrated playground is a React app development server that makes it significantly easier to build and view your library in browser.
 
-To get started with the playground, run.
+To get started with the playground, first run:
 
 ```shell
 npm start
 ```
 
-This builds to `/dist` and starts the project in watch mode so any edits you save inside `/src` causes a rebuild to `/dist`.
+This builds your library to `/dist` and starts the project in watch mode so any edits you save inside `/src` causes a rebuild to `/dist`.
 
-Then run the playground inside another:
+Then run the playground inside another terminal:
 
 ```shell
 npm run preview
 ```
 
-The playground imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode and has an ESM build. **No symlinking required**.
+The playground imports and live reloads your library from `/dist`, so if you are seeing an out of date component, make sure the project is running in watch mode with either ESM or CJS build, or both. **No symlinking required**.
 
 <p align='center'>
 <img src='https://res.cloudinary.com/https-haseebanwar-net/image/upload/v1668925640/create-react-package/playground_dkbew9.gif' width='600' alt='npm start'>
 </p>
+
+### Use CJS build with playground
+
+By default, the playground tries to use the ESM build of your library from `/dist`. But you can use the CJS build by removing the `module` property from package.json
+
+```diff
+{
+  "name": "foo.js",
+  "main": "dist/index.js"
+- "module": "dist/esm/foo.js"
+}
+```
+
+Or you can point the module entry to CJS entry point
+
+```diff
+{
+  "name": "foo.js",
+  "main": "dist/index.js"
+- "module": "dist/esm/foo.js"
++ "module": "dist/index.js"
+}
+```
 
 ## Philosophy
 
